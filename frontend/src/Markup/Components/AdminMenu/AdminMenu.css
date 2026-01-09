@@ -1,0 +1,16 @@
+.admin-menu-container {
+  background-color: #081336;
+  height: 100%;
+  left: -10px;
+}
+.list-group-item {
+  color: rgb(219, 218, 218);
+  font-size: 14px;
+}
+.admin-menu h2 {
+  color: rgb(219, 218, 218);
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

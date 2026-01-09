@@ -1,0 +1,49 @@
+.loginForm
+{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+}
+.loginForm h2
+{
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+.loginForm form
+{
+    display: flex;
+    flex-direction: column;
+    margin: 40px 0;
+}
+.loginForm form .inputGroup
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+.loginForm form .inputGroup input{
+    height: 40px;
+    padding: 0 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    height: 55px;
+    padding: 1px 15px;
+}
+.loginButton
+{
+    height: 55px;
+    background-color: #ff3300;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 130px;
+    font-weight: 600;
+}

@@ -1,0 +1,17 @@
+.contact-section
+{
+    margin-top: 20px;
+    background-color: rgb(243, 245, 245);
+    width: 100%;
+}
+.form-group input, .form-group select{
+   height: 60px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding-left: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-style: italic;
+}
