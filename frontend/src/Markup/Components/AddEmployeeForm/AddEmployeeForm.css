@@ -15,3 +15,7 @@
     margin-bottom: 8px;
     font-style: italic;
 }
+.error {
+    color: oklch(62.793% 0.25768 29.223);
+    font-size: 0.9em;
+}
