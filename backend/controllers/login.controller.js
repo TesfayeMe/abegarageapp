@@ -23,7 +23,7 @@ async function login(req, res, next) {
         employee_last_name: employee.data.employee_last_name,
       };
       //generate JWT token
-      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10h" });
+      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1hr" });
       //return token in response
       // console.log({ message: employee.message, token: token, user: employee.data });
       return res
@@ -31,7 +31,7 @@ async function login(req, res, next) {
         .json({
           status: employee.status,
           message: employee.message,
-          token: token,
+          employee_token: token,
         });
     }
   } catch (error) {

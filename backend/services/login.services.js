@@ -10,8 +10,8 @@ async function loginUser(employeeData) {
   try {
     let returnData = {};
     //get employee data by email
-    const [employee] = await employeeService.getEmployeeByEmail(employeeData);
-    if (employee.length === 0) {
+    const employee = await employeeService.getEmployeeByEmail(employeeData);
+    if (!employee) {
       returnData = {
         status: "failed",
         message: "Employee does not exist",
@@ -20,8 +20,8 @@ async function loginUser(employeeData) {
     }
     //compare passwords
     const passwordMatch = await bcrypt.compare(
-      employeeData.employee_password,
-      employee[0].employee_password_hashed
+      employeeData.password,
+      employee.employee_password_hashed
     );
     if (!passwordMatch) {
       returnData = {
@@ -30,13 +30,18 @@ async function loginUser(employeeData) {
       };
       return returnData;
     }
-    //if passwords match, return employee data
+    else
+    {
+//if passwords match, return employee data
     returnData = {
       status: "success",
       message: "Login successful",
-      data: employee[0],
+      data: employee,
     };
+    // console.log(returnData);
     return returnData;
+    }
+    
   } catch (error) {
     console.log(error);
   }

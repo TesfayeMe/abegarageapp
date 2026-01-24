@@ -1,6 +1,6 @@
 import React from "react";
-import AddEmployeeForm from "../../Components/AddEmployeeForm/AddEmployeeForm";
-import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AddEmployeeForm from "../../Components/Admin/AddEmployeeForm/AddEmployeeForm";
+import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
 const AddEmployee = (props) => {
   return (
     <div>

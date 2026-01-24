@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AddEmployeeForm.css";
-import EmployeeServices from "../../../Services/EmployeeServices";
+import EmployeeServices from "../../../../Services/EmployeeServices";
+import {useAuth} from '../../../../Context/AuthContext'
 const AddEmployeeForm = () => {
   //state to hold form data fro each one by one
   const [employee_first_name, setEmployeeFirstName] = useState("");
@@ -18,6 +19,13 @@ const AddEmployeeForm = () => {
   const [phone_error, setPhoneError] = useState("");
   const [role_error, setRoleError] = useState("");
   const [password_error, setPasswordError] = useState("");
+  let loginEmployeeToken = '';
+  const {employee} = useAuth();
+  if(employee && employee?.employee_token)
+  {
+    loginEmployeeToken = employee.employee_token;
+  }
+  // console.log(loginEmployeeToken);
 
   //server response error state
   const [server_error, setServerError] = useState("");
@@ -91,7 +99,7 @@ const AddEmployeeForm = () => {
     };
 
     try {
-      const newEmployee = await EmployeeServices.createEmployee(formData);
+      const newEmployee = await EmployeeServices.createEmployee(formData, loginEmployeeToken);
       const data = await newEmployee.json();
       console.log("Success:", data);
       if (data.error) {

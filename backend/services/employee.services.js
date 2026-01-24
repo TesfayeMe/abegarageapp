@@ -19,9 +19,25 @@ async function getEmployeeByEmail(employeeData) {
     INNER JOIN employee_role er ON e.employee_id = er.employee_id
     INNER JOIN employee_pass ep ON e.employee_id = ep.employee_id
     WHERE e.employee_email = ?`;
-    const rows = await conn.query(query, [employeeData.employee_email]);
-    return rows.length > 0 ? rows : null;
+    const [rows] = await conn.query(query, [employeeData.email]);
+    // console.log(rows[0]);
+    return rows.length > 0 ? rows[0] : null;
 }
+// async function to get employee data by email
+async function getEmployeeRoleByEmail(employeeEmail) {
+    //query to get all an employee data by email from employee table, employee_info table, employee_role table, employee_pass table, using inner joins
+
+    const query = `SELECT e.employee_id, e.employee_email, ei.employee_first_name, ei.employee_last_name, ei.employee_phone, er.company_role_id, ep.employee_password_hashed
+    FROM employee e
+    INNER JOIN employee_info ei ON e.employee_id = ei.employee_id
+    INNER JOIN employee_role er ON e.employee_id = er.employee_id
+    INNER JOIN employee_pass ep ON e.employee_id = ep.employee_id
+    WHERE e.employee_email = ?`;
+    const [rows] = await conn.query(query, [employeeEmail]);
+    // console.log(rows[0]);
+    return rows.length > 0 ? rows[0] : null;
+}
+
 //create new employee
 async function createEmployee(employeeData) {
     let createdEmployee = {};
@@ -72,9 +88,22 @@ async function createEmployee(employeeData) {
         console.log(error);
     }
 }
-
+// function to get all employees
+const getAllEmployeesList = async () => {
+    const query = `SELECT *
+    FROM employee e
+    INNER JOIN employee_info ei ON e.employee_id = ei.employee_id
+    INNER JOIN employee_role er ON e.employee_id = er.employee_id
+    INNER JOIN employee_pass ep ON e.employee_id = ep.employee_id
+    LIMIT 10`;
+    const [rows] = await conn.query(query);
+    console.log(rows);
+    return rows.length > 0 ? rows : null;
+}
 module.exports = {
     checkIfEmployeeExists,   
     createEmployee,
-    getEmployeeByEmail
+    getEmployeeByEmail,
+    getEmployeeRoleByEmail,
+    getAllEmployeesList
 };
