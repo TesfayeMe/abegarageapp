@@ -95,6 +95,7 @@ const getAllEmployeesList = async () => {
     INNER JOIN employee_info ei ON e.employee_id = ei.employee_id
     INNER JOIN employee_role er ON e.employee_id = er.employee_id
     INNER JOIN employee_pass ep ON e.employee_id = ep.employee_id
+    INNER JOIN company_roles cr ON cr.company_role_id = er.company_role_id
     LIMIT 10`;
     const [rows] = await conn.query(query);
     console.log(rows);
