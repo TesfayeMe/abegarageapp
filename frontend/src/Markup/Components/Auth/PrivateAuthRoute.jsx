@@ -30,25 +30,6 @@ const PrivateAuthRoute = ({roles, children}) => {
         return () => { mounted = false; };
     }, [roles]);
 
-
-    // useEffect(() =>{
-    //     const loggedInEmployee = getAuth();
-    //     loggedInEmployee.then((response) =>{
-    //         console.log(response.employee_token);
-    //         if(response.employee_token)
-    //         {
-    //             setIsLogged(true)
-    //             if(roles && roles.length > 0 && roles.includes(response.employee_role))
-    //             {
-    //                 setIsAuthorized(true);
-    //                 console.log(roles);
-    //                 console.log(roles.includes(response.employee_role));
-    //             }
-    //         }
-    //         setIsChecked(true);
-    //     })
-    // }, [roles])
-
     if(isChecked)
     {
         if(!isLogged)

@@ -45,20 +45,19 @@ async function createEmployee(employeeData) {
     try {
         //generate salt and hash password
         const salt = await bcrypt.genSalt(10);
-        
+
         //hash the password
         const hashedPassword = await bcrypt.hash(employeeData.employee_password, salt);
-//insert email to the employee table
+        //insert email to the employee table
         const query = 'INSERT INTO employee (employee_email,  active_employee) VALUES (?, ?)';
         const [result] = await conn.query(query, [
             employeeData.employee_email,
             employeeData.active_employee
         ]);
-        if(result.affectedRows !== 1) {
+        if (result.affectedRows !== 1) {
             return null;
         }
-        else
-        {
+        else {
             const employee_id = result.insertId;
             //insert queries for tables employee_info(employee_id, first_name, last_name, phone_number), employee_auth(employee_id, password_hash, salt);
             const infoQuery = 'INSERT INTO employee_info (employee_id, employee_first_name, employee_last_name, employee_phone) VALUES (?, ?, ?, ?)';
@@ -69,7 +68,7 @@ async function createEmployee(employeeData) {
                 employeeData.employee_phone
             ]);
 
-           //insert queries for tables employee_pass(employee_id, employee_password_hashed);
+            //insert queries for tables employee_pass(employee_id, employee_password_hashed);
             const passQuery = 'INSERT INTO employee_pass (employee_id, employee_password_hashed) VALUES (?, ?)';
             await conn.query(passQuery, [
                 employee_id,
@@ -81,7 +80,7 @@ async function createEmployee(employeeData) {
                 employee_id,
                 employeeData.employee_role
             ]);
-            return createdEmployee = {employee_id: employee_id};
+            return createdEmployee = { employee_id: employee_id };
 
         }
     } catch (error) {
@@ -101,10 +100,36 @@ const getAllEmployeesList = async () => {
     console.log(rows);
     return rows.length > 0 ? rows : null;
 }
+
+const updateEmployee = async (employee_id) => {
+    return employee_id
+
+}
+const getEmployeeById = async (employee_id) => {
+    console.log(employee_id)
+    const sql = `SELECT e.employee_id, e.employee_email, ei.employee_first_name, ei.employee_last_name, ei.employee_phone, er.company_role_id, ep.employee_password_hashed
+    FROM employee e
+    INNER JOIN employee_info ei ON e.employee_id = ei.employee_id
+    INNER JOIN employee_role er ON e.employee_id = er.employee_id
+    INNER JOIN employee_pass ep ON e.employee_id = ep.employee_id
+    WHERE e.employee_id = ?`
+    const [employee] = await conn.query(sql, [employee_id]);
+    if (employee.length > 0) {
+        console.log(employee)
+        return 'abe'
+    }
+    else {
+        console.log('employee not')
+        return 'x'
+
+    }
+}
 module.exports = {
-    checkIfEmployeeExists,   
+    checkIfEmployeeExists,
     createEmployee,
     getEmployeeByEmail,
     getEmployeeRoleByEmail,
-    getAllEmployeesList
+    getAllEmployeesList,
+    updateEmployee,
+    getEmployeeById
 };
