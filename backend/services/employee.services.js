@@ -97,32 +97,39 @@ const getAllEmployeesList = async () => {
     INNER JOIN company_roles cr ON cr.company_role_id = er.company_role_id
     LIMIT 10`;
     const [rows] = await conn.query(query);
-    console.log(rows);
+    // console.log(rows);
     return rows.length > 0 ? rows : null;
 }
 
-const updateEmployee = async (employee_id) => {
-    return employee_id
+const updateEmployee = async (empolyeeInfo) => {  
+
+  const {employee_email, employee_first_name, employee_last_name, employee_phone, employee_role, active_employee} = empolyeeInfo;
+  const empInfo = [active_employee,employee_first_name,employee_last_name,employee_phone, employee_role, employee_email];
+  const sql = `update employee e
+               INNER JOIN  employee_info ef on e.employee_id = ef.employee_id
+               INNER JOIN  employee_role er on e.employee_id = er.employee_id
+               INNER JOIN company_roles cr on er.company_role_id = cr.company_role_id
+               set
+               e.active_employee = ?,
+               ef.employee_first_name =?,
+               ef.employee_last_name = ?,
+               ef.employee_phone = ?,
+               er.company_role_id = ?
+               where e.employee_email = ?
+              `;
+        const [updated]= await conn.query(sql, empInfo)
+    return updated.changedRows;
 
 }
 const getEmployeeById = async (employee_id) => {
-    console.log(employee_id)
-    const sql = `SELECT e.employee_id, e.employee_email, ei.employee_first_name, ei.employee_last_name, ei.employee_phone, er.company_role_id, ep.employee_password_hashed
+    const sql = `SELECT e.employee_id, e.active_employee, e.employee_email, ei.employee_first_name, ei.employee_last_name, ei.employee_phone, er.company_role_id
     FROM employee e
     INNER JOIN employee_info ei ON e.employee_id = ei.employee_id
     INNER JOIN employee_role er ON e.employee_id = er.employee_id
-    INNER JOIN employee_pass ep ON e.employee_id = ep.employee_id
     WHERE e.employee_id = ?`
     const [employee] = await conn.query(sql, [employee_id]);
-    if (employee.length > 0) {
-        console.log(employee)
-        return 'abe'
-    }
-    else {
-        console.log('employee not')
-        return 'x'
-
-    }
+    return employee.length > 0 ? employee : null
+   
 }
 module.exports = {
     checkIfEmployeeExists,

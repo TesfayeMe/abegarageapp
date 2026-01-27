@@ -9,7 +9,8 @@ const router = express.Router();
 router.post('/api/employee', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.addEmployee);
 //route to get all employees
 router.get('/api/employees', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.getAllEmployees);
-router.get('/api/employee/:id', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.getEmployeeById);
+router.get('/api/employee/:employeeId',  employeeController.getEmployeeById);
+// router.get('/api/employee/:id', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.getEmployeeById);
 //edit employee 
 //edit employee 
 router.put('/api/edit-employee', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.updateEmployee);

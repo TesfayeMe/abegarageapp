@@ -43,30 +43,45 @@ const getAllEmployees = async (req, res, next) => {
     }
 }
 const updateEmployee = async (req, res, next) => {
-    // console.log(req.body.employee_id)
-    let employee_id = req.body.employee_id;
-    if (employee_id) {
-        const editedEmployee = await employeeService.updateEmployee(employee_id);
-        if (editedEmployee) {
-            console.log('edited', editedEmployee)
-            res.send(employee_id)
+    //  console.log(req.body);
+     let employeeInfo = req.body;
+    // let employee_id = req.body.employee_id;
+    
+        const editedEmployeeRows = await employeeService.updateEmployee(employeeInfo);
+        if (editedEmployeeRows > 0) {
+            res.status(200).json({
+                status: 'success',
+                message: 'updated'
+            })
         }
         else {
-            console.log('employee not updated')
+            console.log('employee not updated');
+            res.status(400).json({
+                status: 'fail',
+                message: 'failed to updated'
+            })
         }
     }
-    else {
-        console.log('error')
-        res.send('error')
-        return res.status(400).json({
-            status: 'fail',
-            message: "internal server error"
-        })
-    }
-}
+ 
+
 const getEmployeeById = async (req, res, next) => {
-    let employee_id = req.params.id;
-    const employee = await employeeService.getEmployeeById(employee_id);
-    console.log(employee);
+    let {employeeId} = req.params;
+    const employee = await employeeService.getEmployeeById(employeeId);
+    // console.log(employee);
+    if(!employee)
+    {
+res.status(400).json({
+    status: 'fail',
+    message : 'No employee with this id'
+})
+    }
+    else
+    {
+res.status(200).json({
+    status: 'success',
+    message: 'success',
+    data: employee
+})
+    }
 }
 module.exports = { addEmployee, getAllEmployees, updateEmployee, getEmployeeById };

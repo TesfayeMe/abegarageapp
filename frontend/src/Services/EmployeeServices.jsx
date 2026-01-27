@@ -25,6 +25,17 @@ const getAllEmployees = async (token) => {
   return response;
   
 }
-
-const EmployeeServices = {createEmployee, getAllEmployees};
+const updateEmployee = async (newEmployeeInfo, token) => {
+  const requestOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'Application/json',
+      'x-access-token': token
+    },
+    body: JSON.stringify(newEmployeeInfo)
+  }
+  const response = await fetch(`${api_url}/api/edit-employee`, requestOptions);
+  return response;
+}
+const EmployeeServices = {createEmployee, getAllEmployees, updateEmployee};
 export default EmployeeServices
