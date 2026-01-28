@@ -16,11 +16,16 @@ const verifyToken = async (req, res, next) => {
     else {
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
+                if(err.name === 'TokenExpiredError')
+                {
+
+                    console.log('Token', err);
+                }
                 console.log('Unauthorized!', err);
 
                 return res.status(401).send({
-                    status: "fail",
-                    message: 'Unauthorized!'
+                    status: "tokenExpired",
+                    message: 'tokenExpired!'
                 })
             }
             else {

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./AddEmployeeForm.css";
 import EmployeeServices from "../../../../Services/EmployeeServices";
-import {useAuth} from '../../../../Context/AuthContext'
+import {useAuth} from '../../../../Context/AuthContext';
+import {useNavigate} from 'react-router-dom'
 const AddEmployeeForm = () => {
   //state to hold form data fro each one by one
   const [employee_first_name, setEmployeeFirstName] = useState("");
@@ -19,6 +20,8 @@ const AddEmployeeForm = () => {
   const [phone_error, setPhoneError] = useState("");
   const [role_error, setRoleError] = useState("");
   const [password_error, setPasswordError] = useState("");
+
+  const navigate = useNavigate();
   let loginEmployeeToken = '';
   const {employee} = useAuth();
   if(employee && employee?.employee_token)
@@ -101,16 +104,23 @@ const AddEmployeeForm = () => {
     try {
       const newEmployee = await EmployeeServices.createEmployee(formData, loginEmployeeToken);
       const data = await newEmployee.json();
-      console.log("Success:", data);
-      if (data.error) {
-        setServerError(data.error);
-      } else {
+      console.log("Data:", data);
+      if(data.status === 'success')
+      {
         setSuccess(true);
-        setServerError("");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
+          setServerError("");
+          setTimeout(() => {
+              window.location.href = "/";
+            }, 1000);
+        }
+        else if(data.status === 'tokenExpired')
+          {
+        setServerError(data.error);
+        localStorage.removeItem('employee');
+        navigate('/login')
+
       }
+      
     } catch (error) {
       console.log(error);
     }

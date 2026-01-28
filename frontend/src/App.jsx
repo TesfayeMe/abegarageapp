@@ -17,14 +17,6 @@ import Employees from './Markup/Pages/Admin/Employees';
 import { useAuth } from './Context/AuthContext'
 import EditEmployee from './Markup/Components/Admin/EditEmployee/EditEmployee'
 function App() {
-
-  let y = 3;
-  if (y === 2) {
-    return (<div>
-      <h1>Not logged in</h1>
-    </div>)
-  }
-  else
     return (
       <>
         <Header />

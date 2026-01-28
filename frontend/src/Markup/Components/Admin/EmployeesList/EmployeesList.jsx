@@ -26,8 +26,7 @@ const EmployeesList = () => {
         const allEmployees = EmployeeServices.getAllEmployees(token);
         allEmployees.then((res) => {
 
-            if (!res.ok) {
-                console.log(res.status);
+            if (!res.ok ) {
                 setApiError(true);
                 if (res.status === 401) {
                     setApiErrorMessage('Please login again');
@@ -37,14 +36,19 @@ const EmployeesList = () => {
                 }
                 else {
                     setApiErrorMessage("Please try again");
-
+                    
                 }
             }
             return res.json();
-
+            
         }).then((emp) => {
+            
+            if(emp.status === 'tokenExpired')
+            {
 
-            console.log(emp);
+                localStorage.removeItem('employee');
+                navigate('/login')
+            }
             setEmployees(emp.data);
 
 
@@ -83,7 +87,7 @@ const EmployeesList = () => {
                 </thead>
                 <tbody>
                     {
-                        employees.map((employee) => (
+                        employees?.map((employee) => (
                             <tr key={employee.employee_id}>
                                 <td>{employee.active_employee === 1 ? 'Yes' : 'No'}</td>
                                 <td>{employee.employee_first_name}</td>

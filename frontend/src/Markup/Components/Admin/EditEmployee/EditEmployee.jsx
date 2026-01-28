@@ -75,9 +75,10 @@ const handleEdit = async (e) => {
             // alert(' success')
             navigate('/admin/employees');
         }
-        else
+        else if(data.status === 'tokenExpired')
         {
-            alert('not success')
+            localStorage.removeItem('employee')
+            navigate('/login')
         }
     }
 }

@@ -7,13 +7,12 @@ const createEmployee = async(formData, loginEmployeeToken) => {
         
         body: JSON.stringify(formData)
     };
-    const response = await fetch(`${api_url}/api/employee`, requestOptions);
+    const response = await fetch(`${api_url}/api/add-employee`, requestOptions);
   return response;
 }
 
 // a function to get all employees
 const getAllEmployees = async (token) => {
-  console.log(token);
   const requestOptions = {
     method: 'GET',
     headers: {
@@ -35,6 +34,7 @@ const updateEmployee = async (newEmployeeInfo, token) => {
     body: JSON.stringify(newEmployeeInfo)
   }
   const response = await fetch(`${api_url}/api/edit-employee`, requestOptions);
+  console.log(response);
   return response;
 }
 const EmployeeServices = {createEmployee, getAllEmployees, updateEmployee};

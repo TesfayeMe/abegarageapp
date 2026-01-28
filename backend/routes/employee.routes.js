@@ -6,12 +6,12 @@ const authMiddleWare = require('../middlewares/auth.middleware')
 //import router
 const router = express.Router();
 //route to add a new employee
-router.post('/api/employee', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.addEmployee);
+router.post('/api/add-employee', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.addEmployee);
 //route to get all employees
 router.get('/api/employees', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.getAllEmployees);
-router.get('/api/employee/:employeeId',  employeeController.getEmployeeById);
-// router.get('/api/employee/:id', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.getEmployeeById);
-//edit employee 
+//get employee by id
+router.get('/api/employee/:employeeId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.getEmployeeById);
+
 //edit employee 
 router.put('/api/edit-employee', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.updateEmployee);
 //export the router
