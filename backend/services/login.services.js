@@ -43,7 +43,7 @@ async function loginUser(employeeData) {
     }
     
   } catch (error) {
-    console.log(error);
+    console.log("error:", error);
   }
 }
 module.exports = {

@@ -5,12 +5,19 @@ import AdminMenu from "../../../Components/Admin/AdminMenu/AdminMenu";
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import EmployeeServices from "../../../../Services/EmployeeServices";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 const EditEmployee = () => {
     const [employeeInfo, setEmployeeInfo] = useState([]);
     const location = useLocation();
     const employeeId = location.state?.employee_id;
     const navigate = useNavigate();
+    let editEmployeeToken = '';
+    const {employee} = useAuth();
+    if(employee && employee?.employee_token)
+    {
+      editEmployeeToken = employee.employee_token;
+    }
+
     useEffect(() => {
         const fetchEmployeeDetails = async () => {
             try {
@@ -18,6 +25,7 @@ const EditEmployee = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'x-access-token': editEmployeeToken
                     },
                 });
                 const data = await response.json();
@@ -43,12 +51,7 @@ setActiveEmployee(employeeInfo.active_employee);
 },[employeeInfo])
 
 
-let editEmployeeToken = '';
-  const {employee} = useAuth();
-  if(employee && employee?.employee_token)
-  {
-    editEmployeeToken = employee.employee_token;
-  }
+
 
 //handle edit form submit
 const handleEdit = async (e) => {

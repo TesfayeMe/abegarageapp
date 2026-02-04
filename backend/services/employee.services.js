@@ -101,9 +101,9 @@ const getAllEmployeesList = async () => {
     return rows.length > 0 ? rows : null;
 }
 
-const updateEmployee = async (empolyeeInfo) => {  
+const updateEmployee = async (employeeInfo) => {  
 
-  const {employee_email, employee_first_name, employee_last_name, employee_phone, employee_role, active_employee} = empolyeeInfo;
+  const {employee_email, employee_first_name, employee_last_name, employee_phone, employee_role, active_employee} = employeeInfo;
   const empInfo = [active_employee,employee_first_name,employee_last_name,employee_phone, employee_role, employee_email];
   const sql = `update employee e
                INNER JOIN  employee_info ef on e.employee_id = ef.employee_id
@@ -131,6 +131,13 @@ const getEmployeeById = async (employee_id) => {
     return employee.length > 0 ? employee : null
    
 }
+
+const deleteEmployee = async (employee_id) => {
+    const sql = `DELETE FROM employee WHERE employee_id = ?`;
+    const [deletedRows] = await conn.query(sql, [employee_id]);
+    return deletedRows.affectedRows;
+}
+
 module.exports = {
     checkIfEmployeeExists,
     createEmployee,
@@ -138,5 +145,6 @@ module.exports = {
     getEmployeeRoleByEmail,
     getAllEmployeesList,
     updateEmployee,
-    getEmployeeById
+    getEmployeeById,
+    deleteEmployee
 };

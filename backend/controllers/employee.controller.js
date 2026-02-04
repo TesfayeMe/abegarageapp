@@ -3,7 +3,7 @@ const express = require('express');
 //import service functions
 const employeeService = require('../services/employee.services');
 const addEmployee = async (req, res, next) => {
-    console.log(req.headers);
+    // console.log(req.headers);
     const employee = await employeeService.checkIfEmployeeExists(req.body.employee_email);
     if (employee) {
         return res.status(400).json({ error: 'Employee with this email already exists' });
@@ -18,11 +18,11 @@ const addEmployee = async (req, res, next) => {
             }
             else {
 
-                res.status(201).json({ success: 'true' });
+                res.status(201).json({ success: true});
             }
         }
         catch (error) {
-            console.log(error);
+            console.log('error:', error);
             res.status(500).json({ message: 'Something went wrong', error: error.message });
         }
     }
@@ -84,4 +84,22 @@ res.status(200).json({
 })
     }
 }
-module.exports = { addEmployee, getAllEmployees, updateEmployee, getEmployeeById };
+const deleteEmployee = async (req, res, next) => {
+    let {employeeId} = req.params;
+    const deletedEmployeeRows = await employeeService.deleteEmployee(employeeId);
+    if (deletedEmployeeRows > 0) {
+        res.status(200).json({
+            status: 'success',
+            message: 'deleted'
+        })
+    }
+    else {
+        console.log('employee not deleted');
+        res.status(400).json({
+            status: 'fail',
+            message: 'failed to delete'
+        })
+    }
+}
+    
+module.exports = { addEmployee, getAllEmployees, updateEmployee, getEmployeeById, deleteEmployee };

@@ -37,5 +37,17 @@ const updateEmployee = async (newEmployeeInfo, token) => {
   console.log(response);
   return response;
 }
-const EmployeeServices = {createEmployee, getAllEmployees, updateEmployee};
+const deleteEmployee = async (employee_id, token) => {
+  const requestOptions = {
+    method: 'DELETE', 
+    headers: {
+      'Content-Type': 'Application/json',
+      'x-access-token': token
+    },
+    body: JSON.stringify({ employee_id })
+  }
+  const response = await fetch(`${api_url}/api/delete-employee/${employee_id}`, requestOptions);
+  return response;
+}
+const EmployeeServices = {createEmployee, getAllEmployees, updateEmployee, deleteEmployee};
 export default EmployeeServices

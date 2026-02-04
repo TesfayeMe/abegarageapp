@@ -5,15 +5,18 @@ import EmployeeServices from "../../../../Services/EmployeeServices";
 import { format } from 'date-fns';
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { useNavigate } from 'react-router-dom';
+import { href, useNavigate } from 'react-router-dom';
 import EditEmployee from "../EditEmployee/EditEmployee";
+import './employeeList.css';
 const EmployeesList = () => {
 
     const [employees, setEmployees] = useState([]);
     const [apiError, setApiError] = useState(false);
     const [apiErrorMessage, setApiErrorMessage] = useState(null)
     const [editEmployee, setEditEmployee] = useState(false);
+    const [employeeDeleted, setEmployeeDeleted] = useState(false);
     const [deleteEmployee, setDeleteEmployee] = useState(false);
+    const [empid, setEmpid] = useState(null);
     const navigate = useNavigate();
 
     const { employee } = useAuth();
@@ -62,10 +65,45 @@ const EmployeesList = () => {
 
     }
     const handleDelete = (a) => {
-        setDeleteEmployee(true)
-        setEditEmployee(false);
-        alert('delete' + a)
+    setDeleteEmployee(true)
+    setEmpid(a);
     }
+    useEffect(()=>{
+    if(employeeDeleted)
+    {
+        const deleteEmp = EmployeeServices.deleteEmployee(empid, token);
+        deleteEmp.then((res) => {
+            if (!res.ok) {
+                setApiError(true);
+                if (res.status === 401) {
+                    setApiErrorMessage('Please login again');
+                }
+                else if (res.status === 403) {
+                    setApiErrorMessage("You are not authorized to view this page");
+                }
+                else {
+                    setApiErrorMessage("Please try again");
+                    
+                }
+            }
+            return res.json();
+            
+        }).then((data) => {
+            if(data.status === 'tokenExpired')
+            {
+
+                localStorage.removeItem('employee');
+                navigate('/login')
+            }
+            console.log(data);
+        })
+        .catch((err) => {
+            console.log(err);
+        })     
+        setEmployeeDeleted(false);     
+        window.location.href = "/admin/employees";
+    }
+    }, [employeeDeleted])
     return (
         <div>
 
@@ -109,7 +147,16 @@ const EmployeesList = () => {
 
                 </tbody>
             </Table>
+<div className="confirm-delete-controller">
+            {deleteEmployee && <div className="confirm-delete-modal">
+                <h4>Are you sure you want to delete this employee?</h4>
+                <div className="confirm-delete-buttons">
+                    <Button variant="danger" style={{ marginRight: '10px' }} onClick={() => {setDeleteEmployee(false); setEmployeeDeleted(true);}}>Yes</Button>
+                <Button variant="secondary" onClick={() => {setDeleteEmployee(false); setEmployeeDeleted(false);}}>No</Button>
+                </div>
+            </div>}
 
+</div>
 
         </div>
     )

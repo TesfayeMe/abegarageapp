@@ -14,5 +14,7 @@ router.get('/api/employee/:employeeId', [authMiddleWare.verifyToken, authMiddleW
 
 //edit employee 
 router.put('/api/edit-employee', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.updateEmployee);
+//delete employee 
+router.delete('/api/delete-employee/:employeeId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], employeeController.deleteEmployee);
 //export the router
 module.exports = router;

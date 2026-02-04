@@ -105,8 +105,8 @@ const AddEmployeeForm = () => {
       const newEmployee = await EmployeeServices.createEmployee(formData, loginEmployeeToken);
       const data = await newEmployee.json();
       console.log("Data:", data);
-      if(data.status === 'success')
-      {
+      if(data.success === true)
+        {
         setSuccess(true);
           setServerError("");
           setTimeout(() => {
