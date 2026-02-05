@@ -5,6 +5,7 @@ import LoginServices from '../../../Services/LoginServices'
 import { Link } from 'react-router-dom'
 const Header = (props) => {
     const {isLoggedIn, setIsLoggedIn, employee} = useAuth();
+    console.log(employee);
    const logOut = () =>{
     LoginServices.logOut();
     setIsLoggedIn(false);
@@ -62,6 +63,7 @@ const Header = (props) => {
                                             <li className="dropdown"><a href="/services">Services</a>
                                             </li>
                                             <li><a href="/contact">Contact Us</a></li>
+{isLoggedIn && employee?.employee_role === 3 &&<li><a href="/admin/dashboard">Admin</a></li>}
                                         </ul>
                                     </div>
                                 </nav>

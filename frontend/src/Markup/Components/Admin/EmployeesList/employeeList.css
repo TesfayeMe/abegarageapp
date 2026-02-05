@@ -24,3 +24,20 @@
     gap: 10px;
     width: 100%;
 }
+.api-success-message
+{
+    color: #077a07;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: #d5f8e3;
+    padding: 25px;
+    border-radius: 5px;
+    text-align: center;
+    align-items: center;
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid #a4f7a4;
+
+}

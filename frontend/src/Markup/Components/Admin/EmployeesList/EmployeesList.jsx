@@ -17,6 +17,7 @@ const EmployeesList = () => {
     const [employeeDeleted, setEmployeeDeleted] = useState(false);
     const [deleteEmployee, setDeleteEmployee] = useState(false);
     const [empid, setEmpid] = useState(null);
+    const [employeeDeletedMessage, setEmployeeDeletedMessage] = useState(false);
     const navigate = useNavigate();
 
     const { employee } = useAuth();
@@ -72,7 +73,9 @@ const EmployeesList = () => {
     if(employeeDeleted)
     {
         const deleteEmp = EmployeeServices.deleteEmployee(empid, token);
+        console.log(deleteEmp);
         deleteEmp.then((res) => {
+            console.log(res);
             if (!res.ok) {
                 setApiError(true);
                 if (res.status === 401) {
@@ -96,12 +99,17 @@ const EmployeesList = () => {
                 navigate('/login')
             }
             console.log(data);
+            setEmployeeDeleted(false);    
         })
         .catch((err) => {
             console.log(err);
         })     
-        setEmployeeDeleted(false);     
-        window.location.href = "/admin/employees";
+        setEmployeeDeletedMessage(true);
+        setTimeout(() => {
+            window.location.href = "/admin/employees";
+        setEmployeeDeletedMessage(false);
+
+        }, 2000);
     }
     }, [employeeDeleted])
     return (
@@ -147,7 +155,6 @@ const EmployeesList = () => {
 
                 </tbody>
             </Table>
-<div className="confirm-delete-controller">
             {deleteEmployee && <div className="confirm-delete-modal">
                 <h4>Are you sure you want to delete this employee?</h4>
                 <div className="confirm-delete-buttons">
@@ -156,7 +163,15 @@ const EmployeesList = () => {
                 </div>
             </div>}
 
+<div className="api-error-message">
+{apiErrorMessage && <p className="error-message">{apiErrorMessage}</p>}
 </div>
+{employeeDeletedMessage && 
+<div className="api-success-message">
+<span className="success-message">Employee deleted successfully</span>
+
+</div>
+}
 
         </div>
     )

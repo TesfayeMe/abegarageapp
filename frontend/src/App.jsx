@@ -16,6 +16,7 @@ import Customers from './Markup/Pages/Admin/Customers';
 import Employees from './Markup/Pages/Admin/Employees';
 import { useAuth } from './Context/AuthContext'
 import EditEmployee from './Markup/Components/Admin/EditEmployee/EditEmployee'
+import Dashboard from './Markup/Pages/Admin/Dashboard'
 function App() {
     return (
       <>
@@ -25,6 +26,7 @@ function App() {
           <Route path='/unauthorized' element={<Unauthorized />} />
           <Route path='/login' element={<Login />} />
           <Route path='/admin/add-employee' element={<PrivateAuthRoute roles={[3]}><AddEmployee /></PrivateAuthRoute>} />
+          <Route path='/admin/dashboard' element={<PrivateAuthRoute roles={[3]}><Dashboard /></PrivateAuthRoute>} />
           <Route path='/admin/orders' element={<PrivateAuthRoute roles={[1, 2, 3]}><Orders /></PrivateAuthRoute>} />
           <Route path='/admin/customers' element={<PrivateAuthRoute roles={[2, 3]}><Customers /></PrivateAuthRoute>} />
           <Route path='/admin/employees' element={<Employees />} />

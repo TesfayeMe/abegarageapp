@@ -133,9 +133,36 @@ const getEmployeeById = async (employee_id) => {
 }
 
 const deleteEmployee = async (employee_id) => {
-    const sql = `DELETE FROM employee WHERE employee_id = ?`;
-    const [deletedRows] = await conn.query(sql, [employee_id]);
-    return deletedRows.affectedRows;
+    const sqlrole = `DELETE FROM employee_role WHERE employee_id = ?`;
+    const sqlinfo = `DELETE FROM employee_info WHERE employee_id = ?`;
+    const sqlpass = `DELETE FROM employee_pass WHERE employee_id = ?`;
+    const sqlemp = `DELETE FROM employee WHERE employee_id = ?`;
+
+    const [deletedRoleRows] = await conn.query(sqlrole, [employee_id]);
+    if(deletedRoleRows.affectedRows === 0)
+    {
+        return 0;
+    }
+else
+{
+    const [deletedInfoRows] = await conn.query(sqlinfo, [employee_id]);
+    if(deletedInfoRows.affectedRows === 0)
+    {
+        return 0;
+    }
+    else
+    {   
+    const [deletedPassRows] = await conn.query(sqlpass, [employee_id]);
+    if(deletedPassRows.affectedRows === 0)
+    {
+        return 0;
+    }
+    else
+    {
+    const [deletedEmployeeRows] = await conn.query(sqlemp, [employee_id]);
+    return deletedEmployeeRows.affectedRows;
+    }
+}}
 }
 
 module.exports = {
