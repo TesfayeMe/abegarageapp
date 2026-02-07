@@ -63,12 +63,11 @@ const CustomersList = () => {
     console.log(customers)
     const handleEdit = (id) => {
 
-        alert(id)
-<<<<<<< HEAD
-=======
+        // alert(id)
+
          navigate('/admin/edit-customer', { state: { customer_id: id } });
 
->>>>>>> 2f6388e6d3b4c6050965ae3ec836b59e977e8e13
+
     }
     const handleDelete = (id) => {
         alert(id)
@@ -76,11 +75,8 @@ const CustomersList = () => {
     return (
         <div>
 
-<<<<<<< HEAD
             <h2>Abe Garage Ustomers </h2>
-=======
-            <h2>Abe Garage Customers </h2>
->>>>>>> 2f6388e6d3b4c6050965ae3ec836b59e977e8e13
+
             <br />
             <Table striped bordered hover>
 

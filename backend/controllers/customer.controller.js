@@ -39,7 +39,47 @@ const getAllCustomers = async (req, res, next) => {
         })
     }
 }
+
+const getCustomerById = async (req, res, next) => {
+    const { customerId } = req.params
+    console.log(customerId)
+    const customer = await customerService.getCustomerById(customerId);
+    if (!customer) {
+        res.status(400).json({
+            status: false,
+            messsage: 'No such customer'
+        })
+    }
+    else {
+        return res.status(200).json({
+            status: true,
+            data: customer
+        })
+    }
+}
+
+const editCustomer = async (req, res, next) => {
+const custinfo = req.body;
+    const editcustomer = customerService.editCustomer(custinfo);
+    if (!editcustomer)
+    {
+return res.status(400).json({
+    status: false,
+    message: 'failed to update'
+})
+    }
+    else
+    {
+        console.log(editcustomer)
+        return res.status(200).json({
+            status: true,
+            message: 'updated'
+        })
+    }
+}
 module.exports = {
     addCustomer,
-    getAllCustomers
+    getAllCustomers,
+    editCustomer,
+    getCustomerById,
 }

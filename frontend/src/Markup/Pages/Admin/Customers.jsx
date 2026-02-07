@@ -13,10 +13,6 @@ const Customers = () => {
             <div className="row">
               <div className="col-md-3 admin-left-side w-100" style={{ backgroundColor: '#091435' }}>
                 <AdminMenu />
-<<<<<<< HEAD
-                <p>aaa</p>
-=======
->>>>>>> 2f6388e6d3b4c6050965ae3ec836b59e977e8e13
               </div>
               <div className="col-md-9 admin-right-side">
                 <CustomersList />

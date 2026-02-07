@@ -6,7 +6,12 @@ const authMiddleWare = require('../middlewares/auth.middleware')
 //import router
 const router = express.Router();
 //route to add a new customer
-router.get('/api/customers', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.getAllCustomers);
 router.post('/api/add-customer', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.addCustomer);
+//view customers
+router.get('/api/customers', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.getAllCustomers);
+//edit customer
+router.get('/api/customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.getCustomerById);
+//edit customer
+router.put('/api/edit-customer', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.editCustomer);
 //export the router
 module.exports = router;

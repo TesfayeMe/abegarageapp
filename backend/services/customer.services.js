@@ -70,7 +70,33 @@ const allCustomers = async () => {
     // console.log(customers)
     return customers.length > 0 ? customers : null
 }
+const getCustomerById = async (customerid) => {
+    const getCustSql = `select * from customer_identifier cid 
+                          INNER JOIN customer_info cin ON  cid.customer_id = cin.customer_id where cid.customer_id = ?`;
+    const [selectedCust] = await conn.query(getCustSql, [customerid]);
+    console.log(selectedCust)
+    return selectedCust.length > 0 ? selectedCust[0] : null;
+}
+
+const editCustomer = async (custinfo) => {
+    const { fistname, lastname, phonenumber, custstatus, customerid } = custinfo;
+    const sqlupdate = `update  customer_identifier cid
+                       INNER JOIN customer_info cin ON cid.customer_id=cin.customer_id
+                        set 
+                        cid.customer_phone_number =?, 
+                        cin.customer_first_name =?,
+                        cin.customer_last_name =?,
+                        cin.active_customer_status =?
+                        where cid.customer_id = ?`;
+    const editedCust = await conn.query(sqlupdate, [phonenumber, fistname, lastname, custstatus, customerid]);
+    // console.log(editedCust)
+    return editedCust.affectedRows > 0 ? editedCust.affectedRows : null
+
+
+}
 module.exports = {
     createCustomer,
-    allCustomers
+    allCustomers,
+    getCustomerById,
+    editCustomer
 }

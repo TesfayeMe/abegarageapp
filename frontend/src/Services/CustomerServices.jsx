@@ -23,8 +23,23 @@ const getAllCustomers = async (employee_token) => {
   })
   return customers;
 }
+
+const editCustomer = async (customerinfo, employee_token) => {
+  const response = await fetch(`${apiUrl}/api/edit-customer`, {
+    method: 'PUT',
+    headers: {
+      'Content-type': 'application/json',
+      'x-access-token': employee_token
+    },
+    body: JSON.stringify(customerinfo)
+  }
+  )
+  console.log(response)
+  return response;
+}
 const CustomerServices = {
   createCustomer,
-  getAllCustomers
+  getAllCustomers,
+  editCustomer
 }
 export default CustomerServices
