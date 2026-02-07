@@ -30,18 +30,17 @@ async function loginUser(employeeData) {
       };
       return returnData;
     }
-    else
-    {
-//if passwords match, return employee data
-    returnData = {
-      status: "success",
-      message: "Login successful",
-      data: employee,
-    };
-    // console.log(returnData);
-    return returnData;
+    else {
+      //if passwords match, return employee data
+      returnData = {
+        status: "success",
+        message: "Login successful",
+        data: employee,
+      };
+      // console.log(returnData);
+      return returnData;
     }
-    
+
   } catch (error) {
     console.log("error:", error);
   }
