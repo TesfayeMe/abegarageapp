@@ -1,9 +1,9 @@
-import React from 'react'
 import { useAuth } from "../../../Context/AuthContext";
 import LoginForm from "../../Components/LoginForm/LoginForm";
 import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
-import CustomersList from '../../Components/Admin/CustomersList/CustomersList'
-const Customers = () => {
+import EditCustomer from '../../Components/Admin/EditCustomer/EditCustomer'
+
+const EditCustomers = () => {
   const { isLoggedIn, isAdmin } = useAuth();
   if (isLoggedIn) {
     if (isAdmin) {
@@ -15,7 +15,7 @@ const Customers = () => {
                 <AdminMenu />
               </div>
               <div className="col-md-9 admin-right-side">
-                <CustomersList />
+                <EditCustomer />
               </div>
             </div>
           </div>
@@ -40,4 +40,4 @@ const Customers = () => {
   }
 }
 
-export default Customers
+export default EditCustomers

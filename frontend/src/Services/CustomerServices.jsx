@@ -12,7 +12,19 @@ const createCustomer = async (customerData, employeeToken) => {
   });
   return response;
 }
+
+const getAllCustomers = async (employee_token) => {
+  const customers = await fetch(`${apiUrl}/api/customers`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': employee_token,
+    }
+  })
+  return customers;
+}
 const CustomerServices = {
   createCustomer,
+  getAllCustomers
 }
 export default CustomerServices
