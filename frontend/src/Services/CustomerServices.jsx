@@ -37,9 +37,23 @@ const editCustomer = async (customerinfo, employee_token) => {
   console.log(response)
   return response;
 }
+
+const deleteCustomer = async (customer_id, employee_token) => {
+  const response = await fetch(`${apiUrl}/api/delete-customer/${customer_id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-type': 'application/json',
+      'x-access-token': employee_token
+    }
+  }
+  )
+  console.log(response)
+  return response;
+}
 const CustomerServices = {
   createCustomer,
   getAllCustomers,
-  editCustomer
+  editCustomer,
+  deleteCustomer
 }
 export default CustomerServices

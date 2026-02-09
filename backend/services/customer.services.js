@@ -94,9 +94,32 @@ const editCustomer = async (custinfo) => {
 
 
 }
+
+const deleteCustomer = async (customerid) => {
+    const sqldeletecin = `delete from customer_info where customer_id = ?`;
+    const deletedCustInfo = await conn.query(sqldeletecin, [customerid]);
+    if(deletedCustInfo[0].affectedRows === 0)
+    {
+        return null;
+    }
+    else if(deletedCustInfo[0].affectedRows > 0)
+    {
+        const sqldeletecid = `delete from customer_identifier where customer_id = ?`;
+        const deletedCustId = await conn.query(sqldeletecid, [customerid]);
+        if(!deletedCustId[0].affectedRows)        {
+            return null;
+        }
+        else if(deletedCustId[0].affectedRows > 0)
+        {
+            return deletedCustInfo[0].affectedRows;
+        }
+    }
+}
+
 module.exports = {
     createCustomer,
     allCustomers,
     getCustomerById,
-    editCustomer
+    editCustomer,
+    deleteCustomer
 }

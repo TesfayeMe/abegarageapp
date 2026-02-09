@@ -7,6 +7,7 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { href, useNavigate } from 'react-router-dom';
 import CustomerServices from "../../../../Services/CustomerServices";
+import './customerlist.css';
 
 const CustomersList = () => {
 
@@ -70,8 +71,37 @@ const CustomersList = () => {
 
     }
     const handleDelete = (id) => {
-        alert(id)
+        // alert(id)
+        deleteCustomer ? setDeleteCustomer(false) : setDeleteCustomer(true);
+        setCustid(id);
     }
+    useEffect(() => {
+        if (customerDeleted) {
+            const deleteCustomerApi = async () => {
+                const deletedCustomer = await CustomerServices.deleteCustomer(custid, token);
+                const data = await deletedCustomer.json();
+                if (data.status === true) {
+                    setDeleteCustomer(false);
+                    setCustomerDeletedMessage(true);
+                    setTimeout(() => {
+                        setCustomerDeletedMessage(false);
+                    }, 2000);
+                    const updatedCustomers = customers.filter((customer) => customer.customer_id !== custid);
+                    setCustomers(updatedCustomers);
+                }
+                else if (data.message === 'token expired') {
+                    localStorage.removeItem('employee');
+                    navigate('/login')
+                }
+                else {
+                    alert('Failed to delete customer. Please try again.');
+                }
+                setCustomerDeleted(false); 
+            }
+            deleteCustomerApi();
+        }
+
+    }, [customerDeleted])
     return (
         <div>
 
@@ -116,23 +146,22 @@ const CustomersList = () => {
 
                 </tbody>
             </Table>
-            {/* {deleteEmployee && <div className="confirm-delete-modal">
-                <h4>Are you sure you want to delete this employee?</h4>
+            {deleteCustomer && <div className="confirm-delete-modal">
+                <h4>Are you sure you want to delete this customer?</h4>
                 <div className="confirm-delete-buttons">
-                    <Button variant="danger" style={{ marginRight: '10px' }} onClick={() => { setDeleteEmployee(false); setEmployeeDeleted(true); }}>Yes</Button>
-                    <Button variant="secondary" onClick={() => { setDeleteEmployee(false); setEmployeeDeleted(false); }}>No</Button>
+                    <button className="proceed-delete-btn" style={{ marginRight: '10px' }} onClick={() => { setDeleteCustomer(false); setCustomerDeleted(true); }}>Delete</button>
+                    <button className="cancel-btn" onClick={() => { setDeleteCustomer(false); setCustomerDeleted(false); }}>Cancel</button>
                 </div>
             </div>}
 
             <div className="api-error-message">
                 {apiErrorMessage && <p className="error-message">{apiErrorMessage}</p>}
             </div>
-            {employeeDeletedMessage &&
+            {customerDeletedMessage &&
                 <div className="api-success-message">
-                    <span className="success-message">Employee deleted successfully</span>
-
+                    <span className="success-message">Customer deleted successfully</span>
                 </div>
-            } */}
+            }
 
         </div>
 

@@ -77,9 +77,27 @@ return res.status(400).json({
         })
     }
 }
+const deleteCustomer = async (req, res, next) => {
+    const { customerId } = req.params;
+    console.log(customerId);
+    const deletedCustomer = await customerService.deleteCustomer(customerId);
+    if (!deletedCustomer) {
+        return res.status(400).json({
+            status: false,
+            message: 'Failed to delete customer'
+        })
+    }
+    else {
+        return res.status(200).json({
+            status: true,
+            message: 'Customer deleted successfully'
+        })
+    }
+}
 module.exports = {
     addCustomer,
     getAllCustomers,
     editCustomer,
     getCustomerById,
+    deleteCustomer
 }

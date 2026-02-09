@@ -10,6 +10,7 @@ import { PiFilePlus } from "react-icons/pi";
 import { RxBarChart } from "react-icons/rx";
 import { PiShieldCheckThin } from "react-icons/pi";
 import { LuMessageSquare } from "react-icons/lu";
+import { GrDocumentUser } from "react-icons/gr";
 import './dashboards.css'
 const Dashboards = () => {
   const dashboardItems = [
@@ -40,6 +41,13 @@ const Dashboards = () => {
       title_of_card: 'VIEW CUSTOMERS',
       body_text: 'VIEW CUSTOMERS',
       card_icon: <PiUsersFourThin size={30} />,
+    },
+    {
+      accessed_by: ['all'],
+      access_link: '/admin/customer-profile',
+      title_of_card: 'VIEW CUSTOMER PROFILE',
+      body_text: 'VIEW CUSTOMER PROFILE',
+      card_icon: <GrDocumentUser size={30} />,
     },
     {
       accessed_by: ['all'],

@@ -14,4 +14,6 @@ router.get('/api/customer/:customerId', [authMiddleWare.verifyToken, authMiddleW
 //edit customer
 router.put('/api/edit-customer', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.editCustomer);
 //export the router
+router.delete('/api/delete-customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.deleteCustomer);
+//export the router
 module.exports = router;

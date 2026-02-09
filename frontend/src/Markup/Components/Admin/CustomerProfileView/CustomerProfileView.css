@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.customer-profile-view-container
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    position: relative;
+}
+.customer-profile-vertical-line
+{
+    width: 1px;
+    height: 100%;
+    background-color: #e4dfdf;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    margin-left: 32px;
+}
+.customer-profile-view-right
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    
+}
+.customer-profile-view-right-customer-details, .customer-profile-view-right-vehicle-details, .customer-profile-view-right-order-details
+{
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+    
+}
+.customer-profile-view-right-pointer-circle-end
+{
+   background-color: #F6F7FA;
+   z-index: 1;
+}
+.customer-profile-view-right-pointer-circle, .customer-profile-view-right-order-pointer-circle-inner
+{
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #EE0D0A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 17px;
+    z-index: 1;
+    padding: 10px;
+}
+.customer-profile-view-right-customer-details-content, .customer-profile-view-right-vehicle-details-content, .customer-profile-view-right-order-details-content
+{
+    
+    padding-left: 20px;
+}
+.message-of-no-vehicle-found
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+}
