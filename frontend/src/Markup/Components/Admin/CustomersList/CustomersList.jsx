@@ -102,14 +102,15 @@ const CustomersList = () => {
         }
 
     }, [customerDeleted])
+const handleCustomerProfileView = (id) => {
+    navigate('/admin/customer-profile', { state: { customer_id: id } });
+    
+}
     return (
         <div>
-
-            <h2>Abe Garage Ustomers </h2>
-
+            <h2>Abe Garage Customers </h2>
             <br />
             <Table striped bordered hover>
-
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -125,7 +126,7 @@ const CustomersList = () => {
                 <tbody>
                     {
                         customers?.map((customer) => (
-                            <tr key={customer.customer_id}>
+                            <tr key={customer.customer_id} onClick={() => handleCustomerProfileView(customer.customer_id)} style={{ cursor: 'pointer' }}>
                                 <td>{customer.customer_id}</td>
                                 <td>{customer.customer_first_name}</td>
                                 <td>{customer.customer_last_name}</td>

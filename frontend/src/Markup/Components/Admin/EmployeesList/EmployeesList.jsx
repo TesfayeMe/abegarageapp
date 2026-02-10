@@ -134,7 +134,7 @@ const EmployeesList = () => {
                 <tbody>
                     {
                         employees?.map((employee) => (
-                            <tr key={employee.employee_id}>
+                            <tr key={employee.employee_id} >
                                 <td>{employee.active_employee === 1 ? 'Yes' : 'No'}</td>
                                 <td>{employee.employee_first_name}</td>
                                 <td>{employee.employee_last_name}</td>

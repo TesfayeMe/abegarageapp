@@ -44,13 +44,6 @@ const Dashboards = () => {
     },
     {
       accessed_by: ['all'],
-      access_link: '/admin/customer-profile',
-      title_of_card: 'VIEW CUSTOMER PROFILE',
-      body_text: 'VIEW CUSTOMER PROFILE',
-      card_icon: <GrDocumentUser size={30} />,
-    },
-    {
-      accessed_by: ['all'],
       access_link: '/add-orders',
       title_of_card: 'ADD ORDERS',
       body_text: 'ADD ORDERS',
