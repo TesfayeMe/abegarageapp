@@ -66,6 +66,7 @@
     
     padding-left: 20px;
     width: 100%;
+    max-width: 800px;
    
 }
 .message-of-no-vehicle-found
@@ -76,3 +77,136 @@
     background-color: rgb(255, 255, 255);
     padding: 10px;
 }
+.new-vehicle-form-div
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* max-width: 950px; */
+}
+.form-close-btn
+{
+    background-color: #EE0D0A;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-left: calc(100% - 30px); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+}
+.new-vehicle-form
+{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    /* max-width: 950px; */
+}
+.new-vehicle-form .form-group
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* max-width: 900px; */
+}
+.add-vehicle-btn
+{
+    max-width: 170px;
+}
+.vehicle-info-card
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    margin: 10px 0px;
+}
+.new-order-modal-overlay
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.76);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+.new-order-modal
+{
+    width: 70%;
+    max-width: 1300px;
+    background-color: white;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.644);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    z-index: 1000;
+    border-radius: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    z-index: 10001 ;
+    
+
+}
+.close-modal-btn
+{
+    background-color: #EE0D0A;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-left: calc(100% - 30px); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+}
+.new-order-modal .form-content-container{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 500px;
+    padding-left: 10px;
+}
+.new-order-modal form .form-group
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.075);
+    margin-bottom: 10px;
+}
+.service-list-texts-checkboxes:hover
+{
+    color: #1a1a1a;
+    background-color: #c5c0c02f;
+    cursor: pointer;
+}
+.service-list-texts
+{
+    cursor: pointer;
+    padding: 5px  20px;
+
+}
+.service-checkboxes
+{
+    cursor: pointer;
+    margin-right: 30px;
+ }
