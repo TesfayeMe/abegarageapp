@@ -50,10 +50,25 @@ const deleteCustomer = async (customer_id, employee_token) => {
   console.log(response)
   return response;
 }
+const getCustomerById = async (customer_id, employee_token) => {
+  console.log('customer_id', customer_id);
+  const response = await fetch(`${apiUrl}/api/customer/${customer_id}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+      'x-access-token': employee_token
+    }
+  }
+  )
+  const customer = await response.json();
+  console.log(customer)
+  return customer;
+}
 const CustomerServices = {
   createCustomer,
   getAllCustomers,
   editCustomer,
-  deleteCustomer
+  deleteCustomer,
+  getCustomerById
 }
 export default CustomerServices

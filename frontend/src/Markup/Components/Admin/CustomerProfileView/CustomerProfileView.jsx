@@ -2,11 +2,14 @@ const apiUrl = import.meta.env.VITE_API_URL;;
 import React,{useState, useEffect} from 'react'
 import './CustomerProfileView.css'
 import { FaEdit } from "react-icons/fa";
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { RiCloseFill } from "react-icons/ri";
 import CustomerService from '../../../../Services/CustomerServices';
+import { useAuth } from '../../../../Context/AuthContext';
+import VehicleServices from '../../../../Services/VehicleServices';
 const CustomerProfileView = (props) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const customerId = location.state?.customer_id;
   const [addNewVehicle, setAddNewVehicle] = useState(false);
   const [customerData, setCustomerData] = useState({
@@ -15,30 +18,7 @@ const CustomerProfileView = (props) => {
     phone: "555-1234",
     active: true
   });
-  const [vehicleData, setVehicleData] = useState([
-    {
-      vehicleId: 1,
-      year: 2020,
-      make: "Toyota",
-      model: "Camry",
-      type: "Sedan",
-      mileage: 15000,
-      tag: "ABC123",
-      serial: "1HGCM82633A004352",
-      color: "Blue"
-    },
-{
-  vehicleId: 2,
-      year: 2020,
-      make: "Toyota",
-      model: "Camry",
-      type: "Sedan",
-      mileage: 15000,
-      tag: "ABC123",
-      serial: "1HGCM82633A004352",
-      color: "Blue"
-    },
-  ]);
+  const [vehicleData, setVehicleData] = useState([]);
   const [orderData, setOrderData] =  useState([
     {
       orderId: 12345,
@@ -58,6 +38,22 @@ const CustomerProfileView = (props) => {
   const [tireRelated, setTireRelated] = useState(false);
   const [ignitionSystem, setIgnitionSystem] = useState(false);
   const [cameraSoftware, setCameraSoftware] = useState(false);
+
+ const [carYear, setCarYear] = useState('');
+ const [carMake, setCarMake] = useState('');
+ const [carModel, setCarModel] = useState('');
+ const [carType, setCarType] = useState('');
+ const [carMileage, setCarMileage] = useState('');
+ const [carTag, setCarTag] = useState('');
+ const [carSerial, setCarSerial] = useState('');
+ const [carColor, setCarColor] = useState('');
+
+
+   const { employee } = useAuth();
+      let token = null;
+      if (employee) {
+          token = employee.employee_token;
+      }
 const addNewOrder = (vehicleId) => {
   if(vehicleId) {
 
@@ -67,12 +63,27 @@ const addNewOrder = (vehicleId) => {
   }
 }
 useEffect(() => {
-  // Fetch customer data based on customerId
-  // Example: fetch(`${apiUrl}/api/customer/${customerId}`)
-  //   .then(response => response.json())
-  //   .then(data => setCustomerData(data))
-  //   .catch(error => console.error('Error fetching customer data:', error));
-  const customerdata =  CustomerService.getCustomer(customerId)
+  
+  async function  getCustDatas() {
+    // console.log(customerId);
+    // console.log(token);
+    const customerById = await CustomerService.getCustomerById(customerId, token);
+    if(customerById.status === false) {
+      // console.log(customerById.message);
+      window.location.href = '/admin/customers';
+    }
+    else if(customerById.status === 'tokenExpired' || customerById.message === 'tokenExpired!') {
+      alert('Session expired. Please log in again.');
+      localStorage.removeItem('employeeToken');
+      window.location.href = '/login';
+    }
+    else if(customerById.status === true && customerById.data) {
+      // console.log(customerById.data);
+      setCustomerData(customerById.data);
+    }
+
+  }
+getCustDatas();
 },[customerId]);
 
 useEffect(()=>{
@@ -91,6 +102,124 @@ useEffect(()=>{
   checkModalView();
 
 },[showNewOrderModal])
+const editCustHandler = (customerId) => () => {
+  
+    // alert(`Edit customer with ID: ${customerId}`);
+     navigate('/admin/edit-customer', { state: { customer_id: customerId } });
+  }
+
+
+ const handleVehicleSubmit = async (e) => {
+  e.preventDefault();
+
+  const newVehicle = {
+    customerId: customerId,
+    year: carYear,
+    make: carMake,
+    model: carModel,
+    type: carType,
+    mileage: carMileage,
+    tag: carTag,
+    serial: carSerial,
+    color: carColor,
+  };
+
+  // 1. Uniform Validation (Check for empty fields)
+  const isFormIncomplete = !carYear || !carMake.trim() || !carModel.trim() || !carType.trim() || !carMileage || !carTag.trim() || !carSerial.trim() || !carColor.trim();
+  
+  if (isFormIncomplete) {
+    alert('Please fill in all vehicle fields');
+    return;
+  }
+
+  // 2. Range Validation
+  if (carYear < 1886 || carYear > new Date().getFullYear() + 1) {
+    alert('Please enter a valid year');
+    return;
+  }
+
+  if (isNaN(carMileage) || carMileage < 0) {
+    alert('Please enter a valid mileage');
+    return;
+  }
+
+  // 3. API Call
+  try {
+    if (selectedVehicleId) {
+      // Logic for Update (if you have an update function)
+      console.log('Updating existing vehicle:', selectedVehicleId);
+      // const response = await VehicleServices.updateVehicle(selectedVehicleId, newVehicle, token);
+    } else {
+      // Logic for Add
+      const response = await VehicleServices.addVehicle(newVehicle, token);
+      const responseData = await response.json();
+      // console.log(responseData);
+      if (responseData.status === true) {
+        // alert('New vehicle added successfully!');
+        // Update your UI state here
+        // setVehicleData(prev => [...prev, responseData.data]);
+        getVehicleData(customerId); // Refresh the vehicle list
+        setAddNewVehicle(false);
+      } else {
+        alert(responseData.message || 'Failed to add vehicle');
+      }
+    }
+  } catch (error) {
+    console.error('Submission Error:', error);
+    alert('An error occurred while saving the vehicle.');
+  }
+};
+
+useEffect(() => {
+  async function getVehicleData() {
+    // Fetch vehicle data for the customer and update state
+    const vehicleDataResponse = await VehicleServices.getVehiclesByCustomerId(customerId, token);
+    if(vehicleDataResponse.status === true && vehicleDataResponse.data) {
+      setVehicleData(vehicleDataResponse.data);
+      vehicleDataResponse.data.forEach(vehicle => {
+        // setVehicleData(prev => [...prev, vehicle]);
+      });
+      // console.log(vehicleDataResponse.data);
+    }
+     else if(vehicleDataResponse.status === 'tokenExpired' || vehicleDataResponse.message === 'tokenExpired!')
+       {
+      // alert('Session expired. Please log in again.');
+      localStorage.removeItem('employeeToken');
+      window.location.href = '/login';
+    } else {
+      // alert(vehicleDataResponse.message || 'Failed to fetch vehicle data');
+      console.log(vehicleDataResponse);
+    }
+  }
+  if (customerId) {
+    getVehicleData();
+  }
+}, [customerId]);
+const getVehicleData = async (customerId) => {
+  const vehicleDataResponse = await VehicleServices.getVehiclesByCustomerId(customerId, token);
+  if(vehicleDataResponse.status === true && vehicleDataResponse.data) {
+    setVehicleData(vehicleDataResponse.data);
+    // console.log(vehicleDataResponse.data);
+  }
+    else if(vehicleDataResponse.status === 'tokenExpired' || vehicleDataResponse.message === 'tokenExpired!')
+      {
+    alert('Session expired. Please log in again.');
+    localStorage.removeItem('employeeToken');
+    window.location.href = '/login';
+  } else {
+    alert(vehicleDataResponse.message || 'Failed to fetch vehicle data');
+    console.log(vehicleDataResponse);
+  }
+}
+
+useEffect(() => {
+  async function getOrderData() {
+    // Fetch order data for the selected vehicle and update state
+  }
+  if (selectedVehicleId) {
+    getOrderData();
+  }
+}, [selectedVehicleId]);
   return (
     <div className='customer-profile-view-container'>
       <div className='customer-profile-vertical-line'>
@@ -104,11 +233,11 @@ useEffect(()=>{
   </div>
   <div className='customer-profile-view-right-customer-details-content'>
 
-<p><h5><strong>Customer: {customerId}</strong></h5></p>
-<span> <strong>Email:</strong> john.doe@example.com</span><br/>
-<span> <strong>Phone Number:</strong> 555-1234</span><br/>
-<span> <strong>Active Customer:</strong> Yes</span><br/>
-<span> <strong>Edit customer info:</strong> <FaEdit className="customer-profile-view-right-edit-icon" color="#EE0D0A" /></span><br/>
+<p><h5><strong>Customer: {customerData.customer_first_name} {customerData.customer_last_name}</strong></h5></p>
+<span> <strong>Email:</strong> {customerData.customer_email}</span><br/>
+<span> <strong>Phone Number:</strong> {customerData.customer_phone_number}</span><br/>
+<span> <strong>Active Customer:</strong> {customerData.active_customer_status ? "Yes" : "No"}</span><br/>
+<span> <strong>Edit customer info:</strong> <FaEdit className="customer-profile-view-right-edit-icon" color="#EE0D0A" onClick={editCustHandler(customerId)} /></span><br/>
 
   </div>
 </div>
@@ -128,11 +257,11 @@ useEffect(()=>{
   ) : (
     vehicleData.map((vehicle) => (
       <div key={vehicle.vehicleId} className='vehicle-info-card' onClick={() => setSelectedVehicleId(vehicle.vehicleId)}>
-        <span><strong>Year:</strong> {vehicle.year}</span>
-        <span><strong>Make:</strong> {vehicle.make}</span>
-        <span><strong>Model:</strong> {vehicle.model}</span>
-        <span><strong>Type:</strong> {vehicle.type}</span>
-        <span><strong>Mileage:</strong> {vehicle.mileage}</span>
+        <span><strong>Year:</strong> {vehicle.vehicle_year}</span>
+        <span><strong>Make:</strong> {vehicle.vehicle_make}</span>
+        <span><strong>Model:</strong> {vehicle.vehicle_model}</span>
+        <span><strong>Type:</strong> {vehicle.vehicle_type}</span>
+        <span><strong>Mileage:</strong> {vehicle.vehicle_mileage}</span>
       </div>
     ))
   )}
@@ -145,36 +274,36 @@ useEffect(()=>{
   <div className='form-close-btn' onClick={() => setAddNewVehicle(false)}>
 <RiCloseFill className='form-close-icon' size={35} color='#fff' />
   </div>
-  <form className='new-vehicle-form'>
+  <form className='new-vehicle-form' onSubmit={handleVehicleSubmit}>
     <h1 style={{padding: '20px 10px'}}>Add New Vehicle</h1>
      <div className='form-group col-md-12'>
-    <input type="number" id="year" name="year" placeholder='Year'  required />
+    <input type="number" id="year" name="year" placeholder='Year' onChange={e=>setCarYear(e.target.value)}  required />
     </div>
     <div className='form-group col-md-12'>
 
-    <input type="text" id="make" name="make"  placeholder='Make'  required />
+    <input type="text" id="make" name="make"  placeholder='Make' onChange={e=>setCarMake(e.target.value)} required />
     </div>
     <div className='form-group col-md-12'>
-    <input type="text" id="model" name="model" placeholder='Model' required />
+    <input type="text" id="model" name="model" placeholder='Model' onChange={e=>setCarModel(e.target.value)} required />
     </div>
    
     <div className='form-group col-md-12'>
-    <input type="text" id="type" name="type" placeholder='Type'  required />
+    <input type="text" id="type" name="type" placeholder='Type' onChange={e=>setCarType(e.target.value)} required />
     </div>
     <div className='form-group col-md-12'>
-    <input type="number" id="mileage" name="mileage" placeholder='Mileage'  required />
+    <input type="number" id="mileage" name="mileage" placeholder='Mileage' onChange={e=>setCarMileage(e.target.value)} required />
     </div>
     <div className='form-group col-md-12'>
-    <input type="text" id="tag" name="tag" placeholder='tag'  required />
+    <input type="text" id="tag" name="tag" placeholder='tag' onChange={e=>setCarTag(e.target.value)} required />
     </div>
     <div className='form-group col-md-12'>
-    <input type="text" id="serial" name="serial" placeholder='Serial Number'  required />
+    <input type="text" id="serial" name="serial" placeholder='Serial Number' onChange={e=>setCarSerial(e.target.value)} required />
     </div>
     <div className='form-group col-md-12'>
-    <input type="text" id="color" name="color" placeholder='Color'  required />
+    <input type="text" id="color" name="color" placeholder='Color' onChange={e=>setCarColor(e.target.value)} required />
     </div>
     <div className='form-group col-md-12'>
-    <button type="submit" className='theme-btn btn-style-one add-vehicle-btn'>Add Vehicle</button>
+    <button type="submit" className='theme-btn btn-style-one add-vehicle-btn' >Add Vehicle</button>
 </div>
     </form>
 

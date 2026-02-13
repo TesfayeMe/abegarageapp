@@ -47,7 +47,7 @@ const getCustomerById = async (req, res, next) => {
     if (!customer) {
         res.status(400).json({
             status: false,
-            messsage: 'No such customer'
+            message: 'No such customer'
         })
     }
     else {
