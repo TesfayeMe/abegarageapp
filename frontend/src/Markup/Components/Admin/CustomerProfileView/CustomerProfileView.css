@@ -143,6 +143,15 @@
     align-items: center;
     justify-content: center;
     z-index: 999;
+    font-size: 1.6vh;
+}
+.new-order-modal-overlay h2, h3{
+    font-size: 3vh;
+
+}
+.new-order-modal-overlay h2, h3{
+    font-size: 2vh;
+
 }
 .new-order-modal
 {
@@ -215,3 +224,59 @@
     color: #1a1a1a;
     cursor: pointer;
  }
+.selected
+{
+    border: 2px solid rgb(169, 197, 169);
+}
+.add-order-btn-and-additional-request-and-price-div
+{
+    /* border: 1px solid green; */
+    box-shadow: 3px 5px 10px rgba(12, 12, 12, 0.267);
+    margin-bottom: 50px;
+    padding: 10px;
+    width: 100%;
+}
+.additional-request-textarea-div
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+}
+.additional-request-textarea
+{
+    width: 70%;
+    border: 1px solid rgb(216, 221, 216);
+    min-width: 450px;
+    padding: 5px 20px ;
+}
+.price-of-service
+{
+     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+
+}
+.price-of-service input{
+    width: 70%;
+    border: 1px solid rgb(216, 221, 216);
+    min-width: 450px;
+    padding: 5px 20px ;
+
+}
+@media screen and (max-width: 1500px) {
+    .add-order-btn-and-additional-request-and-price-div
+{
+    padding-bottom: 100px;
+}
+}
+
+@media screen and (max-width: 900px) {
+    .add-order-btn-and-additional-request-and-price-div
+{
+    padding-bottom: 150px;
+}
+}

@@ -49,15 +49,18 @@ const CustomerProfileView = (props) => {
  const [carColor, setCarColor] = useState('');
 
 
-   const { employee } = useAuth();
-      let token = null;
-      if (employee) {
-          token = employee.employee_token;
+const [vehicleId, setVehicleId] = useState(null);
+
+ const { employee } = useAuth();
+ let token = null;
+ if (employee) {
+   token = employee.employee_token;
       }
 const addNewOrder = (vehicleId) => {
+  console.log(vehicleId);
   if(vehicleId) {
 
-  // alert(`Add new order for vehicle ID: ${vehicleId}`);
+  alert(`Add new order for vehicle ID: ${vehicleId}`);
   } else {
     // alert("Please select a vehicle to add an order.");
   }
@@ -81,22 +84,22 @@ useEffect(() => {
       // console.log(customerById.data);
       setCustomerData(customerById.data);
     }
-
+    
   }
-getCustDatas();
+  getCustDatas();
 },[customerId]);
 
 useEffect(()=>{
   function checkModalView() {
     if(showNewOrderModal) {
-  setOilChange(false);
-  setSpark(false);
-  setFuelCup(false);
-  setOxygenSensor(false);
-  setBrakeWork(false);
-  setTireRelated(false);
-  setIgnitionSystem(false);
-  setCameraSoftware(false);
+      setOilChange(false);
+      setSpark(false);
+      setFuelCup(false);
+      setOxygenSensor(false);
+      setBrakeWork(false);
+      setTireRelated(false);
+      setIgnitionSystem(false);
+      setCameraSoftware(false);
 }
   }
   checkModalView();
@@ -104,13 +107,13 @@ useEffect(()=>{
 },[showNewOrderModal])
 const editCustHandler = (customerId) => () => {
   
-    // alert(`Edit customer with ID: ${customerId}`);
-     navigate('/admin/edit-customer', { state: { customer_id: customerId } });
-  }
+  // alert(`Edit customer with ID: ${customerId}`);
+  navigate('/admin/edit-customer', { state: { customer_id: customerId } });
+}
 
 
  const handleVehicleSubmit = async (e) => {
-  e.preventDefault();
+   e.preventDefault();
 
   const newVehicle = {
     customerId: customerId,
@@ -176,28 +179,25 @@ useEffect(() => {
     const vehicleDataResponse = await VehicleServices.getVehiclesByCustomerId(customerId, token);
     if(vehicleDataResponse.status === true && vehicleDataResponse.data) {
       setVehicleData(vehicleDataResponse.data);
-      vehicleDataResponse.data.forEach(vehicle => {
-        // setVehicleData(prev => [...prev, vehicle]);
-      });
-      // console.log(vehicleDataResponse.data);
     }
-     else if(vehicleDataResponse.status === 'tokenExpired' || vehicleDataResponse.message === 'tokenExpired!')
-       {
-      // alert('Session expired. Please log in again.');
-      localStorage.removeItem('employeeToken');
-      window.location.href = '/login';
-    } else {
-      // alert(vehicleDataResponse.message || 'Failed to fetch vehicle data');
-      console.log(vehicleDataResponse);
+    else if(vehicleDataResponse.status === 'tokenExpired' || vehicleDataResponse.message === 'tokenExpired!')
+      {
+        // alert('Session expired. Please log in again.');
+        localStorage.removeItem('employeeToken');
+        window.location.href = '/login';
+      } else {
+        // alert(vehicleDataResponse.message || 'Failed to fetch vehicle data');
+        console.log(vehicleDataResponse);
+      }
     }
-  }
-  if (customerId) {
-    getVehicleData();
-  }
-}, [customerId]);
-const getVehicleData = async (customerId) => {
-  const vehicleDataResponse = await VehicleServices.getVehiclesByCustomerId(customerId, token);
-  if(vehicleDataResponse.status === true && vehicleDataResponse.data) {
+    if (customerId) {
+      getVehicleData();
+    }
+  }, [customerId]);
+  const getVehicleData = async (customerId) => {
+    alert(`Vehicle with id ${vehicleId} is on the top of the table`)
+    const vehicleDataResponse = await VehicleServices.getVehiclesByCustomerId(customerId, token);
+    if(vehicleDataResponse.status === true && vehicleDataResponse.data) {
     setVehicleData(vehicleDataResponse.data);
     // console.log(vehicleDataResponse.data);
   }
@@ -212,6 +212,17 @@ const getVehicleData = async (customerId) => {
   }
 }
 
+
+
+
+useEffect(()=>{
+const getFirstCarOfCustomer =()=>{
+   setVehicleId(vehicleData[0]?.vehicle_id);
+}
+getFirstCarOfCustomer();
+}, [vehicleData])
+console.log('Vehicle id ',vehicleId);
+
 useEffect(() => {
   async function getOrderData() {
     // Fetch order data for the selected vehicle and update state
@@ -220,6 +231,78 @@ useEffect(() => {
     getOrderData();
   }
 }, [selectedVehicleId]);
+
+const [servicesWithId, setServicesWithId] = useState(null);
+const [serviceIDs, setServiceIDs] = useState([])
+const handleServiceClick = (id) => {
+    setServiceIDs((prev) => {
+      const isExisting = prev.includes(Number(id));
+   
+      const nextIds = isExisting
+        ? prev.filter((item) => item !== Number(id))
+        : [...prev, Number(id)];
+
+      // 3. Sort correctly. 
+      // Using .slice().sort() or [...nextIds].sort() ensures a new reference.
+      // (a, b) => a.localeCompare(b, undefined, {numeric: true}) handles "1", "2", "10" correctly.
+      // return nextIds.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+      return nextIds
+    });
+  };
+  
+console.log(serviceIDs);
+const handleCheckboxChange = (e) => {
+  const { value, checked } = e.target;
+
+  if (checked) {
+    setServiceIDs(prev => [...prev, Number(value)]);
+  } else {
+    setServiceIDs(prev =>
+      prev.filter((item) => item !== Number(value))
+    );
+  }
+};
+
+
+const services = [{
+service_id: 1,
+service_name: 'Oil change',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},
+{
+service_id: 2,
+service_name: 'Spark plug replacement',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},{
+service_id: 3,
+service_name: 'Fuel cup replacement',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},{
+service_id: 4,
+service_name: 'Oil change',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},{
+service_id: 5,
+service_name: 'Oxygen sensor replacement',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},{
+service_id: 6,
+service_name: 'Brake work',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},{
+service_id: 7,
+service_name: 'Tire related work',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},{
+service_id: 8,
+service_name: 'Ignition system work',
+service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+},
+]
+const handleServiceOrder = (e)=>{
+e.preventDefault();
+alert(`Save ${serviceIDs}`)
+}
   return (
     <div className='customer-profile-view-container'>
       <div className='customer-profile-vertical-line'>
@@ -249,14 +332,14 @@ useEffect(() => {
   </div>
   <div className='customer-profile-view-right-vehicle-details-content'>
     
-<p><strong>Vehicle of Tesfaye:</strong></p>
+<p><strong>Vehicle of {customerData.customer_first_name} :</strong></p>
 {vehicleData.length === 0 ? (
   <div className='message-of-no-vehicle-found'>
       <span>No vehicle found</span>
     </div>
   ) : (
     vehicleData.map((vehicle) => (
-      <div key={vehicle.vehicleId} className='vehicle-info-card' onClick={() => setSelectedVehicleId(vehicle.vehicleId)}>
+      <div key={vehicle.vehicleId} className={`vehicle-info-card ${vehicleId===vehicle.vehicle_id ? 'selected' : ''}` } onClick={() => setVehicleId(vehicle.vehicle_id)}>
         <span><strong>Year:</strong> {vehicle.vehicle_year}</span>
         <span><strong>Make:</strong> {vehicle.vehicle_make}</span>
         <span><strong>Model:</strong> {vehicle.vehicle_model}</span>
@@ -322,13 +405,11 @@ useEffect(() => {
      
   {orderData.length === 0 ? (
     <div>
-
       <h2>Orders</h2><br/>
       <div className='message-of-no-vehicle-found'>
         <span>No order found for customer {customerId} with vehicle {'selectedVehicleId'}</span>
       </div>
     </div>
-    
   ) : (
     orderData.map((order) => (
       <div key={order.orderId} className='customer-profile-view-right-order-details-content'>
@@ -341,122 +422,66 @@ useEffect(() => {
     ))
     
   )}
- <button className='theme-btn btn-style-one' style={{margin: '20px 0'}} onClick={()=>{addNewOrder(selectedVehicleId);setShowNewOrderModal(true)}}>Add new order</button>
+ 
+ {!showNewOrderModal && <button className='theme-btn btn-style-one' style={{margin: '20px 0'}} onClick={()=>{addNewOrder(selectedVehicleId);setShowNewOrderModal(!showNewOrderModal)}}>Add new order</button> }
   </div>
 
-  {showNewOrderModal && (
-    <div className='new-order-modal-overlay'>
-
+  {showNewOrderModal && vehicleId && 
   
+  (
+<div className='new-order-modal-overlay'>
   <div className='new-order-modal'>
-      <button className='close-modal-btn' onClick={() => setShowNewOrderModal(false)}>
-<RiCloseFill className='close-modal-icon' size={35} color='#fff' />
-      </button>
+    <button className='close-modal-btn' onClick={() => {setShowNewOrderModal(false); setServiceIDs([]);} }>
+ <RiCloseFill className='close-modal-icon' size={35} color='#fff' />
+       </button>
+       <form style={{padding: '10px'}} onSubmit={handleServiceOrder}>
+          <h2 style={{fontSize: '30px'}}>New order of {`${customerData.customer_first_name}'s`} car with car id {vehicleId}</h2>
+        <div className='form-content-container'>
+          {
+            services.map((service)=>(
+             
+<div className='form-group col-md-12 service-list-texts-checkboxes' key={service.service_id}>
+            <div  className='service-list-texts' style={{width: '100%'}} onClick={() => handleServiceClick(service.service_id)} >
+              <h3 >{service.service_name}</h3>
+ <p >{service.service_description}</p>
+            </div>
+            <div>
+   <input 
+  type="checkbox"
+  value={service.service_id}
+  name={service.service_name}
+  id={`service-checkbox-${service.service_id}`}
+  className="service-checkboxes"
+  checked={serviceIDs.includes(service.service_id)}
+  onChange={handleCheckboxChange}
+/>
+ </div>
+          </div>
+            ))
+
+          }
+          <div className='add-order-btn-and-additional-request-and-price-div' style={{backgroundColor: 'white'}}>
+            <div className='additional-request-textarea-div'>
+              <h2>Additional request</h2>
+<textarea className='additional-request-textarea' placeholder='Service request'></textarea>
+            </div>
+            <div className='price-of-service'>
+              <input type='number' placeholder='Price' />
+            </div>
+            <button type='submit' className='theme-btn btn-style-one'  >Save order</button>
+          </div>
+        </div>
+       </form>
+    </div>
+
+</div>
+
+  )
   
-<h2 style={{padding: '10px'}}>
-  Choose service
-</h2>
-<form style={{padding: '10px'}}>
-
-<div className='form-content-container'>
+  }
 
 
-<div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setOilChange(!oilChange)}>
-<div  className='service-list-texts'>
-  <h3 >Oil change</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='oil-change' id='oil-change' className='service-checkboxes' checked={oilChange} onChange={() => setOilChange(!oilChange)}/>
-</div>
-  </div>
-
-
-<div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setSpark(!spark)}>
-<div  className='service-list-texts'>
-  <h3 >Spark plug replacement</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='spark-plug-replacement' id='spark-plug-replacement' className='service-checkboxes' checked={spark} onChange={() => setSpark(!spark)}/>
-</div>
-  </div>
-
-
-
-  <div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setFuelCup(!fuelCup)}>
-<div  className='service-list-texts'>
-  <h3 >Fuel cup replacement</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='fuel-cup-replacement' id='fuel-cup-replacement' className='service-checkboxes' checked={fuelCup} onChange={() => setFuelCup(!fuelCup)}/>
-</div>
-  </div>
-
-
-
-  <div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setOxygenSensor(!oxygenSensor)}>
-<div  className='service-list-texts'>
-  <h3 >Oxygen sensor replacement</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='oxygen-sensor-replacement' id='oxygen-sensor-replacement' className='service-checkboxes' checked={oxygenSensor} onChange={() => setOxygenSensor(!oxygenSensor)}/>
-</div>
-  </div>
-
-
-  <div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setBrakeWork(!brakeWork)}>
-<div  className='service-list-texts'>
-  <h3 >Brake work</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='brake-work' id='brake-work' className='service-checkboxes' checked={brakeWork} onChange={() => setBrakeWork(!brakeWork)}/>
-</div>
-  </div>
-
-
-<div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setTireRelated(!tireRelated)}>
-<div  className='service-list-texts'>
-  <h3 >Tire related work</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='tire-related-work' id='tire-related-work' className='service-checkboxes' checked={tireRelated} onChange={() => setTireRelated(!tireRelated)}/>
-</div>
-  </div>
-
-
-  <div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setIgnitionSystem(!ignitionSystem)}>
-<div  className='service-list-texts'>
-  <h3 >Ignition system work</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='ignition-system-work' id='ignition-system-work' className='service-checkboxes' checked={ignitionSystem} onChange={() => setIgnitionSystem(!ignitionSystem)}/>
-</div>
-  </div>
-
-
-  <div className='form-group col-md-12 service-list-texts-checkboxes' onClick={() => setCameraSoftware(!cameraSoftware)}>
-<div  className='service-list-texts'>
-  <h3 >Camera software update</h3>
-<p >Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape</p>
-</div>
-<div>
-  <input type='checkbox' name='camera-software-update' id='camera-software-update' className='service-checkboxes' checked={cameraSoftware} onChange={() => setCameraSoftware(!cameraSoftware)}/>
-</div>
-  </div>
-
-
-</div>
-<button className='theme-btn btn-style-one' style={{margin: '20px 0'}} onClick={() => setShowNewOrderModal(false)}>Add Order</button>
-</form>
-     </div>
-</div>
-  )}
+ 
   
 
       </div>
