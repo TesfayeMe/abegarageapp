@@ -7,6 +7,7 @@ import { RiCloseFill } from "react-icons/ri";
 import CustomerService from '../../../../Services/CustomerServices';
 import { useAuth } from '../../../../Context/AuthContext';
 import VehicleServices from '../../../../Services/VehicleServices';
+import ServiceServices from '../../../../Services/ServiceServices'
 const CustomerProfileView = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -262,46 +263,59 @@ const handleCheckboxChange = (e) => {
     );
   }
 };
+const [services, setServices] = useState([])
+useEffect(()=>{
+const getServices = async () => {
+  const service = await ServiceServices.getServices(token);
+  const serviceResponse = await service.json();
+  const serviceData = serviceResponse.data[0]
+      console.log(serviceResponse.data[0]);
+  setServices(serviceData)
+}
+getServices();
+}, [customerId])
 
-
-const services = [{
-service_id: 1,
-service_name: 'Oil change',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},
-{
-service_id: 2,
-service_name: 'Spark plug replacement',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},{
-service_id: 3,
-service_name: 'Fuel cup replacement',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},{
-service_id: 4,
-service_name: 'Oil change',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},{
-service_id: 5,
-service_name: 'Oxygen sensor replacement',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},{
-service_id: 6,
-service_name: 'Brake work',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},{
-service_id: 7,
-service_name: 'Tire related work',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},{
-service_id: 8,
-service_name: 'Ignition system work',
-service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
-},
-]
+// const services = [{
+// service_id: 1,
+// service_name: 'Oil change',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },
+// {
+// service_id: 2,
+// service_name: 'Spark plug replacement',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },{
+// service_id: 3,
+// service_name: 'Fuel cup replacement',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },{
+// service_id: 4,
+// service_name: 'Oil change',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },{
+// service_id: 5,
+// service_name: 'Oxygen sensor replacement',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },{
+// service_id: 6,
+// service_name: 'Brake work',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },{
+// service_id: 7,
+// service_name: 'Tire related work',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },{
+// service_id: 8,
+// service_name: 'Ignition system work',
+// service_description:'Every 5000 kilometer or so, you need to change the oil in your car to keep your engine in the best possible shape'
+// },
+// ]
+const [additionalRequest, setAdditionalRequest] = useState('');
+const [servicePrice, setServicePrice] = useState(0);
 const handleServiceOrder = (e)=>{
 e.preventDefault();
-alert(`Save ${serviceIDs}`)
+alert(`Save ${serviceIDs} and additional request of ${additionalRequest} and service price is ${servicePrice}`)
+
 }
   return (
     <div className='customer-profile-view-container'>
@@ -463,10 +477,10 @@ alert(`Save ${serviceIDs}`)
           <div className='add-order-btn-and-additional-request-and-price-div' style={{backgroundColor: 'white'}}>
             <div className='additional-request-textarea-div'>
               <h2>Additional request</h2>
-<textarea className='additional-request-textarea' placeholder='Service request'></textarea>
+<textarea className='additional-request-textarea' placeholder='Service request' value = {additionalRequest} onChange={e=>setAdditionalRequest(e.target.value)} ></textarea>
             </div>
             <div className='price-of-service'>
-              <input type='number' placeholder='Price' />
+              <input type='number' placeholder='Price' value={servicePrice} onChange  = {e=>setServicePrice(e.target.value)} />
             </div>
             <button type='submit' className='theme-btn btn-style-one'  >Save order</button>
           </div>
