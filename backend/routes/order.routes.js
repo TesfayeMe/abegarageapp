@@ -6,5 +6,5 @@ const authMiddleWare = require('../middlewares/auth.middleware')
 //import router
 const router = express.Router();
 //add customer garage orders by vehicle id
-router.get('/api/orders',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], orderController.getOrders );
+router.get('/api/orders/:cust_veh_id', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], orderController.getOrders);
 module.exports = router
