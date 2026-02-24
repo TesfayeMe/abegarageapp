@@ -116,10 +116,56 @@ const deleteCustomer = async (customerid) => {
     }
 }
 
+const addServiceOrder = async (serviceData) => {
+    const { 
+        employee_id, customer_id, vehicle_id, active_order, 
+        order_total_price, additional_request, active_additional_request, 
+        service_ids 
+    } = serviceData;
+    try {
+        // 1. Start a Transaction
+        await conn.query('START TRANSACTION');
+
+        // 2. Insert into orders
+        const sqlOrder = 'INSERT INTO orders (employee_id, customer_id, vehicle_id, active_order) VALUES (?,?,?,?)';
+        const [orderResult] = await conn.query(sqlOrder, [employee_id, customer_id, vehicle_id, active_order]);
+        const orderId = orderResult.insertId;
+
+        // 3. Insert into order_info
+        const sqlInfo = 'INSERT INTO order_info (order_id, order_total_price, additional_request, active_additional_request) VALUES (?,?,?,?)';
+        await conn.query(sqlInfo, [orderId, order_total_price, additional_request, active_additional_request]);
+
+        // 4. Insert into order_services (BULK INSERT - No loop needed!)
+        if (service_ids && service_ids.length > 0) {
+            const sqlServices = 'INSERT INTO order_services (order_id, service_id) VALUES ?';
+            // Transform [1, 2, 3] into [[orderId, 1], [orderId, 2], [orderId, 3]]
+            const serviceValues = service_ids.map(s_id => [orderId, s_id]);
+            await conn.query(sqlServices, [serviceValues]);
+        }
+
+        // 5. Insert into order_status
+        const sqlStatus = 'INSERT INTO order_status (order_id) VALUES (?)';
+        await conn.query(sqlStatus, [orderId]);
+
+        // 6. If everything worked, COMMIT the changes
+        await conn.query('COMMIT');
+        
+        return { orderId, ...serviceData };
+
+    } catch (error) {
+        // 7. If ANY step fails, ROLLBACK everything automatically
+        await conn.query('ROLLBACK');
+        console.error("Transaction failed, rolled back:", error);
+        return null;
+    }
+};
+
+
 module.exports = {
     createCustomer,
     allCustomers,
     getCustomerById,
     editCustomer,
-    deleteCustomer
+    deleteCustomer,
+    addServiceOrder
 }

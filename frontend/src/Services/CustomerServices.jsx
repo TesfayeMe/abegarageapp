@@ -64,11 +64,27 @@ const getCustomerById = async (customer_id, employee_token) => {
   console.log(customer)
   return customer;
 }
+
+const addServiceOrder = async (serviceData, employee_token) => {
+  console.log(serviceData);
+  console.log(employee_token);
+  const response = await fetch(`${apiUrl}/api/add-service-order-info`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': employee_token
+    },
+    body: JSON.stringify(serviceData)
+  }) 
+  return response;
+}
+
 const CustomerServices = {
   createCustomer,
   getAllCustomers,
   editCustomer,
   deleteCustomer,
-  getCustomerById
+  getCustomerById,
+  addServiceOrder
 }
 export default CustomerServices

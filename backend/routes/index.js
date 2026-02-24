@@ -12,10 +12,13 @@ const customerRouter = require('./customer.routes.js');
 const vehicleRouter = require('./vehicle.routes.js');
 //import serviceRouter from './service.routes.js
 const serviceRouter = require('./services.routes.js')
+//import orderRouter from './order.routes.js
+const orderRouter = require('./order.routes.js')
 router.use(loginRouter);
 router.use(installRouter);
 router.use(employeeRouter);
 router.use(customerRouter);
 router.use(vehicleRouter);
 router.use(serviceRouter);
+router.use(orderRouter);
 module.exports = router;

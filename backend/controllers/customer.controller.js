@@ -12,7 +12,7 @@ const addCustomer = async (req, res) => {
     // console.log('customerData:', customerData);
     const newCustomer = await customerService.createCustomer(customerData);
     if (!newCustomer) {
-        console.log("Failed to create customer:", newCustomer);
+        // console.log("Failed to create customer:", newCustomer);
         return res.status(400).json({ success: false, message: 'Failed to add customer' });
     }
     else {
@@ -32,7 +32,7 @@ const getAllCustomers = async (req, res, next) => {
         })
     }
     else {
-        console.log(customers)
+        // console.log(customers)
         return res.status(200).json({
             status: true,
             data: customers
@@ -42,7 +42,7 @@ const getAllCustomers = async (req, res, next) => {
 
 const getCustomerById = async (req, res, next) => {
     const { customerId } = req.params
-    console.log(customerId)
+    // console.log(customerId)
     const customer = await customerService.getCustomerById(customerId);
     if (!customer) {
         res.status(400).json({
@@ -70,7 +70,7 @@ return res.status(400).json({
     }
     else
     {
-        console.log(editcustomer)
+        // console.log(editcustomer)
         return res.status(200).json({
             status: true,
             message: 'updated'
@@ -79,7 +79,7 @@ return res.status(400).json({
 }
 const deleteCustomer = async (req, res, next) => {
     const { customerId } = req.params;
-    console.log(customerId);
+    // console.log(customerId);
     const deletedCustomer = await customerService.deleteCustomer(customerId);
     if (!deletedCustomer) {
         return res.status(400).json({
@@ -94,10 +94,34 @@ const deleteCustomer = async (req, res, next) => {
         })
     }
 }
+
+const addServiceOrder = async (req, res, next) => {
+    // console.log(req.body);
+    const serviceData = req.body;
+    const addServiceOrderResponse = await customerService.addServiceOrder(serviceData);
+        // console.log(addServiceOrderResponse);
+        if(addServiceOrderResponse)
+        {
+            return res.status(200).json({
+                status: true,
+                message: 'Successfully ordered',
+                data: addServiceOrderResponse
+            })
+        }
+        else
+        {
+            return res.status(400).json({
+                status: false,
+                message: 'Order not success'
+            })
+        }
+
+}
 module.exports = {
     addCustomer,
     getAllCustomers,
     editCustomer,
     getCustomerById,
-    deleteCustomer
+    deleteCustomer,
+    addServiceOrder
 }

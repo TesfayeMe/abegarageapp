@@ -16,4 +16,6 @@ router.put('/api/edit-customer', [authMiddleWare.verifyToken, authMiddleWare.isA
 //export the router
 router.delete('/api/delete-customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.deleteCustomer);
 //export the router
+router.post('/api/add-service-order-info', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.addServiceOrder);
+//export the router
 module.exports = router;

@@ -9,5 +9,5 @@ const router = express.Router();
 router.post('/api/add-service', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.addServices );
 //get All services
 // router.get('/api/services', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.getAllServices );
-router.get('/api/services', serviceController.getAllServices );
+router.get('/api/services',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.getAllServices );
 module.exports = router

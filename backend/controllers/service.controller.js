@@ -30,7 +30,7 @@ const getAllServices = async (req, res, next) =>{
   const allServices = await serviceServices.getAllServices();
   if(allServices)
   {
-    console.log(allServices);
+    // console.log(allServices);
 return res.status(200).json({
   status: true,
   message: allServices.length,

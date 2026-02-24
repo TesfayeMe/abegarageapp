@@ -8,6 +8,7 @@ import CustomerService from '../../../../Services/CustomerServices';
 import { useAuth } from '../../../../Context/AuthContext';
 import VehicleServices from '../../../../Services/VehicleServices';
 import ServiceServices from '../../../../Services/ServiceServices'
+import CustomerServices from '../../../../Services/CustomerServices';
 const CustomerProfileView = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -312,11 +313,73 @@ getServices();
 // ]
 const [additionalRequest, setAdditionalRequest] = useState('');
 const [servicePrice, setServicePrice] = useState(0);
-const handleServiceOrder = (e)=>{
-e.preventDefault();
-alert(`Save ${serviceIDs} and additional request of ${additionalRequest} and service price is ${servicePrice}`)
+const handleServiceOrder = async (e)=>{
+  e.preventDefault();
+  let totalAdditionalRequests = []
+  let allAdditionalRequests = additionalRequest.split(',');
+allAdditionalRequests.forEach(request => {
+  
+  if(request.trim().length > 2)
+  {
+   totalAdditionalRequests.push(request) 
+  }
+  else
+  {
+    
+  }
+});
+if(serviceIDs.length<1)
+{
+  alert('Please Select AtLest One Service')
+}
+else if(Number(servicePrice) === 0)
+{
+  alert("Please Add Price")
+}
+else{
+const orderServiceData = {
+  employee_id: employee?.employee_id,
+  customer_id: customerId,
+  vehicle_id: vehicleId,
+  active_order: serviceIDs.length,
+  order_total_price: Number(servicePrice),
+  additional_request: totalAdditionalRequests.toString(),
+  active_additional_request: totalAdditionalRequests.length,
+  service_ids: serviceIDs
+}
+try {
+  const addServiceOrder = await CustomerServices.addServiceOrder(orderServiceData, token);
+  const data = await addServiceOrder.json();
+  console.log('data', data);
+       if(data.status === true)
+       {
+        window.location.href ='/admin/customer-profile'
+       }
+       else if(data.message === 'TokenExpired')
+       {
+        window.location.href ='/login'
+
+       }
+       else if(data.status === false)
+       {
+        alert(data.message)
+       }
+
+
+} catch (error) {
+  console.log(error);
+}
+console.log(orderServiceData);
+}
 
 }
+
+useEffect(()=>{
+  if(customerId && vehicleId )
+    {
+  console.log([customerId, vehicleId]);
+}
+}, [customerId, vehicleId])
   return (
     <div className='customer-profile-view-container'>
       <div className='customer-profile-vertical-line'>
