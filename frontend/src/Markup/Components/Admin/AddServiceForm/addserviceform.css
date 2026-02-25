@@ -1,5 +1,58 @@
-.add-service-form-page-container
-{
-    max-width: 800px;
+
+.manage-service-page
+{max-width: 1300px;
     padding: 40px;
+    
+}
+
+.manage-service-page-service-display-div
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.single-service-service-display-div
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 4px;
+    background-color: white;
+    padding: 7px 15px;
+    align-items: center;
+}
+.single-service-service-display-div .left-div
+{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.single-service-service-display-div .right-div
+{
+    display: flex;
+    flex-direction: row;
+    padding-left: 20px;
+    
+}
+.single-service-service-display-div .right-div .edit-delete-icon
+{
+    margin: 1px 4px;
+    cursor: pointer;
+    
+
+}
+.add-service-form-page-container 
+{
+    width: 100%;
+    background-color: white;
+    border-radius: 4px;
+    margin-top: 13px;
+    padding: 30px;
+}
+.add-service-form-page-container input
+{
+    max-width: 900px;
+    
 }

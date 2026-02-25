@@ -133,13 +133,14 @@ const addServiceOrder = async (serviceData) => {
 
         // 3. Insert into order_info
         const sqlInfo = 'INSERT INTO order_info (order_id, order_total_price, additional_request, active_additional_request) VALUES (?,?,?,?)';
-        await conn.query(sqlInfo, [orderId, order_total_price, additional_request, active_additional_request]);
+        const [orderInfoResult] = await conn.query(sqlInfo, [orderId, order_total_price, additional_request, active_additional_request]);
+        const orderInfoId = orderInfoResult.insertId
 
         // 4. Insert into order_services (BULK INSERT - No loop needed!)
         if (service_ids && service_ids.length > 0) {
-            const sqlServices = 'INSERT INTO order_services (order_id, service_id) VALUES ?';
+            const sqlServices = 'INSERT INTO order_services (order_id, service_id, order_info_id) VALUES ?';
             // Transform [1, 2, 3] into [[orderId, 1], [orderId, 2], [orderId, 3]]
-            const serviceValues = service_ids.map(s_id => [orderId, s_id]);
+            const serviceValues = service_ids.map(s_id => [orderId, s_id, orderInfoId]);
             await conn.query(sqlServices, [serviceValues]);
         }
 

@@ -22,15 +22,6 @@ const CustomerProfileView = (props) => {
     active: true
   });
   const [vehicleData, setVehicleData] = useState([]);
-  const [orderData, setOrderData] = useState([
-    {
-      orderId: 12345,
-      date: "2024-06-01",
-      orderDetails: "Oil change, Tire rotation",
-      status: "Completed"
-    },
-
-  ]);
   const [selectedVehicleId, setSelectedVehicleId] = useState(null);
   const [showNewOrderModal, setShowNewOrderModal] = useState(false);
   const [oilChange, setOilChange] = useState(false);
@@ -117,7 +108,7 @@ const CustomerProfileView = (props) => {
 
   const handleVehicleSubmit = async (e) => {
     e.preventDefault();
-
+    
     const newVehicle = {
       customerId: customerId,
       year: carYear,
@@ -213,7 +204,7 @@ const CustomerProfileView = (props) => {
     }
   }
 
-
+  
 
 
   useEffect(() => {
@@ -245,7 +236,7 @@ const CustomerProfileView = (props) => {
       return nextIds
     });
   };
-
+  
   console.log(serviceIDs);
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
@@ -310,12 +301,12 @@ const CustomerProfileView = (props) => {
         }
         else if (data.message === 'TokenExpired') {
           window.location.href = '/login'
-
+          
         }
         else if (data.status === false) {
           alert(data.message)
         }
-
+        
 
       } catch (error) {
         console.log(error);
@@ -330,8 +321,7 @@ const CustomerProfileView = (props) => {
   for (let yr = newYear - 30; yr <= newYear; yr++) {
     years.push(yr);
   }
-
-  const [orderd, setOrderD] = useState(null)
+  const [orderData, setOrderData] = useState(null);
   useEffect(() => {
     const getServiceOrder = async () => {
       if (customerId && vehicleId) {
@@ -340,7 +330,8 @@ const CustomerProfileView = (props) => {
         const getOrderByVehicleId = await orderService.getOrderByVehicleId(searchData, token);
         const data = await getOrderByVehicleId.json();
         if (data.status === true) {
-          alert('Order found')
+          console.log(data.data);
+          // alert('Order found')
           setOrderData(data.data);
         }
         else if (data.message === 'TokenExpired') {
@@ -349,14 +340,14 @@ const CustomerProfileView = (props) => {
         }
         else {
           // alert('No order for this car');
-          setOrderData({});
+          setOrderData(null);
 
         }
       }
     }
     getServiceOrder();
   }, [customerId, vehicleId])
-  console.log(orderd)
+  console.log(orderData);
 
   return (
     <div className='customer-profile-view-container'>
@@ -464,34 +455,21 @@ const CustomerProfileView = (props) => {
             </div>
           </div>
           <div>
-
-            {orderData ? (
-              <div>
-                <h2>Orders</h2><br />
+  <div className='customer-profile-view-right-order-details-content'>
+                   <h2>Orders</h2>
+            {orderData === null ? (
                 <div className='message-of-no-vehicle-found'>
                   <span>No order found for customer {customerId} with vehicle {'selectedVehicleId'}</span>
                 </div>
-              </div>
             ) : (
-              orderData?.map((order) => (
-                <div key={order.orderId} className='customer-profile-view-right-order-details-content'>
-                  <h2>Orders</h2>
-                  <span><strong>Order ID:</strong> {order.orderId}</span><br />
-                  <span><strong>Vehicle Type:</strong> {order.vehicle_type}</span><br />
-                  <span><strong>Vehicle Color:</strong> {order.vehicle_color}</span><br />
-                  <span><strong>Vehicle Tag:</strong> {order.vehicle_tag}</span><br />
-                  <span><strong>Order Date:</strong> {order.order_date}</span><br />
-                  <span><strong>Service Name:</strong> {order.service_name}</span><br />
-                  <span><strong>Service Description:</strong> {order.service_description}</span>
-                  <span><strong>Order Hash:</strong> {order.order_hash}</span><br />
-                  <span><strong>Additional Request:</strong> {order.additional_request}</span><br />
-                  <span><strong>Completed Service :</strong> {order.service_completed}</span><br />
-                  <span><strong>Order Status:</strong> {order.order_status}</span><br />
-                </div>
+              Object.entries(orderData)?.map(([key, value]) => (
+                  <div>
+                    <span key={key}><strong>{key}:</strong> {value}</span><br />
+                  </div>            
               ))
 
             )}
-
+ </div>
             {!showNewOrderModal && <button className='theme-btn btn-style-one' style={{ margin: '20px 0' }} onClick={() => { addNewOrder(selectedVehicleId); setShowNewOrderModal(!showNewOrderModal) }}>Add new order {selectedVehicleId} </button>}
           </div>
 
@@ -500,7 +478,7 @@ const CustomerProfileView = (props) => {
             (
               <div className='new-order-modal-overlay'>
                 <div className='new-order-modal'>
-                  <button className='close-modal-btn' onClick={() => { setShowNewOrderModal(false); setServiceIDs([]); }}>
+                  <button className='close-modal-btn' onClick={() => { setShowNewOrderModal(false); setServiceIDs([]);setAdditionalRequest('');setServicePrice(0) }}>
                     <RiCloseFill className='close-modal-icon' size={35} color='#fff' />
                   </button>
                   <form style={{ padding: '10px' }} onSubmit={handleServiceOrder}>
