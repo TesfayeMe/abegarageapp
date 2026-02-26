@@ -23,8 +23,8 @@ const AdminMenu = () => {
                
 
                 {/* Services */}
-                <a href='/admin/add-service' className='list-group-item list-group-item-action bg-transparent'>Add Service</a>
-                <a href='/admin/services' className='list-group-item list-group-item-action bg-transparent'>View Services</a>
+                <a href='/admin/services' className='list-group-item list-group-item-action bg-transparent'>Services</a>
+                {/* <a href='/admin/services' className='list-group-item list-group-item-action bg-transparent'>View Services</a> */}
 
                 {/* Admin tools */}
                 <a href='/admin/manage-roles' className='list-group-item list-group-item-action bg-transparent'>Manage Roles</a>

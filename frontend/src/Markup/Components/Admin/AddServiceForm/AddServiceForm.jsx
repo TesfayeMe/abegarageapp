@@ -4,6 +4,7 @@ import { useAuth } from '../../../../Context/AuthContext';
 import ServiceServices from '../../../../Services/ServiceServices'
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { IoIosClose } from "react-icons/io";
 import './addserviceform.css'
 const AddServiceForm =  () => {
   const navigate = useNavigate();
@@ -84,12 +85,115 @@ window.location.href = '/login'
 }
 getService();
 }, [employee_id])
-const handleServiceEdit = ()=>{
-  alert('edit')
+const [editServiceEnabled, setEditServiceEnabled] = useState(false);
+const [selectedService, setSelectedService] = useState({})
+const handleServiceEdit = async (service_id)=>{
+const getServiceById = await ServiceServices.getServiceById(service_id, loginEmployeeToken);
+const data = await getServiceById.json();
+if(data.status === true)
+{
+setSelectedService(data.data)
 }
-const handleServiceDelete = ()=>{
-  alert('delete')
+else if(data.status === 'tokenExpired')
+{
+  localStorage.removeItem('employee');
+window.location.href = '/login';
+//  navigate("/login", { replace: true });
 }
+else if(data.status === 'notAdmin')
+{
+  alert('You are not authorized for this action')
+}
+else if(data.status === false)
+{
+  alert('Service not found')
+}
+
+}
+
+
+const handleServiceSaveChange = async (e) => {
+  e.preventDefault();
+  if(!selectedService.service_name.trim() || !selectedService.service_description.trim())
+    {
+    alert('You should fill all required fields')
+  }
+  else if(selectedService.service_name.trim().length < 2)
+  {
+    alert('Service name should more than 2 letters')
+  }else if(selectedService.service_description.trim().length < 5)
+  {
+    alert('Service Description should more than 5 letters')
+  }
+  else{
+    const updateService = await ServiceServices.updateService(selectedService, loginEmployeeToken);
+    const updateData = await updateService.json()
+    // console.log(updateData);
+     if(updateData.status === true)
+     {
+       setEditServiceEnabled(!editServiceEnabled)
+// navigate('/admin/services');
+window.location.href = '/admin/services'
+     }
+     else if(updateData.status === 'tokenExpired')
+     {
+localStorage.removeItem('employee')
+window.location.href='/login'
+     }
+     else if(updateData.status === 'notAdmin')
+     {
+
+       alert('You are not authorized for this action');
+     }
+     else
+     {
+      alert('Service not updated please try again');
+     }
+
+  }
+} 
+const [deleteServiceEnabled, setDeleteServiceEnabled] = useState(false);
+const [serviceIdDelete, setServiceIdDelete] = useState(null);
+const [deleting, setDeleting] = useState(false);
+
+
+
+
+const handleServiceDelete = async (service_id)=>{
+  setServiceIdDelete(service_id);
+}
+
+useEffect(()=>{
+async function deleteServiceFunc() {
+  alert(serviceIdDelete)
+  const deleteService = await ServiceServices.deleteService(serviceIdDelete, loginEmployeeToken);
+  const deleteResponse = await deleteService.json();
+  console.log(deleteResponse);
+  if(deleteResponse.status === true)
+  {
+    setDeleting(false);
+window.location.href = '/admin/services'
+  }
+  else if(deleteResponse.status === 'tokenExpired')
+  {
+    setDeleting(false);
+    localStorage.removeItem('employee')
+window.location.href = '/login'
+  }
+  else if(deleteResponse.status === 'notAdmin')
+  {
+    setDeleting(false);
+    alert('Not authorized')
+  }
+  else
+  {
+    setDeleting(false);
+    alert('Deletion failed')
+
+  }
+}
+deleteServiceFunc();
+}, [deleting])
   return (
     <div className='manage-service-page'>
       <h1 style={{fontWeight: '700', margin: '10px 2px'}}>Services we provide</h1>
@@ -97,15 +201,15 @@ const handleServiceDelete = ()=>{
       
  <div className='manage-service-page-service-display-div' >
   {
-       savedServices?.map((savedService, service_id)=>(
-<div key={service_id} className='single-service-service-display-div'>
+       savedServices?.map((savedService)=>(
+<div key={savedService.service_id} className='single-service-service-display-div'>
 <div className='left-div'>
 <h3 style={{fontWeight: '700'}} >{savedService.service_name}</h3>
 <p>{savedService.service_description}</p>
 </div>
 <div className='right-div'>
-  <FaEdit className='edit-delete-icon' color='red' size={20} onClick={handleServiceEdit}/>   
-  <MdDelete className='edit-delete-icon' size={20} onClick={handleServiceDelete}/>
+  <FaEdit className='edit-delete-icon' color='red' size={20} onClick={()=>{handleServiceEdit(savedService.service_id);setEditServiceEnabled(!editServiceEnabled)}}/>   
+  <MdDelete className='edit-delete-icon' size={20} onClick={()=>{handleServiceDelete(savedService.service_id);setDeleteServiceEnabled(!deleteServiceEnabled)}}/>
 
 </div>
 </div>
@@ -113,8 +217,52 @@ const handleServiceDelete = ()=>{
             
       }
     </div>
+    { deleteServiceEnabled && (
+      <div className='delete-service-panel-overlay'>
+        <div className='delete-service-panel'>
+<h4>Are you sure?</h4>
+
+
+<div className='service-delete-confirmation-div'>
+  <button className='service-delete-confirmation-delete-btn' onClick={()=>{setDeleteServiceEnabled(!deleteServiceEnabled); setDeleting(!deleting);}}>Delete</button>
+  <button className='service-delete-confirmation-cancel-btn' onClick={()=>{setDeleteServiceEnabled(!deleteServiceEnabled); setDeleting(!deleting);}}>Cancel</button>
+</div>
+
+    </div>
+      </div>
+    )
+    }
       
-    
+    {
+        editServiceEnabled  && (<div className='edit-service-controller-overlay-div'>
+          <div className='new-service-edit-modal'>
+            <div className='new-service-edit-modal-header'>
+          <h2>Edit service</h2>
+          <IoIosClose onClick={()=>setEditServiceEnabled(!editServiceEnabled)}  className='close-btn-edit-service' color='red' size={30}/>
+            </div>
+            <div className='new-service-edit-modal-form'>
+<form onSubmit={handleServiceSaveChange}>
+            <div className='form-groups'>
+              <h6>Service name</h6>
+<input type='text' value={selectedService.service_name} onChange={(e)=>setSelectedService({ ...selectedService, service_name: e.target.value })} placeholder='Service name' />
+            </div>
+            <div className='form-groups'>
+              <h6>Service Description</h6>
+
+<textarea value={selectedService.service_description} placeholder='Service Description' onChange={(e)=>setSelectedService({ ...selectedService, service_description: e.target.value })}></textarea>
+            </div>
+            <div className='form-groups'>
+<button type='submit' className='theme-btn btn-style-one'  >Save Service Change</button>
+            </div>
+            
+          </form>
+          </div>
+          </div>
+          
+          
+        </div>)
+
+      }
        <div className='add-service-form-page-container'>
     <h2>Add a new service</h2>
     <br />

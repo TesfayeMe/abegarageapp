@@ -2,6 +2,7 @@
 .manage-service-page
 {max-width: 1300px;
     padding: 40px;
+    position: relative;
     
 }
 
@@ -55,4 +56,147 @@
 {
     max-width: 900px;
     
+}
+
+.edit-service-controller-overlay-div
+{
+     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.76);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1999;
+    font-size: 1.6vh;
+
+    
+}
+.new-service-edit-modal
+{
+    width: 50%;
+    max-width: 800px;
+    background-color: white;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.644);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    border-radius: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    z-index: 10001 ;
+}
+.new-service-edit-modal-header
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #b3bbb349;
+}
+.close-btn-edit-service
+{
+    cursor: pointer;
+}
+.new-service-edit-modal-form form
+{
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+.new-service-edit-modal-form form .form-groups
+{
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    justify-content: start;
+    gap: 6px;
+}
+.new-service-edit-modal-form form .form-groups input 
+{
+    width: 90%;
+    border: 1px solid rgb(218, 221, 218);
+    height: 40px;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: .8rem;
+}
+.new-service-edit-modal-form form .form-groups textarea
+{
+    width: 90%;
+    border: 1px solid rgb(218, 221, 218);
+    min-height: 100px;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: .8rem;
+}
+.new-service-edit-modal-form form .form-groups button
+{
+width: 255px;
+}
+.delete-service-panel-overlay
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.76);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1999;
+    font-size: 1.6vh;
+
+}
+.delete-service-panel
+{
+    width: 20%;
+    max-width: 500px;
+    min-width: 400px;
+    background-color: white;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.644);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    border-radius: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    z-index: 10001 ;
+    justify-content: center;
+    align-items: center;
+
+}
+.service-delete-confirmation-div
+{
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.service-delete-confirmation-div button
+{
+padding: 5px 20px;
+background-color: transparent;
+font-weight: 700;
+font-size: 17px;
+
+}
+.service-delete-confirmation-delete-btn
+{
+    color: red;
+}
+.service-delete-confirmation-cancel-btn
+{
+color: rgb(104, 112, 119);
 }

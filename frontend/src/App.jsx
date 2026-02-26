@@ -20,7 +20,7 @@ import Dashboard from './Markup/Pages/Admin/Dashboard'
 import AddCustomer from './Markup/Pages/Admin/AddCustomer';
 import EditCustomers from './Markup/Pages/Admin/EditCustomers';
 import CustomerProfile from './Markup/Pages/Admin/CustomerProfile';
-import AddServices from './Markup/Pages/Admin/AddServices'
+import Services from './Markup/Pages/Admin/AddServices'
 function App() {
     return (
       <>
@@ -31,7 +31,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/admin/add-employee' element={<PrivateAuthRoute roles={[3]}><AddEmployee /></PrivateAuthRoute>} />
           <Route path='/admin/add-customer' element={<PrivateAuthRoute roles={[3]}><AddCustomer /></PrivateAuthRoute>} />
-          <Route path='/admin/add-service' element={<PrivateAuthRoute roles={[3]}><AddServices /></PrivateAuthRoute>} />
+          <Route path='/admin/services' element={<PrivateAuthRoute roles={[3]}><Services /></PrivateAuthRoute>} />
           <Route path='/admin/dashboard' element={<PrivateAuthRoute roles={[3]}><Dashboard /></PrivateAuthRoute>} />
           <Route path='/admin/orders' element={<PrivateAuthRoute roles={[1, 2, 3]}><Orders /></PrivateAuthRoute>} />
           <Route path='/admin/customers' element={<PrivateAuthRoute roles={[2, 3]}><Customers /></PrivateAuthRoute>} />
