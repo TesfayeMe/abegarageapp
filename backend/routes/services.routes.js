@@ -14,5 +14,5 @@ router.get('/api/service/:service_id',  [authMiddleWare.verifyToken, authMiddleW
 //update service
 router.put('/api/edit-service',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.updateService );
 //delete services
-router.delete('/api/service-delete/service_id',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.deleteService );
+router.put('/api/service-delete/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.deleteService );
 module.exports = router

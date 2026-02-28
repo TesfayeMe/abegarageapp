@@ -12,7 +12,7 @@ const addService = async (serviceData) => {
     }
 }
 const getAllServices = async () => {
-    const sqlAllServices = 'SELECT * FROM `common_services`'
+    const sqlAllServices = 'SELECT * FROM `common_services` where service_deleted = 0'
 const allServices = await conn.query(sqlAllServices);
 // console.log(allServices);
 return allServices.length > 0 ? allServices : null
@@ -34,8 +34,11 @@ const updateService = async (dataToUpdate) => {
     return updateResult.affectedRows > 0 ? updateResult.affectedRows : null;
 }
 const deleteService = async(service_id)=>{
-    //delete order_status with order id and service_id order_info_id matched to order_inof,
-    //in order to delete orderid=serviceid=orderinfoid
+    //update the service status to delete option and leave it as a backup
+    const serviceUpdateSql = 'update common_services set service_deleted = ? where service_id = ? '
+    const [updateResult] = await conn.query(serviceUpdateSql, [1, service_id]);
+    // console.log(updateResult.affectedRows);
+    return updateResult.affectedRows > 0 ? updateResult.affectedRows : null;
 
 }
 module.exports = {

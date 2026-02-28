@@ -88,6 +88,7 @@ return res.status(200).json({
 
 const deleteService =  async (req, res, next) => {
   const {service_id} = req.params;
+  // console.log(service_id);
   const deleteService = await serviceServices.deleteService(service_id);
      if(deleteService)
      {

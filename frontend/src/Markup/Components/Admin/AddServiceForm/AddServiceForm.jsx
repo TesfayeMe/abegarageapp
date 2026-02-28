@@ -5,6 +5,7 @@ import ServiceServices from '../../../../Services/ServiceServices'
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoIosClose } from "react-icons/io";
+import { MdRestoreFromTrash } from "react-icons/md";
 import './addserviceform.css'
 const AddServiceForm =  () => {
   const navigate = useNavigate();
@@ -17,11 +18,13 @@ const AddServiceForm =  () => {
     loginEmployeeToken = employee.employee_token;
     employee_id = employee?.employee_id
   }
-  console.log(employee_id);
-  console.log(loginEmployeeToken);
+  // console.log(employee_id);
+  // console.log(loginEmployeeToken);
 
 const [serviceName, setServiceName] = useState('')
 const [serviceDescription, setServiceDescription] = useState('')
+
+//-------------------------------------Add Service function------------------------------------------
 const handleServiceFormSubmit = async (e) => {
   e.preventDefault();
   // alert(`Form clicked and has ${serviceName} and ${serviceDescription} fields`)
@@ -63,6 +66,9 @@ else
       alert(serviceResponse.message);
     }
 }}
+//---------------------------------------------------------------------------------------------------
+
+//-------------------------------------get All active Saved Services function------------------------
 const [savedServices, setSavedServices] = useState(null) 
 useEffect(()=>{
 const getService = async () => {
@@ -85,6 +91,10 @@ window.location.href = '/login'
 }
 getService();
 }, [employee_id])
+//----------------------------------------------------------------------------------------------------
+
+
+// ------------------------------------Edit Services function------------------------------------------
 const [editServiceEnabled, setEditServiceEnabled] = useState(false);
 const [selectedService, setSelectedService] = useState({})
 const handleServiceEdit = async (service_id)=>{
@@ -110,8 +120,11 @@ else if(data.status === false)
 }
 
 }
+//------------------------------------------------------------------------------------------------------
 
 
+
+//------------------------------------Save Edited Service function--------------------------------------
 const handleServiceSaveChange = async (e) => {
   e.preventDefault();
   if(!selectedService.service_name.trim() || !selectedService.service_description.trim())
@@ -152,21 +165,22 @@ window.location.href='/login'
 
   }
 } 
+//------------------------------------------------------------------------------------------------------
+
+
+//------------------------------------Delete a service function-----------------------------------------
 const [deleteServiceEnabled, setDeleteServiceEnabled] = useState(false);
 const [serviceIdDelete, setServiceIdDelete] = useState(null);
 const [deleting, setDeleting] = useState(false);
-
-
-
-
 const handleServiceDelete = async (service_id)=>{
   setServiceIdDelete(service_id);
 }
-
 useEffect(()=>{
 async function deleteServiceFunc() {
-  alert(serviceIdDelete)
-  const deleteService = await ServiceServices.deleteService(serviceIdDelete, loginEmployeeToken);
+  if(serviceIdDelete)
+    {
+    alert(serviceIdDelete)
+const deleteService = await ServiceServices.deleteService(serviceIdDelete, loginEmployeeToken);
   const deleteResponse = await deleteService.json();
   console.log(deleteResponse);
   if(deleteResponse.status === true)
@@ -192,8 +206,37 @@ window.location.href = '/login'
 
   }
 }
+  }
+  
 deleteServiceFunc();
 }, [deleting])
+//-------------------------------------------------------------------------------------------------------
+
+
+//----------------------------------Restore a deleted service function-----------------------------------
+const [restoreServiceEnabled, setRestoreServiceEnabled] = useState(false);
+const [restoring, setRestoring] = useState(false);
+const [serviceIdRestore, setServiceIdRestore] = useState(null);
+const [serviceNameRestore, setServiceNameRestore] = useState(null);
+useEffect(()=>{
+async function restoreService() {
+  if(serviceIdRestore && restoring)
+  {
+    const restoreDeletedService = await ServiceServices.RestoreDeletedService(serviceIdRestore, loginEmployeeToken)
+    const data = await restoreDeletedService.json();
+    console.log(data);
+// alert(`Service id to restore is ${serviceIdRestore} and Service name is ${serviceNameRestore}`)
+setRestoring(false);
+}
+else{
+    setRestoring(false);
+
+  }
+}
+restoreService();
+}, [restoring])
+//-------------------------------------------------------------------------------------------------------
+
   return (
     <div className='manage-service-page'>
       <h1 style={{fontWeight: '700', margin: '10px 2px'}}>Services we provide</h1>
@@ -208,8 +251,10 @@ deleteServiceFunc();
 <p>{savedService.service_description}</p>
 </div>
 <div className='right-div'>
-  <FaEdit className='edit-delete-icon' color='red' size={20} onClick={()=>{handleServiceEdit(savedService.service_id);setEditServiceEnabled(!editServiceEnabled)}}/>   
-  <MdDelete className='edit-delete-icon' size={20} onClick={()=>{handleServiceDelete(savedService.service_id);setDeleteServiceEnabled(!deleteServiceEnabled)}}/>
+  <FaEdit className='edit-delete-icon' color='#3285f1' size={20} onClick={()=>{handleServiceEdit(savedService.service_id);setEditServiceEnabled(!editServiceEnabled)}}/>   
+  <MdDelete className='edit-delete-icon' color='red' size={20} onClick={()=>{handleServiceDelete(savedService.service_id);setDeleteServiceEnabled(!deleteServiceEnabled)}}/>
+  <MdRestoreFromTrash className='edit-delete-icon' size={20} color='#3dac6b' onClick={()=>{setServiceIdRestore(savedService.service_id);setServiceNameRestore( savedService.service_name);setRestoreServiceEnabled(!restoreServiceEnabled)}}/>
+  
 
 </div>
 </div>
@@ -217,6 +262,21 @@ deleteServiceFunc();
             
       }
     </div>
+    {
+      restoreServiceEnabled && (
+        <div className='delete-service-panel-overlay'>
+        <div className='delete-service-panel'>
+          <h6>Restore Service <b>{serviceNameRestore}</b> ?</h6>
+
+
+<div className='service-delete-confirmation-div'>
+  <button className='service-delete-confirmation-delete-btn' onClick={()=>{setRestoreServiceEnabled(!restoreServiceEnabled); setRestoring(true);}}>Restore</button>
+  <button className='service-delete-confirmation-cancel-btn' onClick={()=>{setRestoreServiceEnabled(!restoreServiceEnabled); setRestoring(false);}}>Cancel</button>
+</div>
+        </div>
+        </div>
+      )
+    }
     { deleteServiceEnabled && (
       <div className='delete-service-panel-overlay'>
         <div className='delete-service-panel'>

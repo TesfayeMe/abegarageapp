@@ -51,7 +51,7 @@ const updateService = async (selectedService, loginEmployeeToken) => {
 const deleteService = async (serviceIdDelete, loginEmployeeToken) =>{
 const response = await fetch(`${apiUrl}/api/service-delete/${serviceIdDelete}`,
     {
-       method: 'delete',
+       method: 'put',
        headers: {
         'Content-Type': 'application/json',
         'x-access-token': loginEmployeeToken
