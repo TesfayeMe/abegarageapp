@@ -108,7 +108,7 @@ const CustomerProfileView = (props) => {
 
   const handleVehicleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const newVehicle = {
       customerId: customerId,
       year: carYear,
@@ -204,7 +204,7 @@ const CustomerProfileView = (props) => {
     }
   }
 
-  
+
 
 
   useEffect(() => {
@@ -236,7 +236,7 @@ const CustomerProfileView = (props) => {
       return nextIds
     });
   };
-  
+
   console.log(serviceIDs);
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
@@ -301,12 +301,12 @@ const CustomerProfileView = (props) => {
         }
         else if (data.message === 'TokenExpired') {
           window.location.href = '/login'
-          
+
         }
         else if (data.status === false) {
           alert(data.message)
         }
-        
+
 
       } catch (error) {
         console.log(error);
@@ -395,7 +395,7 @@ const CustomerProfileView = (props) => {
               ))
             )}
             {!addNewVehicle && (
-              <button className='theme-btn btn-style-one' onClick={() => setAddNewVehicle(true)}>Add new vehicle</button>
+              <button className='theme-btn btn-style-one' style={{marginTop: '20px'}} onClick={() => setAddNewVehicle(true)}>Add new vehicle</button>
             )}
 
             {addNewVehicle && (
@@ -404,7 +404,7 @@ const CustomerProfileView = (props) => {
                   <RiCloseFill className='form-close-icon' size={35} color='#fff' />
                 </div>
                 <form className='new-vehicle-form' onSubmit={handleVehicleSubmit}>
-                  <h1 style={{ padding: '20px 10px' }}>Add New Vehicle</h1>
+                  <h1 style={{ padding: '20px 10px', marginTop: '20px'}}>Add New Vehicle</h1>
                   <div className='form-group col-md-12'>
                     <select onChange={e => setCarYear(e.target.value)} required>
                       <option value={''}>Select year</option>
@@ -455,70 +455,76 @@ const CustomerProfileView = (props) => {
             </div>
           </div>
           <div>
-  <div className='customer-profile-view-right-order-details-content'>
-                   <h2>Orders</h2>
-            {orderData === null ? (
+            <div className='customer-profile-view-right-order-details-content'>
+              <h2>Orders</h2>
+              {orderData === null ? (
                 <div className='message-of-no-vehicle-found'>
                   <span>No order found for customer {customerId} with vehicle {'selectedVehicleId'}</span>
                 </div>
-            ) : (
-              Object.entries(orderData)?.map(([key, value]) => (
+              ) : (
+                Object.entries(orderData)?.map(([key, value]) => (
                   <div>
                     <span key={key}><strong>{key}:</strong> {value}</span><br />
-                  </div>            
-              ))
+                  </div>
+                ))
 
-            )}
- </div>
-            {!showNewOrderModal && <button className='theme-btn btn-style-one' style={{ margin: '20px 0' }} onClick={() => { addNewOrder(selectedVehicleId); setShowNewOrderModal(!showNewOrderModal) }}>Add new order {selectedVehicleId} </button>}
+              )}
+            </div>
+            {!showNewOrderModal && <button className='theme-btn btn-style-one' style={{ margin: '20px' }} onClick={() => { addNewOrder(selectedVehicleId); setShowNewOrderModal(!showNewOrderModal) }}>Add new order {selectedVehicleId} </button>}
           </div>
 
-          {showNewOrderModal && vehicleId &&
+          {
+            showNewOrderModal && vehicleId &&
 
             (
               <div className='new-order-modal-overlay'>
                 <div className='new-order-modal'>
-                  <button className='close-modal-btn' onClick={() => { setShowNewOrderModal(false); setServiceIDs([]);setAdditionalRequest('');setServicePrice(0) }}>
+                  <button className='close-modal-btn' onClick={() => { setShowNewOrderModal(false); setServiceIDs([]); setAdditionalRequest(''); setServicePrice(0) }}>
                     <RiCloseFill className='close-modal-icon' size={35} color='#fff' />
                   </button>
-                  <form style={{ padding: '10px' }} onSubmit={handleServiceOrder}>
-                    <h2 style={{ fontSize: '30px' }}>New order of {`${customerData.customer_first_name}'s`} car with car id {vehicleId}</h2>
-                    <div className='form-content-container'>
-                      {
-                        services.map((service) => (
+                  {services.length > 0 ? (
+                    <form style={{ padding: '10px' }} onSubmit={handleServiceOrder}>
+                      <h2 style={{ fontSize: '30px' }}>New order of {`${customerData.customer_first_name}'s`} car with car id {vehicleId}</h2>
+                      <div className='form-content-container'>
+                        {
+                          services.map((service) => (
+                            <>
+                              <div className='form-group col-md-12 service-list-texts-checkboxes' key={service.service_id}>
+                                <div className='service-list-texts' style={{ width: '100%' }} onClick={() => handleServiceClick(service.service_id)} >
+                                  <h3 >{service.service_name}</h3>
+                                  <p >{service.service_description}</p>
+                                </div>
+                                <div>
+                                  <input
+                                    type="checkbox"
+                                    value={service.service_id}
+                                    name={service.service_name}
+                                    id={`service-checkbox-${service.service_id}`}
+                                    className="service-checkboxes"
+                                    checked={serviceIDs.includes(service.service_id)}
+                                    onChange={handleCheckboxChange}
+                                  />
+                                </div>
+                              </div>
+                              <div className='add-order-btn-and-additional-request-and-price-div' style={{ backgroundColor: 'white' }}>
+                                <div className='additional-request-textarea-div'>
+                                  <h2>Additional request</h2>
+                                  <textarea className='additional-request-textarea' placeholder='Service request' value={additionalRequest} onChange={e => setAdditionalRequest(e.target.value)} ></textarea>
+                                </div>
+                                <div className='price-of-service'>
+                                  <input type='number' placeholder='Price' value={servicePrice} onChange={e => setServicePrice(e.target.value)} />
+                                </div>
+                                <button type='submit' className='theme-btn btn-style-one'  >Save order</button>
+                              </div>
+                            </>
+                          ))
 
-                          <div className='form-group col-md-12 service-list-texts-checkboxes' key={service.service_id}>
-                            <div className='service-list-texts' style={{ width: '100%' }} onClick={() => handleServiceClick(service.service_id)} >
-                              <h3 >{service.service_name}</h3>
-                              <p >{service.service_description}</p>
-                            </div>
-                            <div>
-                              <input
-                                type="checkbox"
-                                value={service.service_id}
-                                name={service.service_name}
-                                id={`service-checkbox-${service.service_id}`}
-                                className="service-checkboxes"
-                                checked={serviceIDs.includes(service.service_id)}
-                                onChange={handleCheckboxChange}
-                              />
-                            </div>
-                          </div>
-                        ))
+                        }
 
-                      }
-                      <div className='add-order-btn-and-additional-request-and-price-div' style={{ backgroundColor: 'white' }}>
-                        <div className='additional-request-textarea-div'>
-                          <h2>Additional request</h2>
-                          <textarea className='additional-request-textarea' placeholder='Service request' value={additionalRequest} onChange={e => setAdditionalRequest(e.target.value)} ></textarea>
-                        </div>
-                        <div className='price-of-service'>
-                          <input type='number' placeholder='Price' value={servicePrice} onChange={e => setServicePrice(e.target.value)} />
-                        </div>
-                        <button type='submit' className='theme-btn btn-style-one'  >Save order</button>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  ) : (<div className='service-not-found-for-add-new-order'>Services of the garage not found, please add services first</div>)
+                  }
                 </div>
 
               </div>

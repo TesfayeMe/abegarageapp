@@ -1,20 +1,18 @@
-
-.manage-service-page
-{max-width: 1300px;
+.manage-service-page {
+    max-width: 1300px;
     padding: 40px;
     position: relative;
-    
+
 }
 
-.manage-service-page-service-display-div
-{
+.manage-service-page-service-display-div {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
-.single-service-service-display-div
-{
+
+.single-service-service-display-div {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -24,43 +22,42 @@
     padding: 7px 15px;
     align-items: center;
 }
-.single-service-service-display-div .left-div
-{
+
+.single-service-service-display-div .left-div {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
-.single-service-service-display-div .right-div
-{
+
+.single-service-service-display-div .right-div {
     display: flex;
     flex-direction: row;
     padding-left: 20px;
-    
-}
-.single-service-service-display-div .right-div .edit-delete-icon
-{
-    margin: 1px 4px;
-    cursor: pointer;
-    
 
 }
-.add-service-form-page-container 
-{
+
+.single-service-service-display-div .right-div .edit-delete-icon {
+    margin: 1px 4px;
+    cursor: pointer;
+
+
+}
+
+.add-service-form-page-container {
     width: 100%;
     background-color: white;
     border-radius: 4px;
     margin-top: 13px;
     padding: 30px;
 }
-.add-service-form-page-container input
-{
+
+.add-service-form-page-container input {
     max-width: 900px;
-    
+
 }
 
-.edit-service-controller-overlay-div
-{
-     position: fixed;
+.edit-service-controller-overlay-div {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -72,10 +69,10 @@
     z-index: 1999;
     font-size: 1.6vh;
 
-    
+
 }
-.new-service-edit-modal
-{
+
+.new-service-edit-modal {
     width: 50%;
     max-width: 800px;
     background-color: white;
@@ -88,29 +85,29 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -30%);
-    z-index: 10001 ;
+    z-index: 10001;
 }
-.new-service-edit-modal-header
-{
+
+.new-service-edit-modal-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #b3bbb349;
 }
-.close-btn-edit-service
-{
+
+.close-btn-edit-service {
     cursor: pointer;
 }
-.new-service-edit-modal-form form
-{
-width: 100%;
-display: flex;
-flex-direction: column;
-gap: 10px;
+
+.new-service-edit-modal-form form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
-.new-service-edit-modal-form form .form-groups
-{
+
+.new-service-edit-modal-form form .form-groups {
     width: 100%;
     display: flex;
     margin-top: 20px;
@@ -118,8 +115,8 @@ gap: 10px;
     justify-content: start;
     gap: 6px;
 }
-.new-service-edit-modal-form form .form-groups input 
-{
+
+.new-service-edit-modal-form form .form-groups input {
     width: 90%;
     border: 1px solid rgb(218, 221, 218);
     height: 40px;
@@ -127,8 +124,8 @@ gap: 10px;
     padding: 5px 10px;
     font-size: .8rem;
 }
-.new-service-edit-modal-form form .form-groups textarea
-{
+
+.new-service-edit-modal-form form .form-groups textarea {
     width: 90%;
     border: 1px solid rgb(218, 221, 218);
     min-height: 100px;
@@ -136,12 +133,12 @@ gap: 10px;
     padding: 5px 10px;
     font-size: .8rem;
 }
-.new-service-edit-modal-form form .form-groups button
-{
-width: 255px;
+
+.new-service-edit-modal-form form .form-groups button {
+    width: 255px;
 }
-.delete-service-panel-overlay
-{
+
+.delete-service-panel-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -155,8 +152,8 @@ width: 255px;
     font-size: 1.6vh;
 
 }
-.delete-service-panel
-{
+
+.delete-service-panel {
     width: 20%;
     max-width: 500px;
     min-width: 400px;
@@ -170,13 +167,13 @@ width: 255px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -30%);
-    z-index: 10001 ;
+    z-index: 10001;
     justify-content: center;
     align-items: center;
 
 }
-.service-delete-confirmation-div
-{
+
+.service-delete-confirmation-div {
     width: 100%;
     margin-top: 40px;
     display: flex;
@@ -184,19 +181,24 @@ width: 255px;
     align-items: center;
     justify-content: space-evenly;
 }
-.service-delete-confirmation-div button
-{
-padding: 5px 20px;
-background-color: transparent;
-font-weight: 700;
-font-size: 17px;
+
+.service-delete-confirmation-div button {
+    padding: 5px 20px;
+    background-color: transparent;
+    font-weight: 700;
+    font-size: 17px;
 
 }
-.service-delete-confirmation-delete-btn
-{
+
+.service-delete-confirmation-delete-btn {
     color: red;
 }
-.service-delete-confirmation-cancel-btn
-{
-color: rgb(104, 112, 119);
+
+.service-delete-confirmation-cancel-btn {
+    color: rgb(104, 112, 119);
+}
+
+.service-not-found-div {
+    background-color: white;
+    padding: 5px 30px;
 }

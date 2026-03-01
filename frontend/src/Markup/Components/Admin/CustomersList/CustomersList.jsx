@@ -66,7 +66,7 @@ const CustomersList = () => {
 
         // alert(id)
 
-         navigate('/admin/edit-customer', { state: { customer_id: id } });
+        navigate('/admin/edit-customer', { state: { customer_id: id } });
 
 
     }
@@ -96,16 +96,16 @@ const CustomersList = () => {
                 else {
                     alert('Failed to delete customer. Please try again.');
                 }
-                setCustomerDeleted(false); 
+                setCustomerDeleted(false);
             }
             deleteCustomerApi();
         }
 
     }, [customerDeleted])
-const handleCustomerProfileView = (id) => {
-    navigate('/admin/customer-profile', { state: { customer_id: id } });
-    
-}
+    const handleCustomerProfileView = (id) => {
+        navigate('/admin/customer-profile', { state: { customer_id: id } });
+
+    }
     return (
         <div>
             <h2>Abe Garage Customers </h2>
@@ -126,14 +126,14 @@ const handleCustomerProfileView = (id) => {
                 <tbody>
                     {
                         customers?.map((customer) => (
-                            <tr key={customer.customer_id} onClick={() => handleCustomerProfileView(customer.customer_id)} style={{ cursor: 'pointer' }}>
-                                <td>{customer.customer_id}</td>
-                                <td>{customer.customer_first_name}</td>
-                                <td>{customer.customer_last_name}</td>
-                                <td>{customer.customer_email}</td>
-                                <td>{customer.customer_phone_number}</td>
-                                <td>{format(new Date(customer.customer_added_date), 'MM-dd-yyyy | kk:mm')}</td>
-                                <td>{customer.active_customer_status === 1 ? 'Yes' : 'No'}</td>
+                            <tr key={customer.customer_id} style={{ cursor: 'pointer' }}>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{customer.customer_id}</td>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{customer.customer_first_name}</td>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{customer.customer_last_name}</td>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{customer.customer_email}</td>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{customer.customer_phone_number}</td>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{format(new Date(customer.customer_added_date), 'MM-dd-yyyy | kk:mm')}</td>
+                                <td onClick={() => handleCustomerProfileView(customer.customer_id)}>{customer.active_customer_status === 1 ? 'Yes' : 'No'}</td>
                                 <td>
                                     <div className="edit-delete-icons" style={{ display: 'flex', gap: '20px' }}>
                                         <button className="edit-icon" onClick={() => handleEdit(customer.customer_id)}><CiEdit size={17} /></button>

@@ -13,7 +13,20 @@ const getOrderByVehicleId = async (searchData, token) => {
     })
     return response;
 }
+const getAllOrders = async (token)=>{
+    
+const response = await fetch(`${api_url}/api/get-services`,{
+method: 'get',
+headers: {
+    'Content-Type': 'application/json',
+    'x-access-token': token
+}
+})
+// console.log(response)
+return response;
+}
 const OrderServices = {
-    getOrderByVehicleId
+    getOrderByVehicleId,
+    getAllOrders
 }
 export default OrderServices

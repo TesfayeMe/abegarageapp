@@ -1,5 +1,5 @@
 const orderService = require('../services/order.services')
-const getOrders = async (req, res, next) => {
+const getOrder = async (req, res, next) => {
     // const customer_vehicle_id = req.body;
     const { cust_veh_id } = req.params;
     // console.log(cust_veh_id)
@@ -8,7 +8,7 @@ const getOrders = async (req, res, next) => {
     // console.log(customer_id)
     // console.log(vehicle_id)
     const customer_vehicle_id = { customer_id: customer_id, vehicle_id: vehicle_id };
-    const getOrder = await orderService.getOrders(customer_vehicle_id);
+    const getOrder = await orderService.getOrder(customer_vehicle_id);
     if (getOrder) {
         return res.status(200).json({
             status: true,
@@ -23,9 +23,28 @@ const getOrders = async (req, res, next) => {
         })
     }
 }
-
+const getOrders = async (req, res) =>{
+const orders = await orderService.getOrders();
+if(orders)
+    {
+        return res.status(200).json({
+            status: true,
+            message: 'Data found',
+            data: orders
+        })
+    }
+    else
+        {
+        //  console.log('ordcntrl ', orders)
+        return res.status(400).json({
+            status: false,
+            message: 'order not found'
+        })
+     }
+}
 const orderController = {
-    getOrders,
+    getOrder,
+    getOrders
 }
 
 module.exports = orderController;

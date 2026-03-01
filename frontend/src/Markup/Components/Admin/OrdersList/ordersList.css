@@ -1,0 +1,13 @@
+
+.orders-list-page
+{
+    padding: 30px;
+}
+.order-not-found-div {
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    font-size: 22px;
+
+
+}

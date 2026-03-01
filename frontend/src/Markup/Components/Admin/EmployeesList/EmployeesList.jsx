@@ -30,7 +30,7 @@ const EmployeesList = () => {
         const allEmployees = EmployeeServices.getAllEmployees(token);
         allEmployees.then((res) => {
 
-            if (!res.ok ) {
+            if (!res.ok) {
                 setApiError(true);
                 if (res.status === 401) {
                     setApiErrorMessage('Please login again');
@@ -40,15 +40,14 @@ const EmployeesList = () => {
                 }
                 else {
                     setApiErrorMessage("Please try again");
-                    
+
                 }
             }
             return res.json();
-            
+
         }).then((emp) => {
-            
-            if(emp.status === 'tokenExpired')
-            {
+
+            if (emp.status === 'tokenExpired') {
 
                 localStorage.removeItem('employee');
                 navigate('/login')
@@ -66,51 +65,49 @@ const EmployeesList = () => {
 
     }
     const handleDelete = (a) => {
-    setDeleteEmployee(true)
-    setEmpid(a);
+        setDeleteEmployee(true)
+        setEmpid(a);
     }
-    useEffect(()=>{
-    if(employeeDeleted)
-    {
-        const deleteEmp = EmployeeServices.deleteEmployee(empid, token);
-        console.log(deleteEmp);
-        deleteEmp.then((res) => {
-            console.log(res);
-            if (!res.ok) {
-                setApiError(true);
-                if (res.status === 401) {
-                    setApiErrorMessage('Please login again');
-                }
-                else if (res.status === 403) {
-                    setApiErrorMessage("You are not authorized to view this page");
-                }
-                else {
-                    setApiErrorMessage("Please try again");
-                    
-                }
-            }
-            return res.json();
-            
-        }).then((data) => {
-            if(data.status === 'tokenExpired')
-            {
+    useEffect(() => {
+        if (employeeDeleted) {
+            const deleteEmp = EmployeeServices.deleteEmployee(empid, token);
+            console.log(deleteEmp);
+            deleteEmp.then((res) => {
+                console.log(res);
+                if (!res.ok) {
+                    setApiError(true);
+                    if (res.status === 401) {
+                        setApiErrorMessage('Please login again');
+                    }
+                    else if (res.status === 403) {
+                        setApiErrorMessage("You are not authorized to view this page");
+                    }
+                    else {
+                        setApiErrorMessage("Please try again");
 
-                localStorage.removeItem('employee');
-                navigate('/login')
-            }
-            console.log(data);
-            setEmployeeDeleted(false);    
-        })
-        .catch((err) => {
-            console.log(err);
-        })     
-        setEmployeeDeletedMessage(true);
-        setTimeout(() => {
-            window.location.href = "/admin/employees";
-        setEmployeeDeletedMessage(false);
+                    }
+                }
+                return res.json();
 
-        }, 2000);
-    }
+            }).then((data) => {
+                if (data.status === 'tokenExpired') {
+
+                    localStorage.removeItem('employee');
+                    navigate('/login')
+                }
+                console.log(data);
+                setEmployeeDeleted(false);
+            })
+                .catch((err) => {
+                    console.log(err);
+                })
+            setEmployeeDeletedMessage(true);
+            setTimeout(() => {
+                window.location.href = "/admin/employees";
+                setEmployeeDeletedMessage(false);
+
+            }, 2000);
+        }
     }, [employeeDeleted])
     return (
         <div>
@@ -158,20 +155,20 @@ const EmployeesList = () => {
             {deleteEmployee && <div className="confirm-delete-modal">
                 <h4>Are you sure you want to delete this employee?</h4>
                 <div className="confirm-delete-buttons">
-                    <Button variant="danger" style={{ marginRight: '10px' }} onClick={() => {setDeleteEmployee(false); setEmployeeDeleted(true);}}>Yes</Button>
-                <Button variant="secondary" onClick={() => {setDeleteEmployee(false); setEmployeeDeleted(false);}}>No</Button>
+                    <Button variant="danger" style={{ marginRight: '10px' }} onClick={() => { setDeleteEmployee(false); setEmployeeDeleted(true); }}>Yes</Button>
+                    <Button variant="secondary" onClick={() => { setDeleteEmployee(false); setEmployeeDeleted(false); }}>No</Button>
                 </div>
             </div>}
 
-<div className="api-error-message">
-{apiErrorMessage && <p className="error-message">{apiErrorMessage}</p>}
-</div>
-{employeeDeletedMessage && 
-<div className="api-success-message">
-<span className="success-message">Employee deleted successfully</span>
+            <div className="api-error-message">
+                {apiErrorMessage && <p className="error-message">{apiErrorMessage}</p>}
+            </div>
+            {employeeDeletedMessage &&
+                <div className="api-success-message">
+                    <span className="success-message">Employee deleted successfully</span>
 
-</div>
-}
+                </div>
+            }
 
         </div>
     )
