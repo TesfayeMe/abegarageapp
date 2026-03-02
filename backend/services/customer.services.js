@@ -98,29 +98,26 @@ const editCustomer = async (custinfo) => {
 const deleteCustomer = async (customerid) => {
     const sqldeletecin = `delete from customer_info where customer_id = ?`;
     const deletedCustInfo = await conn.query(sqldeletecin, [customerid]);
-    if(deletedCustInfo[0].affectedRows === 0)
-    {
+    if (deletedCustInfo[0].affectedRows === 0) {
         return null;
     }
-    else if(deletedCustInfo[0].affectedRows > 0)
-    {
+    else if (deletedCustInfo[0].affectedRows > 0) {
         const sqldeletecid = `delete from customer_identifier where customer_id = ?`;
         const deletedCustId = await conn.query(sqldeletecid, [customerid]);
-        if(!deletedCustId[0].affectedRows)        {
+        if (!deletedCustId[0].affectedRows) {
             return null;
         }
-        else if(deletedCustId[0].affectedRows > 0)
-        {
+        else if (deletedCustId[0].affectedRows > 0) {
             return deletedCustInfo[0].affectedRows;
         }
     }
 }
 
 const addServiceOrder = async (serviceData) => {
-    const { 
-        employee_id, customer_id, vehicle_id, active_order, 
-        order_total_price, additional_request, active_additional_request, 
-        service_ids 
+    const {
+        employee_id, customer_id, vehicle_id, active_order,
+        order_total_price, additional_request, active_additional_request,
+        service_ids
     } = serviceData;
     try {
         // 1. Start a Transaction
@@ -150,7 +147,7 @@ const addServiceOrder = async (serviceData) => {
 
         // 6. If everything worked, COMMIT the changes
         await conn.query('COMMIT');
-        
+
         return { orderId, ...serviceData };
 
     } catch (error) {
@@ -161,12 +158,36 @@ const addServiceOrder = async (serviceData) => {
     }
 };
 
+const searchCustomer = async (search_value) => {
+    const formattedSearch = `%${search_value}%`;
+    const searchCustSql = `
+        SELECT 
+        cident.customer_id,
+            cinfo.customer_first_name, 
+            cinfo.customer_last_name, 
+            cident.customer_email, 
+            cident.customer_phone_number 
+        FROM customer_identifier cident 
+        JOIN customer_info cinfo ON cident.customer_id = cinfo.customer_id 
+        WHERE cinfo.customer_first_name LIKE ? 
+           OR cinfo.customer_last_name LIKE ? 
+           OR cident.customer_email LIKE ? 
+           OR cident.customer_phone_number LIKE ?`;
+    const [customerResult] = await conn.query(searchCustSql, [
+        formattedSearch,
+        formattedSearch,
+        formattedSearch,
+        formattedSearch
+    ]);
 
+    return customerResult.length > 0 ? customerResult : null;
+}
 module.exports = {
     createCustomer,
     allCustomers,
     getCustomerById,
     editCustomer,
     deleteCustomer,
-    addServiceOrder
+    addServiceOrder,
+    searchCustomer
 }

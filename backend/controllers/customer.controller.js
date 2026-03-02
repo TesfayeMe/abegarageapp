@@ -59,17 +59,15 @@ const getCustomerById = async (req, res, next) => {
 }
 
 const editCustomer = async (req, res, next) => {
-const custinfo = req.body;
+    const custinfo = req.body;
     const editcustomer = customerService.editCustomer(custinfo);
-    if (!editcustomer)
-    {
-return res.status(400).json({
-    status: false,
-    message: 'failed to update'
-})
+    if (!editcustomer) {
+        return res.status(400).json({
+            status: false,
+            message: 'failed to update'
+        })
     }
-    else
-    {
+    else {
         // console.log(editcustomer)
         return res.status(200).json({
             status: true,
@@ -99,23 +97,39 @@ const addServiceOrder = async (req, res, next) => {
     // console.log(req.body);
     const serviceData = req.body;
     const addServiceOrderResponse = await customerService.addServiceOrder(serviceData);
-        // console.log(addServiceOrderResponse);
-        if(addServiceOrderResponse)
-        {
-            return res.status(200).json({
-                status: true,
-                message: 'Successfully ordered',
-                data: addServiceOrderResponse
-            })
-        }
-        else
-        {
-            return res.status(400).json({
-                status: false,
-                message: 'Order not success'
-            })
-        }
+    // console.log(addServiceOrderResponse);
+    if (addServiceOrderResponse) {
+        return res.status(200).json({
+            status: true,
+            message: 'Successfully ordered',
+            data: addServiceOrderResponse
+        })
+    }
+    else {
+        return res.status(400).json({
+            status: false,
+            message: 'Order not success'
+        })
+    }
 
+}
+
+const searchCustomer = async (req, res) => {
+    const { search_value } = req.params;
+    const customer = await customerService.searchCustomer(search_value);
+    // console.log(customer)
+    if (customer) {
+        return res.status(200).json({
+            status: true,
+            data: customer
+        })
+    }
+    else {
+        return res.status(400).json({
+            status: false,
+            message: 'Customer not found!'
+        })
+    }
 }
 module.exports = {
     addCustomer,
@@ -123,5 +137,6 @@ module.exports = {
     editCustomer,
     getCustomerById,
     deleteCustomer,
-    addServiceOrder
+    addServiceOrder,
+    searchCustomer
 }

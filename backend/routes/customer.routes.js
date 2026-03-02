@@ -17,5 +17,7 @@ router.put('/api/edit-customer', [authMiddleWare.verifyToken, authMiddleWare.isA
 router.delete('/api/delete-customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.deleteCustomer);
 //export the router
 router.post('/api/add-service-order-info', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.addServiceOrder);
+//search-customer
+router.get('/api/search-customer/:search_value', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.searchCustomer);
 //export the router
 module.exports = router;

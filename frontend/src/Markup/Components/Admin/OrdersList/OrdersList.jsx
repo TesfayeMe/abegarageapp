@@ -24,18 +24,28 @@ const OrdersList = () => {
             // console.log(data)
             if (data.status === true) {
                 console.log(data.data)
-                setSavedOrders(data.data);
+                 setSavedOrders(data.data);
+                
+                
+
+
             }
             else if (data.status === 'tokenExpired') {
                 localStorage.removeItem('employee');
                 window.location.href = '/login';
+    
+
             }
             else {
                 console.log(data.message)
+              
+
+
             }
         }
         grapeOrders();
     }, [employee?.employee_id])
+    console.log(savedOrders)
     return (
         <div className="orders-list-page">
             <h2>Orders</h2>
@@ -54,9 +64,10 @@ const OrdersList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* cinfo.customer_first_name, cinfo.customer_last_name, cident.customer_email, cident.customer_phone_number, c_v_info.vehicle_make, c_v_info.vehicle_year, c_v_info.vehicle_tag, ord.order_id, ord.order_date, crole.company_role_name, emp_info.employee_first_name, ord_stat.order_status */}
 
                         {
+
+
                             savedOrders?.map((order) => (
                                 <tr key={order.order_id} >
                                     <td>{order.order_id}</td>
@@ -71,9 +82,7 @@ const OrdersList = () => {
                                         <span>{order.vehicle_year}</span><br />
                                         <span>{order.vehicle_tag}</span>
                                     </td>
-                                    <td>{order.order_date}</td>
-                                    <td>{employee.employee_phone}</td>
-                                    <td>{format(new Date(employee.added_date), 'MM-dd-yyyy | kk:mm')}</td>
+                                    <td>{format(new Date(order.order_date), 'MM-dd-yyyy | kk:mm')}</td>
                                     <td>
                                         {order.company_role_name} {order.employee_first_name}
                                     </td>

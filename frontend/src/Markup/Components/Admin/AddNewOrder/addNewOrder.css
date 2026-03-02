@@ -1,0 +1,72 @@
+.add-new-order-page {
+    width: 100%;
+    padding: 40px 0 0 80px;
+
+}
+
+.add-new-order-content {
+    width: 80%;
+    max-width: 1200px;
+    min-width: 500px;
+    border: 1px solid rgb(212, 226, 226);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.add-new-order-page form {
+    /* margin-bottom: 30px; */
+    width: 100%;
+}
+
+.customer-search-bar {
+    background-color: white;
+    border: 1px solid rgb(212, 226, 226);
+    width: 100%;
+    border-radius: 5px;
+}
+
+.customer-search-bar .search-input {
+    width: 94%;
+    height: 65px;
+    padding: 3px 20px;
+    border-radius: 5px;
+
+}
+
+.customer-search-bar .search-btn {
+    width: calc(6%);
+    height: 65px;
+    background-color: transparent;
+
+}
+
+.add-new-customer-btn {
+    margin-top: 20px;
+}
+.selected-customer-info
+{
+    background-color: white;
+    padding: 20px;
+    border: 1px solid rgb(212, 226, 226);
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.selected-customer-info .close-btn-div
+{
+display: flex;
+}
+.selected-customer-info .close-btn-div button
+{
+    background-color: red;
+    font-size: 30px;
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+.edit-customer-icon {
+    cursor: pointer;
+}

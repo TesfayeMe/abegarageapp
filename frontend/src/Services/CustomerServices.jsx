@@ -75,16 +75,28 @@ const addServiceOrder = async (serviceData, employee_token) => {
       'x-access-token': employee_token
     },
     body: JSON.stringify(serviceData)
-  }) 
+  })
   return response;
 }
 
+const searchCustomers = async (searchValue, loginEmployeeToken) => {
+  const response = await fetch(`${apiUrl}/api/search-customer/${searchValue}`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': loginEmployeeToken
+    }
+  })
+  return response;
+
+}
 const CustomerServices = {
   createCustomer,
   getAllCustomers,
   editCustomer,
   deleteCustomer,
   getCustomerById,
-  addServiceOrder
+  addServiceOrder,
+  searchCustomers
 }
 export default CustomerServices

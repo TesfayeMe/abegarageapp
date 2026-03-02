@@ -19,20 +19,3 @@ const orderService = {
     getOrders,
 }
 module.exports = orderService;
-//select cinfo.customer_first_name, cinfo.customer_last_name, cident.customer_email, cident.customer_phone_number,
-//  c_v_info.vehicle_make, c_v_info.vehicle_year, c_v_info.vehicle_tag, ord.order_id, ord.order_date,
-// crole.company_role_name, emp_info.employee_first_name, ord_stat.order_status from company_roles crole
-//JOIN employee_role emproles ON crole.company_role_id = emproles.company_role_id
-//JOIN employee emp ON emproles.employee_id = emp.employee_id
-//JOIN employee_info emp_info ON emp.employee_id = emp_info.employee_id
-//JOIN orders ord ON emp.employee_id = ord.employee_id
-//JOIN order_info ord_info ON ord.order_id = ord_info.order_id
-//JOIN order_status ord_stat ON ord.order_id = ord_stat.order_id
-//JOIN customer_identifier cident ON ord.customer_id = cident.customer_id
-//JOIN customer_info cinfo ON cident.customer_id = cinfo.customer_id
-//JOIN customer_vehicle_info c_v_info ON cident.customer_id = c_v_info.customer_id
-
-
-
-// camp role, employee role, employee employee info, order, order_info,
-// order_status, vehicle(order), customer(order) 
