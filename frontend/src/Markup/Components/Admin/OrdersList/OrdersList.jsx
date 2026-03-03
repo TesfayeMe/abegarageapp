@@ -6,6 +6,9 @@ import { format } from 'date-fns';
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { href, useNavigate } from 'react-router-dom';
+import { BsBoxArrowUpRight } from "react-icons/bs";
+import { FaEdit } from "react-icons/fa";
+import { LiaEditSolid } from "react-icons/lia";
 import './ordersList.css'
 const OrdersList = () => {
 
@@ -45,7 +48,9 @@ const OrdersList = () => {
         }
         grapeOrders();
     }, [employee?.employee_id])
-    console.log(savedOrders)
+    console.log(savedOrders);
+
+
     return (
         <div className="orders-list-page">
             <h2>Orders</h2>
@@ -72,13 +77,12 @@ const OrdersList = () => {
                                 <tr key={order.order_id} >
                                     <td>{order.order_id}</td>
                                     <td>
-                                        <span> {order.customer_first_name}</span><br />
-                                        <span> {order.customer_last_name}</span><br />
+                                        <span><strong> {order.customer_first_name} {order.customer_last_name}</strong></span><br />
                                         <span> {order.customer_email}</span><br />
                                         <span> {order.customer_phone_number}</span>
                                     </td>
                                     <td>
-                                        <span>{order.vehicle_make}</span><br />
+                                        <span><strong>{order.vehicle_make} {order.vehicle_model}</strong></span><br />
                                         <span>{order.vehicle_year}</span><br />
                                         <span>{order.vehicle_tag}</span>
                                     </td>
@@ -86,11 +90,11 @@ const OrdersList = () => {
                                     <td>
                                         {order.company_role_name} {order.employee_first_name}
                                     </td>
-                                    <td>{order.order_status}</td>
+                                    <td><span className={order.order_status === 0 ? "received" : order.order_status === 1 ? "in-progress" : "completed"}>{order.order_status === 0 ? "Received" : order.order_status === 1 ? "In Progress" : "Completed"}</span></td>
                                     <td>
                                         <div className="edit-delete-icons" style={{ display: 'flex', gap: '20px' }}>
-                                            <button className="edit-icon" ><CiEdit size={17} /></button>
-                                            <button className="delete-icon" ><RiDeleteBinLine size={15} /></button>
+                                            <button className="edit-icon" ><LiaEditSolid size={17} /></button>
+                                            <button className="delete-icon" ><BsBoxArrowUpRight size={15} /></button>
 
                                         </div>
                                     </td>

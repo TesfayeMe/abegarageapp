@@ -12,7 +12,7 @@ const addService = async (serviceData) => {
     }
 }
 const getAllServices = async () => {
-    const sqlAllServices = 'SELECT * FROM `common_services` where service_deleted = 0'
+    const sqlAllServices = 'SELECT * FROM `common_services`'
     const allServices = await conn.query(sqlAllServices);
     // console.log(allServices);
     return allServices.length > 0 ? allServices : null

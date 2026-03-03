@@ -226,9 +226,18 @@ const AddServiceForm = () => {
               <div className='right-div'>
                 <FaEdit className='edit-delete-icon' color='#3285f1' size={20} onClick={() => { handleServiceEdit(savedService.service_id); setEditServiceEnabled(!editServiceEnabled) }} />
                 <MdDelete className='edit-delete-icon' color='red' size={20} onClick={() => { handleServiceDelete(savedService.service_id); setDeleteServiceEnabled(!deleteServiceEnabled) }} />
-                <MdRestoreFromTrash className='edit-delete-icon' size={20} color='#3dac6b' onClick={() => { setServiceIdRestore(savedService.service_id); setServiceNameRestore(savedService.service_name); setRestoreServiceEnabled(!restoreServiceEnabled) }} />
-
-
+                <button
+  type="button"
+  disabled={savedService.service_deleted === 1}
+  className="icon-button"
+  onClick={() => {
+    setServiceIdRestore(savedService.service_id);
+    setServiceNameRestore(savedService.service_name);
+    setRestoreServiceEnabled(!restoreServiceEnabled);
+  }}
+>
+  <MdRestoreFromTrash size={20} color={savedService.service_deleted === 1 ? '#ccc' : '#3dac6b'} />
+</button>
               </div>
             </div>
           )))

@@ -506,7 +506,12 @@ const CustomerProfileView = (props) => {
                                   />
                                 </div>
                               </div>
-                              <div className='add-order-btn-and-additional-request-and-price-div' style={{ backgroundColor: 'white' }}>
+                              
+                            </>
+                          ))
+
+                        }
+<div className='add-order-btn-and-additional-request-and-price-div' style={{ backgroundColor: 'white' }}>
                                 <div className='additional-request-textarea-div'>
                                   <h2>Additional request</h2>
                                   <textarea className='additional-request-textarea' placeholder='Service request' value={additionalRequest} onChange={e => setAdditionalRequest(e.target.value)} ></textarea>
@@ -516,11 +521,6 @@ const CustomerProfileView = (props) => {
                                 </div>
                                 <button type='submit' className='theme-btn btn-style-one'  >Save order</button>
                               </div>
-                            </>
-                          ))
-
-                        }
-
                       </div>
                     </form>
                   ) : (<div className='service-not-found-for-add-new-order'>Services of the garage not found, please add services first</div>)
