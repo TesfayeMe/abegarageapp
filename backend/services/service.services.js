@@ -41,10 +41,20 @@ const deleteService = async (service_id) => {
     return updateResult.affectedRows > 0 ? updateResult.affectedRows : null;
 
 }
+
+const restoreDeletedService = async (service_id) => {
+    const serviceUpdateSql = 'update common_services set service_deleted = ? where service_id = ? '
+    const [updateResult] = await conn.query(serviceUpdateSql, [0, service_id]);
+    // console.log(updateResult.affectedRows);
+    return updateResult.affectedRows > 0 ? updateResult.affectedRows : null;
+
+}
+
 module.exports = {
     addService,
     getAllServices,
     getServiceById,
     updateService,
-    deleteService
+    deleteService,
+    restoreDeletedService
 }

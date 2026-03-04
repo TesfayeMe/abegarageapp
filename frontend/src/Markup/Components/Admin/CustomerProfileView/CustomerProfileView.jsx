@@ -486,31 +486,27 @@ const CustomerProfileView = (props) => {
                     <form style={{ padding: '10px' }} onSubmit={handleServiceOrder}>
                       <h2 style={{ fontSize: '30px' }}>New order of {`${customerData.customer_first_name}'s`} car with car id {vehicleId}</h2>
                       <div className='form-content-container'>
-                        {
-                          services.map((service) => (
-                            <>
-                              <div className='form-group col-md-12 service-list-texts-checkboxes' key={service.service_id}>
-                                <div className='service-list-texts' style={{ width: '100%' }} onClick={() => handleServiceClick(service.service_id)} >
-                                  <h3 >{service.service_name}</h3>
-                                  <p >{service.service_description}</p>
-                                </div>
-                                <div>
-                                  <input
-                                    type="checkbox"
-                                    value={service.service_id}
-                                    name={service.service_name}
-                                    id={`service-checkbox-${service.service_id}`}
-                                    className="service-checkboxes"
-                                    checked={serviceIDs.includes(service.service_id)}
-                                    onChange={handleCheckboxChange}
-                                  />
-                                </div>
-                              </div>
-                              
-                            </>
-                          ))
-
-                        }
+                        {services.map((service) => ( // Use parenthesis here for implicit return
+  service.service_deleted === 0 && (
+    <div className='form-group col-md-12 service-list-texts-checkboxes' key={service.service_id}>
+      <div className='service-list-texts' style={{ width: '100%' }} onClick={() => handleServiceClick(service.service_id)} >
+        <h3>{service.service_name}</h3>
+        <p>{service.service_description}</p>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          value={service.service_id}
+          name={service.service_name}
+          id={`service-checkbox-${service.service_id}`}
+          className="service-checkboxes"
+          checked={serviceIDs.includes(service.service_id)}
+          onChange={handleCheckboxChange}
+        />
+      </div>
+    </div>
+  )
+))}
 <div className='add-order-btn-and-additional-request-and-price-div' style={{ backgroundColor: 'white' }}>
                                 <div className='additional-request-textarea-div'>
                                   <h2>Additional request</h2>

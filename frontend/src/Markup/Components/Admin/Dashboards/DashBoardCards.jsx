@@ -2,11 +2,6 @@ import React from 'react'
 import './dashboards.css'
 const DashBoardCards = (props) => {
   return (
-
-
-    
-
-
     <div className="col-12 col-md-6 col-lg-4 col-xl-3 mb-4" key={props.index}>
        <div className="card h-100">
          <div className="card-body">
@@ -21,9 +16,6 @@ const DashBoardCards = (props) => {
          </div>
        </div>
     </div>
-
-
-    
   )
 }
 

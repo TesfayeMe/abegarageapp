@@ -157,7 +157,7 @@ const AddServiceForm = () => {
   useEffect(() => {
     async function deleteServiceFunc() {
       if (serviceIdDelete) {
-        alert(serviceIdDelete)
+        // alert(serviceIdDelete)
         const deleteService = await ServiceServices.deleteService(serviceIdDelete, loginEmployeeToken);
         const deleteResponse = await deleteService.json();
         console.log(deleteResponse);
@@ -198,6 +198,24 @@ const AddServiceForm = () => {
         const restoreDeletedService = await ServiceServices.RestoreDeletedService(serviceIdRestore, loginEmployeeToken)
         const data = await restoreDeletedService.json();
         console.log(data);
+        if (data.status === true) {
+          setRestoring(false);
+          window.location.href = '/admin/services'
+        }
+        else if (data.status === 'tokenExpired') {
+          setRestoring(false);
+          localStorage.removeItem('employee')
+          window.location.href = '/login'
+        }
+        else if (data.status === 'notAdmin') {
+          setRestoring(false);
+          alert('Not authorized')
+        }
+        else {
+          setRestoring(false);
+          alert('Restoring failed')
+
+        }
         // alert(`Service id to restore is ${serviceIdRestore} and Service name is ${serviceNameRestore}`)
         setRestoring(false);
       }
@@ -228,7 +246,7 @@ const AddServiceForm = () => {
                 <MdDelete className='edit-delete-icon' color='red' size={20} onClick={() => { handleServiceDelete(savedService.service_id); setDeleteServiceEnabled(!deleteServiceEnabled) }} />
                 <button
   type="button"
-  disabled={savedService.service_deleted === 1}
+  disabled={savedService.service_deleted === 0}
   className="icon-button"
   onClick={() => {
     setServiceIdRestore(savedService.service_id);
@@ -236,7 +254,7 @@ const AddServiceForm = () => {
     setRestoreServiceEnabled(!restoreServiceEnabled);
   }}
 >
-  <MdRestoreFromTrash size={20} color={savedService.service_deleted === 1 ? '#ccc' : '#3dac6b'} />
+  <MdRestoreFromTrash size={20} color={savedService.service_deleted === 0 ? '#ccc' : '#3dac6b'} />
 </button>
               </div>
             </div>

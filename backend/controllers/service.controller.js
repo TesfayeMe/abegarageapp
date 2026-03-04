@@ -105,10 +105,31 @@ const deleteService =  async (req, res, next) => {
       })
      }
 }
+
+const restoreDeletedService = async (req, res, next) => {
+  const {service_id} = req.params;
+  const restoreService = await serviceServices.restoreDeletedService(service_id);
+  if(restoreService)
+  {
+    return res.status(200).json({
+      status: true,
+      message: 'Service restored successfully',
+      data: restoreService
+    })
+  }
+  else  {
+    return res.status(400).json({
+      status: false,
+      message: 'Service has not been restored'
+    })
+  }
+}
+
 module.exports = {
     addServices,
     getAllServices,
     getServiceById,
     updateService,
-    deleteService
+    deleteService,
+    restoreDeletedService
 }

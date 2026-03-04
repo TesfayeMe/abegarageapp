@@ -49,7 +49,7 @@ const updateService = async (selectedService, loginEmployeeToken) => {
     return response;
 }
 const deleteService = async (serviceIdDelete, loginEmployeeToken) =>{
-const response = await fetch(`${apiUrl}/api/service-delete/${serviceIdDelete}`,
+   const response = await fetch(`${apiUrl}/api/service-delete/${serviceIdDelete}`,
     {
        method: 'put',
        headers: {
@@ -60,11 +60,25 @@ const response = await fetch(`${apiUrl}/api/service-delete/${serviceIdDelete}`,
 )
 return response;
 }
+
+const RestoreDeletedService = async (serviceIdRestore, loginEmployeeToken) =>{
+    const response = await fetch(`${apiUrl}/api/service-restore/${serviceIdRestore}`,
+     {
+        method: 'put',
+        headers: {
+         'Content-Type': 'application/json',
+            'x-access-token': loginEmployeeToken
+        } 
+     }
+ )
+ return response;
+ }
 const ServiceServices = {
     addServices,
     getServices,
     getServiceById,
     updateService,
-    deleteService
+    deleteService,
+    RestoreDeletedService
 }
 export default ServiceServices

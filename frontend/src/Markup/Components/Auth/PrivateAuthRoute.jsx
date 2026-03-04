@@ -17,7 +17,9 @@ const PrivateAuthRoute = ({roles, children}) => {
             
             if (response.employee_token) {
                 setIsLogged(true);
-                if (roles && roles.length > 0 && roles.includes(response.employee_role)) {
+                if (roles && roles.length > 0 && roles.includes(response.employee_role)) 
+                // if (roles && roles.length > 0) 
+                    {
                     setIsAuthorized(true);
                     console.log(roles);
                     console.log(roles.includes(response.employee_role));

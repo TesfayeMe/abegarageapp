@@ -63,7 +63,8 @@ const Header = (props) => {
                                             <li className="dropdown"><a href="/services">Services</a>
                                             </li>
                                             <li><a href="/contact">Contact Us</a></li>
-{isLoggedIn && employee?.employee_role === 3 &&<li><a href="/admin/dashboard">Admin</a></li>}
+{/* {isLoggedIn && employee?.employee_role === 3 &&<li><a href="/admin/dashboard">Dashboard</a></li>} */}
+{isLoggedIn && <li><a href="/admin/dashboard">Dashboard</a></li>}
                                         </ul>
                                     </div>
                                 </nav>

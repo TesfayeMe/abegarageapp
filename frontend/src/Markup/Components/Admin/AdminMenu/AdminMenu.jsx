@@ -10,25 +10,19 @@ const AdminMenu = () => {
                 {/* Dashboard */}
                 <a href='/admin/dashboard' className='list-group-item list-group-item-action bg-transparent'>Dashboard</a>
                 {/* Orders */}
-
                 <a href='/admin/orders' className='list-group-item list-group-item-action bg-transparent'>Orders</a>
                 <a href='/admin/new-order' className='list-group-item list-group-item-action bg-transparent'>New Order</a>
                 {/* Employees */}
                 <a href='/admin/add-employee' className='list-group-item list-group-item-action bg-transparent'>Add Employee</a>
-                <a href='/admin/employees' className='list-group-item list-group-item-action bg-transparent'>View Employees</a>
+                <a href='/admin/employees' className='list-group-item list-group-item-action bg-transparent'>Employees</a>
 
                 {/* Customers */}
                 <a href='/admin/add-customer' className='list-group-item list-group-item-action bg-transparent'>Add Customer</a>
-                <a href='/admin/customers' className='list-group-item list-group-item-action bg-transparent'>View Customers</a>
-
-
+                <a href='/admin/customers' className='list-group-item list-group-item-action bg-transparent'>Customers</a>
                 {/* Services */}
                 <a href='/admin/services' className='list-group-item list-group-item-action bg-transparent'>Services</a>
-                {/* <a href='/admin/services' className='list-group-item list-group-item-action bg-transparent'>View Services</a> */}
 
-                {/* Admin tools */}
-                <a href='/admin/manage-roles' className='list-group-item list-group-item-action bg-transparent'>Manage Roles</a>
-                <a href='/admin/reports' className='list-group-item list-group-item-action bg-transparent'>View Reports</a>
+
             </div>
         </div>
     )
