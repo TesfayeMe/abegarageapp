@@ -64,7 +64,7 @@ const Header = (props) => {
                                             </li>
                                             <li><a href="/contact">Contact Us</a></li>
 {/* {isLoggedIn && employee?.employee_role === 3 &&<li><a href="/admin/dashboard">Dashboard</a></li>} */}
-{isLoggedIn && <li><a href="/admin/dashboard">Dashboard</a></li>}
+{isLoggedIn && <li><a href="/dashboard">Dashboard</a></li>}
                                         </ul>
                                     </div>
                                 </nav>

@@ -9,7 +9,7 @@ const verifyToken = async (req, res, next) => {
     if (!token) {
         console.log('No token provided');
         return res.status(403).send({
-            status: 'fail',
+            status: 'noTokenProvided',
             message: "No token provided!"
         });
     }
@@ -49,15 +49,112 @@ const isAdmin = async (req, res, next) => {
     else {
         console.log('Not an admin');
         return res.status(403).send({
-            status: 'fail',
+            status: 'notAdmin',
             message: 'Not an admin'
+        });
+    }
+}
+
+//function that checks if the user is an Manager
+const isManager = async (req, res, next) => {
+    let token = req?.headers['x-access-token'];
+    const employee_email = req.employee_email;
+    // console.log(employee_email);
+    const employee = await employeeServices.getEmployeeRoleByEmail(employee_email);
+    //    console.log('role', employee.company_role_id);
+    if (employee?.company_role_id === 2) {
+        next();
+    }
+    else {
+        console.log('Not an manager');
+        return res.status(403).send({
+            status: 'notManager',
+            message: 'Not an manager'
+        });
+    }
+}
+
+//function that checks if the user is an Employee
+const isEmployee = async (req, res, next) => {
+    let token = req?.headers['x-access-token'];
+    const employee_email = req.employee_email;
+    // console.log(employee_email);
+    const employee = await employeeServices.getEmployeeRoleByEmail(employee_email);
+    //    console.log('role', employee.company_role_id);
+    if (employee?.company_role_id === 1) {
+        next();
+    }
+    else {
+        console.log('Not an employee');
+        return res.status(403).send({
+            status: 'notEmployee',
+            message: 'Not an employee'
+        });
+    }
+}
+
+const isNotEmployee = async (req, res, next) => {
+    let token = req?.headers['x-access-token'];
+    const employee_email = req.employee_email;
+    // console.log(employee_email);
+    const employee = await employeeServices.getEmployeeRoleByEmail(employee_email);
+    //    console.log('role', employee.company_role_id);
+    if (employee?.company_role_id != 1) {
+        next();
+    }
+    else {
+        console.log('Is an employee');
+        return res.status(403).send({
+            status: 'isEmployee',
+            message: 'Is an employee'
+        });
+    }
+}
+
+const isNotManager = async (req, res, next) => {
+    let token = req?.headers['x-access-token'];
+    const employee_email = req.employee_email;
+    // console.log(employee_email);
+    const employee = await employeeServices.getEmployeeRoleByEmail(employee_email);
+    //    console.log('role', employee.company_role_id);
+    if (employee?.company_role_id != 2) {
+        next();
+    }
+    else {
+        console.log('Is manager');
+        return res.status(403).send({
+            status: 'isManager',
+            message: 'Is a manager'
+        });
+    }
+}
+
+const isNotManagerAndNotEmployee = async (req, res, next) => {
+    let token = req?.headers['x-access-token'];
+    const employee_email = req.employee_email;
+    // console.log(employee_email);
+    const employee = await employeeServices.getEmployeeRoleByEmail(employee_email);
+    //    console.log('role', employee.company_role_id);
+    if (employee?.company_role_id != 2 && employee?.company_role_id != 1) {
+        next();
+    }
+    else {
+        console.log('Is manager or employee');
+        return res.status(403).send({
+            status: 'isManagerOrEmployee',
+            message: 'Is a manager or employee'
         });
     }
 }
 
 const authMiddleWare = {
     verifyToken,
-    isAdmin
+    isAdmin,
+    isManager,
+    isEmployee,
+    isNotEmployee,
+    isNotManager,
+    isNotManagerAndNotEmployee
 }
 
 module.exports = authMiddleWare;

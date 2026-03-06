@@ -8,5 +8,5 @@ const router = express.Router();
 //add customer garage orders by vehicle id
 router.get('/api/orders/:cust_veh_id', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], orderController.getOrder); 
 //get customer orders
-router.get('/api/get-services', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], orderController.getOrders); 
+router.get('/api/get-services', authMiddleWare.verifyToken, orderController.getOrders); 
 module.exports = router

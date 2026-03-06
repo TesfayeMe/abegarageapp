@@ -15,6 +15,7 @@ const addServices = async (serviceData, loginEmployeeToken) => {
   return response
 }
 const getServices = async (loginEmployeeToken) =>{
+    // console.log(loginEmployeeToken);
       const response = await fetch(`${apiUrl}/api/services`, {
     method: 'get',
     headers: {

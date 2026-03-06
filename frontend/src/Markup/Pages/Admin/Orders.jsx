@@ -5,7 +5,7 @@ import OrdersList from '../../Components/Admin/OrdersList/OrdersList';
 const Orders = () => {
   const { isLoggedIn, isAdmin } = useAuth();
   if (isLoggedIn) {
-    if (isAdmin) {
+    // if (isAdmin) {
       return (
         <div>
           <div className="container-fluid admin-pages">
@@ -20,15 +20,15 @@ const Orders = () => {
           </div>
         </div>
       );
-    } else {
-      return (
-        <div>
-          <h2>
-            You are not authorized to access this page
-          </h2>
-        </div>
-      )
-    }
+    // } else {
+    //   return (
+    //     <div>
+    //       <h2>
+    //         You are not authorized to access this page
+    //       </h2>
+    //     </div>
+    //   )
+    // }
   }
   else {
     return (

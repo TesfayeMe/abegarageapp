@@ -6,18 +6,18 @@ const authMiddleWare = require('../middlewares/auth.middleware')
 //import router
 const router = express.Router();
 //route to add a new customer
-router.post('/api/add-customer', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.addCustomer);
+router.post('/api/add-customer', [authMiddleWare.verifyToken, authMiddleWare.isNotEmployee], customerController.addCustomer);
 //view customers
-router.get('/api/customers', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.getAllCustomers);
+router.get('/api/customers', [authMiddleWare.verifyToken,  authMiddleWare.isNotEmployee], customerController.getAllCustomers);
 //edit customer
-router.get('/api/customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.getCustomerById);
+router.get('/api/customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isNotEmployee], customerController.getCustomerById);
 //edit customer
-router.put('/api/edit-customer', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.editCustomer);
+router.put('/api/edit-customer', [authMiddleWare.verifyToken, authMiddleWare.isNotEmployee], customerController.editCustomer);
 //export the router
-router.delete('/api/delete-customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.deleteCustomer);
+router.delete('/api/delete-customer/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isNotEmployee], customerController.deleteCustomer);
 //export the router
-router.post('/api/add-service-order-info', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.addServiceOrder);
+router.post('/api/add-service-order-info', [authMiddleWare.verifyToken, authMiddleWare.isNotEmployee], customerController.addServiceOrder);
 //search-customer
-router.get('/api/search-customer/:search_value', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], customerController.searchCustomer);
+router.get('/api/search-customer/:search_value', [authMiddleWare.verifyToken, authMiddleWare.isNotEmployee], customerController.searchCustomer);
 //export the router
 module.exports = router;

@@ -31,15 +31,15 @@ function App() {
         <Route path='/unauthorized' element={<Unauthorized />} />
         <Route path='/login' element={<Login />} />
         <Route path='/admin/add-employee' element={<PrivateAuthRoute roles={[3]}><AddEmployee /></PrivateAuthRoute>} />
-        <Route path='/admin/add-customer' element={<PrivateAuthRoute roles={[3]}><AddCustomer /></PrivateAuthRoute>} />
-        <Route path='/admin/services' element={<PrivateAuthRoute roles={[3]}><Services /></PrivateAuthRoute>} />
-        <Route path='/admin/new-order' element={<PrivateAuthRoute roles={[3]}><CreateNewOrder /></PrivateAuthRoute>} />
-        <Route path='/admin/dashboard' element={<PrivateAuthRoute roles={[3]}><Dashboard /></PrivateAuthRoute>} />
-        <Route path='/admin/orders' element={<PrivateAuthRoute roles={[1, 2, 3]}><Orders /></PrivateAuthRoute>} />
-        <Route path='/admin/customers' element={<PrivateAuthRoute roles={[2, 3]}><Customers /></PrivateAuthRoute>} />
+        <Route path='/mgr/add-customer' element={<PrivateAuthRoute roles={[2, 3]}><AddCustomer /></PrivateAuthRoute>} />
+        <Route path='/mgr/services' element={<PrivateAuthRoute roles={[2, 3]}><Services /></PrivateAuthRoute>} />
+        <Route path='/mgr/new-order' element={<PrivateAuthRoute roles={[2, 3]}><CreateNewOrder /></PrivateAuthRoute>} />
+        <Route path='/dashboard' element={<PrivateAuthRoute roles={[1,2,3]}><Dashboard /></PrivateAuthRoute>} />
+        <Route path='/orders' element={<PrivateAuthRoute roles={[1, 2, 3]}><Orders /></PrivateAuthRoute>} />
+        <Route path='/mgr/customers' element={<PrivateAuthRoute roles={[2, 3 ]}><Customers /></PrivateAuthRoute>} />
         <Route path='/admin/customer-profile' element={<PrivateAuthRoute roles={[1, 2, 3]}><CustomerProfile /></PrivateAuthRoute>} />
         <Route path='/admin/edit-customer' element={<PrivateAuthRoute roles={[2, 3]}><EditCustomers /></PrivateAuthRoute>} />
-        <Route path='/admin/employees' element={<Employees />} />
+        <Route path='/admin/employees' element={<PrivateAuthRoute roles={[3]}><Employees /></PrivateAuthRoute>} />
         <Route path='/admin/edit-employee' element={<EditEmployee employee_id={Option} />} />
       </Routes>
       <Footer />
