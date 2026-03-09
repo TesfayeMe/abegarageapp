@@ -143,8 +143,8 @@ const deleteEmployee = async (employee_id) => {
     {
         return 0;
     }
-else
-{
+   else
+    {
     const [deletedInfoRows] = await conn.query(sqlinfo, [employee_id]);
     if(deletedInfoRows.affectedRows === 0)
     {

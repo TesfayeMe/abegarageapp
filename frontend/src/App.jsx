@@ -22,9 +22,14 @@ import EditCustomers from './Markup/Pages/Admin/EditCustomers';
 import CustomerProfile from './Markup/Pages/Admin/CustomerProfile';
 import Services from './Markup/Pages/Admin/AddServices'
 import CreateNewOrder from './Markup/Pages/Admin/CreateNewOrder'
+import { Helmet } from "react-helmet";
 function App() {
   return (
     <>
+    <Helmet>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+      </Helmet>
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />

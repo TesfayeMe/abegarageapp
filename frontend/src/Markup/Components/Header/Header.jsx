@@ -1,19 +1,39 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../../../assets/images/logo.png'
 import { useAuth } from '../../../Context/AuthContext'
 import LoginServices from '../../../Services/LoginServices'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 const Header = (props) => {
+    const location = useLocation();
     const {isLoggedIn, setIsLoggedIn, employee} = useAuth();
+    const [isTokenExpired, setIsTokenExpired] = useState(false);
     console.log(employee);
    const logOut = () =>{
     LoginServices.logOut();
     setIsLoggedIn(false);
    }
-//read data saved at local storage with key of employee
+function parseJwt(token) {
+  return  token ?  JSON?.parse(atob(token?.split(".")[1])) : null
+}
 
-
+function isExpired(token) {
+  const decoded = parseJwt(token);
+  return decoded ?  decoded.exp < Math.floor(Date.now() / 1000) : null;
+}
+useEffect(()=>{
+const token = localStorage.getItem('employee');
+const expireTime = isExpired(token);
+if(expireTime)
+{
+    setIsTokenExpired(true);
+    localStorage.removeItem('employee');
+    window.location.href = '/login'
+}
+},[])
   return (
+
+
+    
     <div>
        {/* Main Header */}
         <header className="main-header header-style-one">
@@ -112,7 +132,23 @@ const Header = (props) => {
                                     </nav>
                                 </div>
                                 <div className="search-btn"></div>
-                                <div className="link-btn"><a href="/login" className="theme-btn btn-style-one">Login</a>
+                                <div className="link-btn">
+                                    
+                                    {/* <a href="/login" className="theme-btn btn-style-one">Login</a> */}
+
+                                    {isLoggedIn ? (
+                                <div className='link-btn'>
+<Link to = '/' className='theme-btn btn-style-one blue' onClick={logOut}>Logout</Link>
+                                </div>
+                            )
+                            :
+                            (
+                                <div className='link-btn'>
+                                    <Link to='/login' className='theme-btn btn-style-one blue'>Login
+                                    </Link>
+                                </div>
+                            )
+                            }
                                 </div>
                             </div>
                         </div>

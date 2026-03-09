@@ -163,7 +163,7 @@ const AddServiceForm = () => {
         console.log(deleteResponse);
         if (deleteResponse.status === true) {
           setDeleting(false);
-          window.location.href = '/admin/services'
+          window.location.href = '/mgr/services'
         }
         else if (deleteResponse.status === 'tokenExpired') {
           setDeleting(false);
@@ -200,14 +200,14 @@ const AddServiceForm = () => {
         console.log(data);
         if (data.status === true) {
           setRestoring(false);
-          window.location.href = '/admin/services'
+          window.location.href = '/mgr/services'
         }
         else if (data.status === 'tokenExpired') {
           setRestoring(false);
           localStorage.removeItem('employee')
           window.location.href = '/login'
         }
-        else if (data.status === 'notAdmin') {
+        else if (data.status === 'notManager') {
           setRestoring(false);
           alert('Not authorized')
         }

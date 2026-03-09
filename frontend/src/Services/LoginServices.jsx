@@ -15,7 +15,6 @@ const login = async (formData) => {
 const logOut = ()=>
 {
   localStorage.removeItem('employee');
-  localStorage.removeItem('logLvel')
 }
 const LoginServices = {login, logOut};
 export default LoginServices

@@ -25,16 +25,19 @@ const {isLoggedIn, setIsLoggedIn, setEmployee, employee} = useAuth();
       setEmailError('Email is required');
       valid = false;
     } 
-else if(!email.includes('@')){
+else if(!email.includes('@'))
+  {
       setEmailError('Email must contain @ symbol');
       valid = false;
     }
-    else if (!/\S+@\S+\.\S+/.test(email)) {
+    else if (!/\S+@\S+\.\S+/.test(email)) 
+      {
       setEmailError('Email address is invalid');
       valid = false;
     }
     
-    else {
+    else 
+      {
       setEmailError('');
     }
     if (password.trim() === '') {
@@ -78,7 +81,8 @@ else if(!email.includes('@')){
 const redirectPath = location.state?.from?.pathname || location.state?.from || '/';
 
 console.log("Redirecting to:", redirectPath); // Debugging line
-navigate(redirectPath, { replace: true });
+// navigate(redirectPath, { replace: true });
+window.location.href = redirectPath; // Force full page reload to ensure state is updated
         }
         else
         {
@@ -90,6 +94,10 @@ navigate(redirectPath, { replace: true });
           return;
         }
 
+      }
+      else
+      {        setServerError(data.message || 'Login failed. Please check your credentials and try again.');
+        return;
       }
 
       // console.log(data);
@@ -109,7 +117,9 @@ navigate(redirectPath, { replace: true });
             <div className={classes.inputGroup}>
                 <input type="password" id="password" name="password" placeholder='Password' required value={password} onChange={(e) => setPassword(e.target.value)} />
                 {passwordError && <span className={classes.error}>{passwordError}</span>}
+                {serverError && <span className={`${classes.error} ${classes.red}`}>{serverError}</span>}
             </div>
+            
             <button type="submit" className={classes.loginButton}>LOGIN</button>
         </form>
     </div>
