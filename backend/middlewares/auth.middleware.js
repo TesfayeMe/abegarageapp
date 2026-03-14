@@ -93,6 +93,41 @@ const isEmployee = async (req, res, next) => {
     }
 }
 
+//function that checks if the user is an Employee
+const isManagerAndAdmin = async (req, res, next) => {
+    let token = req?.headers['x-access-token'];
+    const employee_email = req.employee_email;
+    // console.log(employee_email);
+    const employee = await employeeServices.getEmployeeRoleByEmail(employee_email);
+    //    console.log('role', employee.company_role_id);
+    if (employee?.company_role_id === 2 || employee?.company_role_id === 3) {
+        next();
+    }
+    else {
+        console.log('Not a manager or admin');
+        return res.status(403).send({
+            status: 'notManagerAndNotAdmin',
+            message: 'Not a manager or admin'
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const isNotEmployee = async (req, res, next) => {
     let token = req?.headers['x-access-token'];
     const employee_email = req.employee_email;
@@ -152,6 +187,11 @@ const authMiddleWare = {
     isAdmin,
     isManager,
     isEmployee,
+    isManagerAndAdmin,
+
+
+
+    
     isNotEmployee,
     isNotManager,
     isNotManagerAndNotEmployee

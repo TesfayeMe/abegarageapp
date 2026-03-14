@@ -1,0 +1,8 @@
+.unauthorized-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 28.8vh;
+    text-align: center;
+    background-color: green;
+}

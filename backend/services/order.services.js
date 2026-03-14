@@ -14,8 +14,64 @@ const getOrders = async () => {
     return ordersResult.length > 0 ? ordersResult : null;
 
 }
+const getOrderById = async (order_id) => {
+    const orderByIdSql = `SELECT 
+    cinfo.customer_first_name,
+    cinfo.customer_last_name,
+    cident.customer_email,
+    cident.customer_phone_number,
+    c_v_info.vehicle_make,
+    c_v_info.vehicle_model,
+    c_v_info.vehicle_year,
+    c_v_info.vehicle_tag,
+    ord_info.order_total_price,
+    ord_info.additional_request,
+    ord_info.active_additional_request,
+    ord_info.notes_for_internal_use,
+    ord_info.notes_for_customer,
+    ord_info.additional_requests_completed,
+    GROUP_CONCAT(service.service_name SEPARATOR ', ') AS all_services, 
+    ord.order_id,
+    ord.order_date,
+    ord.active_order,
+    crole.company_role_name,
+    emp_info.employee_first_name,
+    ord_stat.order_status
+FROM orders ord
+JOIN customer_vehicle_info c_v_info ON ord.vehicle_id = c_v_info.vehicle_id 
+JOIN order_info ord_info ON ord.order_id = ord_info.order_id
+JOIN order_status ord_stat ON ord.order_id = ord_stat.order_id
+JOIN order_services ord_serv ON ord.order_id = ord_serv.order_id
+JOIN common_services service ON ord_serv.service_id = service.service_id
+JOIN customer_identifier cident ON ord.customer_id = cident.customer_id
+JOIN customer_info cinfo ON cident.customer_id = cinfo.customer_id
+JOIN employee emp ON ord.employee_id = emp.employee_id
+JOIN employee_info emp_info ON emp.employee_id = emp_info.employee_id
+JOIN employee_role emproles ON emp.employee_id = emproles.employee_id
+JOIN company_roles crole ON emproles.company_role_id = crole.company_role_id
+WHERE ord.order_id = ?
+GROUP BY 
+    ord.order_id, cinfo.customer_first_name, cinfo.customer_last_name, 
+    cident.customer_email, cident.customer_phone_number, c_v_info.vehicle_make, 
+    c_v_info.vehicle_model, c_v_info.vehicle_year, c_v_info.vehicle_tag, 
+    ord_info.order_total_price, ord_info.additional_request, 
+    ord_info.active_additional_request, ord_info.notes_for_internal_use, 
+    ord_info.notes_for_customer, ord_info.additional_requests_completed, 
+    ord.order_date, ord.active_order, crole.company_role_name, 
+    emp_info.employee_first_name, ord_stat.order_status;`;
+    const [orderByIdResult] = await conn.query(orderByIdSql, [order_id]);
+    // console.log(orderByIdResult);
+    return orderByIdResult.length > 0 ? orderByIdResult[0] : null;
+}
+const updateOrder = async (orderId, noteContent, orderColumn) => {
+    const updateNoteSql = `UPDATE order_info SET ${orderColumn} = ? WHERE order_id = ?`;
+    const [updateResult] = await conn.query(updateNoteSql, [noteContent, orderId]);
+    return updateResult.affectedRows > 0;
+}
 const orderService = {
     getOrder,
     getOrders,
+    getOrderById,
+    updateOrder
 }
 module.exports = orderService;

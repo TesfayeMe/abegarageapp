@@ -66,7 +66,7 @@ const CustomersList = () => {
 
         // alert(id)
 
-        navigate('/admin/edit-customer', { state: { customer_id: id } });
+        navigate('/mgr/edit-customer', { state: { customer_id: id } });
 
 
     }
@@ -103,7 +103,7 @@ const CustomersList = () => {
 
     }, [customerDeleted])
     const handleCustomerProfileView = (id) => {
-        navigate('/admin/customer-profile', { state: { customer_id: id } });
+        navigate('/mgr/customer-profile', { state: { customer_id: id } });
 
     }
     return (

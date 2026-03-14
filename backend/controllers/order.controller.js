@@ -23,9 +23,9 @@ const getOrder = async (req, res, next) => {
         })
     }
 }
-const getOrders = async (req, res) =>{
-const orders = await orderService.getOrders();
-if(orders)
+const getOrders = async (req, res) =>{ 
+   const orders = await orderService.getOrders();
+   if(orders)
     {
         return res.status(200).json({
             status: true,
@@ -42,9 +42,48 @@ if(orders)
         })
      }
 }
+
+const getOrderById = async (req, res) => {
+    const { order_id } = req.params;
+    const order = await orderService.getOrderById(order_id);
+    if (order) {
+        return res.status(200).json({
+            status: true,
+            message: 'Order found',
+            data: order
+        })
+    }
+    else {
+        return res.status(400).json({
+            status: false,
+            message: 'Order not found'
+        })
+    }
+}
+const updateOrder = async (req, res) => {
+    const { order_id } = req.params;
+    const { orderColumn } = req.params;
+    const { noteContent } = req.body;
+    const updateResult = await orderService.updateOrder(order_id, noteContent, orderColumn);
+    if (updateResult) {
+        return res.status(200).json({
+            status: true,
+            message: 'Internal note updated successfully',
+        });
+    } else {
+        return res.status(400).json({
+            status: false,
+            message: 'Failed to update internal note',
+        });
+    }
+}
+
+
 const orderController = {
     getOrder,
-    getOrders
+    getOrders,
+    getOrderById,
+    updateOrder
 }
 
 module.exports = orderController;

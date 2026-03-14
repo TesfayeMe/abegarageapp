@@ -11,3 +11,52 @@
 
 
 }
+.status {
+  padding: 4px 10px;
+  border-radius: 13px;
+  font-weight: 500;
+  display: inline-block;
+  font-size: 13px;
+}
+
+/* received */
+.status-received {
+  color: #1D4ED8;
+  background-color: #DBEAFE;
+}
+
+/* assigned */
+.status-assigned {
+  color: #4338CA;
+  background-color: #E0E7FF;
+}
+
+/* in progress */
+.status-in-progress {
+  color: #B45309;
+  background-color: #FEF3C7;
+}
+
+/* paused */
+.status-paused {
+  color: #A16207;
+  background-color: #FEF9C3;
+}
+
+/* canceled */
+.status-canceled {
+  color: #B91C1C;
+  background-color: #FEE2E2;
+}
+
+/* completed */
+.status-completed {
+  color: #15803D;
+  background-color: #DCFCE7;
+}
+
+/* submitted */
+.status-submitted {
+  color: #374151;
+  background-color: #F3F4F6;
+}

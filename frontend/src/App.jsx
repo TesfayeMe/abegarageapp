@@ -23,6 +23,7 @@ import CustomerProfile from './Markup/Pages/Admin/CustomerProfile';
 import Services from './Markup/Pages/Admin/AddServices'
 import CreateNewOrder from './Markup/Pages/Admin/CreateNewOrder'
 import { Helmet } from "react-helmet";
+import ViewOrder from './Markup/Components/Admin/ViewOrder/ViewOrder';
 function App() {
   return (
     <>
@@ -42,10 +43,11 @@ function App() {
         <Route path='/dashboard' element={<PrivateAuthRoute roles={[1,2,3]}><Dashboard /></PrivateAuthRoute>} />
         <Route path='/orders' element={<PrivateAuthRoute roles={[1, 2, 3]}><Orders /></PrivateAuthRoute>} />
         <Route path='/mgr/customers' element={<PrivateAuthRoute roles={[2, 3 ]}><Customers /></PrivateAuthRoute>} />
-        <Route path='/admin/customer-profile' element={<PrivateAuthRoute roles={[1, 2, 3]}><CustomerProfile /></PrivateAuthRoute>} />
-        <Route path='/admin/edit-customer' element={<PrivateAuthRoute roles={[2, 3]}><EditCustomers /></PrivateAuthRoute>} />
-        <Route path='/admin/employees' element={<PrivateAuthRoute roles={[3]}><Employees /></PrivateAuthRoute>} />
+        <Route path='/mgr/customer-profile' element={<PrivateAuthRoute roles={[2, 3]}><CustomerProfile /></PrivateAuthRoute>} />
+        <Route path='/mgr/edit-customer' element={<PrivateAuthRoute roles={[2, 3]}><EditCustomers /></PrivateAuthRoute>} />
+        <Route path='/mgr/employees' element={<PrivateAuthRoute roles={[2,3]}><Employees /></PrivateAuthRoute>} />
         <Route path='/admin/edit-employee' element={<EditEmployee employee_id={Option} />} />
+        <Route path='/order-details' element={<ViewOrder />} />
       </Routes>
       <Footer />
     </>

@@ -1,0 +1,15 @@
+.unauthorized-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 28.8vh;
+    text-align: center;
+}
+.unauthorized-page h2 {
+    padding: 30px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    
+}

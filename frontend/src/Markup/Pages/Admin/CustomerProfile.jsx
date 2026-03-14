@@ -4,9 +4,9 @@ import LoginForm from "../../Components/LoginForm/LoginForm";
 import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
 import CustomerProfileView from '../../Components/Admin/CustomerProfileView/CustomerProfileView';
 const CustomerProfile = () => {
- const { isLoggedIn, isAdmin } = useAuth();
+ const { isLoggedIn, isManagerAndAdmin } = useAuth();
   if (isLoggedIn) {
-    if (isAdmin) {
+    if (isManagerAndAdmin) {
       return (
         <div>
           <div className="container-fluid admin-pages">
@@ -23,11 +23,12 @@ const CustomerProfile = () => {
       );
     } else {
       return (
-        <div>
-          <h2>
-            You are not authorized to access this page
-          </h2>
-        </div>
+         <div className='not-authorized-div' >
+                    <h2 >
+                        You are not authorized to access this page
+                    </h2>
+                    
+                </div>
       )
     }
   }

@@ -23,7 +23,7 @@ async function login(req, res, next) {
         employee_last_name: employee.data.employee_last_name,
       };
       // const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1hr" });
-      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1m" });
+      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10m" });
       return res
         .status(200)
         .json({

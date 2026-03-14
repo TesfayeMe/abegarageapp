@@ -6,15 +6,15 @@ const authMiddleWare = require('../middlewares/auth.middleware')
 //import router
 const router = express.Router();
 //add garage services
-router.post('/api/add-service', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.addServices );
+router.post('/api/add-service', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], serviceController.addServices );
 //get All services
-router.get('/api/services',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.getAllServices );
+router.get('/api/services',  [authMiddleWare.verifyToken], serviceController.getAllServices );
 //get service by id
-router.get('/api/service/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.getServiceById );
+router.get('/api/service/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], serviceController.getServiceById );
 //update service
-router.put('/api/edit-service',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.updateService );
+router.put('/api/edit-service',  [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], serviceController.updateService );
 //delete services
-router.put('/api/service-delete/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.deleteService );
+router.put('/api/service-delete/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], serviceController.deleteService );
     //restore services
-router.put('/api/service-restore/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isAdmin], serviceController.restoreDeletedService );
+router.put('/api/service-restore/:service_id',  [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], serviceController.restoreDeletedService );
 module.exports = router

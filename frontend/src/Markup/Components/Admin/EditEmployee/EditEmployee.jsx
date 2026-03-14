@@ -148,10 +148,11 @@ const handleEdit = async (e) => {
             );
         } else {
             return (
-                <div>
-                    <h2>
+                <div className='not-authorized-div' >
+                    <h2 >
                         You are not authorized to access this page
                     </h2>
+                    
                 </div>
             )
         }

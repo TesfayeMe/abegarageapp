@@ -14,7 +14,7 @@ const AdminMenu = () => {
                 <a href='/mgr/new-order' className='list-group-item list-group-item-action bg-transparent'>New Order</a>
                 {/* Employees */}
                 <a href='/admin/add-employee' className='list-group-item list-group-item-action bg-transparent'>Add Employee</a>
-                <a href='/admin/employees' className='list-group-item list-group-item-action bg-transparent'>Employees</a>
+                <a href='/mgr/employees' className='list-group-item list-group-item-action bg-transparent'>Employees</a>
 
                 {/* Customers */}
                 <a href='/mgr/add-customer' className='list-group-item list-group-item-action bg-transparent'>Add Customer</a>

@@ -4,9 +4,9 @@ import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
 import EditCustomer from '../../Components/Admin/EditCustomer/EditCustomer'
 
 const EditCustomers = () => {
-  const { isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn, isManagerAndAdmin } = useAuth();
   if (isLoggedIn) {
-    if (isAdmin) {
+    if (isManagerAndAdmin) {
       return (
         <div>
           <div className="container-fluid admin-pages">
@@ -23,11 +23,12 @@ const EditCustomers = () => {
       );
     } else {
       return (
-        <div>
-          <h2>
-            You are not authorized to access this page
-          </h2>
-        </div>
+         <div className='not-authorized-div' >
+                    <h2 >
+                        You are not authorized to access this page
+                    </h2>
+                    
+                </div>
       )
     }
   }

@@ -18,6 +18,7 @@ const OrdersList = () => {
         token = employee.employee_token;
     }
     // console.log(token);
+    const navigate = useNavigate();
     const [savedOrders, setSavedOrders] = useState([]);
     useEffect(() => {
         async function grapeOrders() {
@@ -50,7 +51,10 @@ const OrdersList = () => {
     }, [employee?.employee_id])
     console.log(savedOrders);
 
-
+const  handleViewOrder = async(order_id)=>{
+// alert(order_id);
+ navigate('/order-details', { state: { order_id: order_id } });
+}
     return (
         <div className="orders-list-page">
             <h2>Orders</h2>
@@ -90,11 +94,16 @@ const OrdersList = () => {
                                     <td>
                                         {order.company_role_name} {order.employee_first_name}
                                     </td>
-                                    <td><span className={order.order_status === 0 ? "received" : order.order_status === 1 ? "in-progress" : "completed"}>{order.order_status === 0 ? "Received" : order.order_status === 1 ? "In Progress" : "Completed"}</span></td>
+                                    <td>
+                                        <span className={`status status-${ order.order_status === 0 ? "received" : order.order_status === 1 ? "assigned" : order.order_status === 2 ? "in-progress" : order.order_status === 3 ? "paused" : order.order_status === 4 ? "canceled" : order.order_status === 5 ? "completed" : "submitted"}`}>
+                                            {order.order_status === 0 ? "Received" : order.order_status === 1 ? "Assigned" : order.order_status === 2 ? "In-progress" : order.order_status === 3 ? "Paused" : order.order_status === 4 ? "Canceled" : order.order_status === 5 ? "Completed" : "Submitted" }
+                                        </span>
+                                    
+                                    </td>
                                     <td>
                                         <div className="edit-delete-icons" style={{ display: 'flex', gap: '20px' }}>
                                             <button className="edit-icon" ><LiaEditSolid size={17} /></button>
-                                            <button className="delete-icon" ><BsBoxArrowUpRight size={15} /></button>
+                                            <button className="delete-icon" onClick ={()=>handleViewOrder(order.order_id)}><BsBoxArrowUpRight size={15} /></button>
 
                                         </div>
                                     </td>

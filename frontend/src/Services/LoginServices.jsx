@@ -15,6 +15,7 @@ const login = async (formData) => {
 const logOut = ()=>
 {
   localStorage.removeItem('employee');
+  window.location.href = '/';
 }
 const LoginServices = {login, logOut};
 export default LoginServices

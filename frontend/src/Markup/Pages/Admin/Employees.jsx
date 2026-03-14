@@ -4,9 +4,10 @@ import LoginForm from "../../Components/LoginForm/LoginForm";
 import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
 import EmployeesList from "../../Components/Admin/EmployeesList/EmployeesList";
 const Employees = () => {
-  const { isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn, isManagerAndAdmin } = useAuth();
+  console.log(isManagerAndAdmin);
   if (isLoggedIn) {
-    if (isAdmin) {
+    if (isManagerAndAdmin) {
       return (
         <div>
           <div className="container-fluid admin-pages">

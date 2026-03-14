@@ -4,7 +4,7 @@ import LoginForm from "../../Components/LoginForm/LoginForm";
 import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
 import CustomersList from '../../Components/Admin/CustomersList/CustomersList'
 const Customers = () => {
-  const { isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn } = useAuth();
   if (isLoggedIn) {
     // if (isAdmin) {
       return (

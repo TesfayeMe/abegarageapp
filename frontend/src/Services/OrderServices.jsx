@@ -25,8 +25,31 @@ headers: {
 // console.log(response)
 return response;
 }
+const getOrderById = async (orderId, token) => {
+    const response = await fetch(`${api_url}/api/order/${orderId}`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+        }
+    })
+    return response;
+}
+const saveNote = async (orderId, noteContent, orderColumn, token) => {
+    const response = await fetch(`${api_url}/api/update-order/${orderId}/${orderColumn}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+        },
+        body: JSON.stringify({ noteContent })
+    });
+    return response;
+}
 const OrderServices = {
     getOrderByVehicleId,
-    getAllOrders
+    getAllOrders,
+    getOrderById,
+    saveNote
 }
 export default OrderServices

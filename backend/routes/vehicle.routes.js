@@ -6,8 +6,8 @@ const authMiddleWare = require('../middlewares/auth.middleware')
 //import router
 const router = express.Router();
 //route to add a new vehicle
-router.post('/api/add-vehicle', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], vehicleController.addVehicle); 
+router.post('/api/add-vehicle', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], vehicleController.addVehicle); 
 //get vehicles by customer id
-router.get('/api/vehicles/:customerId', [authMiddleWare.verifyToken, authMiddleWare.isAdmin], vehicleController.getVehiclesByCustomerId); 
+router.get('/api/vehicles/:customerId', [authMiddleWare.verifyToken], vehicleController.getVehiclesByCustomerId); 
 //export the router
 module.exports = router;

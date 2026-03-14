@@ -3,9 +3,9 @@ import LoginForm from "../../Components/LoginForm/LoginForm";
 import AdminMenu from "../../Components/Admin/AdminMenu/AdminMenu";
 import AddNewOrder from '../../Components/Admin/AddNewOrder/AddNewOrder';
 const CreateNewOrder = () => {
-    const { isLoggedIn, isAdmin } = useAuth();
+    const { isLoggedIn, isManagerAndAdmin } = useAuth();
     if (isLoggedIn) {
-        if (isAdmin) {
+        if (isManagerAndAdmin) {
             return (
                 <div>
                     <div className="container-fluid admin-pages">
@@ -22,10 +22,11 @@ const CreateNewOrder = () => {
             );
         } else {
             return (
-                <div>
-                    <h2>
+                <div className='not-authorized-div' >
+                    <h2 >
                         You are not authorized to access this page
                     </h2>
+                    
                 </div>
             )
         }
