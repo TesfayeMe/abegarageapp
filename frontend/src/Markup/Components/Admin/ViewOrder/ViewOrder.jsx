@@ -84,6 +84,8 @@ const handleSaveNotes = () => {
     });
  
   setModal(false);
+  
+  
 }
 const handleReplayInternalNotes = () => {
   setOrderColumn("notes_for_internal_use");
@@ -137,7 +139,13 @@ const handleReplayCustomerNotes = () => {
               
              {order?.notes_for_internal_use} 
             </span>
-             <span className='notes-replay-spn' onClick={handleReplayInternalNotes}>Replay</span>
+             <span className='notes-replay-spn' >
+              <span onClick={handleReplayInternalNotes}>
+
+              Replay
+              </span>
+              
+              </span>
              </span>
              
             </div>
@@ -152,7 +160,12 @@ const handleReplayCustomerNotes = () => {
               <strong>Notes for customer:</strong>
              {order?.notes_for_customer}
             </span>
-             <span className='notes-replay-spn' onClick={handleReplayCustomerNotes}>Replay</span>
+             <span className='notes-replay-spn' >
+              <span onClick={handleReplayCustomerNotes}>
+
+              Replay
+              </span>
+              </span>
              </span>
              
             </div>
