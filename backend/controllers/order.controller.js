@@ -60,11 +60,12 @@ const getOrderById = async (req, res) => {
         })
     }
 }
-const updateOrder = async (req, res) => {
+const insertComments = async (req, res) => {
     const { order_id } = req.params;
-    const { orderColumn } = req.params;
+    const { commentsFor } = req.params;
     const { noteContent } = req.body;
-    const updateResult = await orderService.updateOrder(order_id, noteContent, orderColumn);
+    const { employee_id } = req.body;
+    const updateResult = await orderService.insertComments(order_id, noteContent, commentsFor, employee_id);
     if (updateResult) {
         return res.status(200).json({
             status: true,
@@ -78,12 +79,29 @@ const updateOrder = async (req, res) => {
     }
 }
 
-
+const insertReplays = async (req, res) => {
+    const { comment_id } = req.params;
+    const { noteContent } = req.body;
+    const { employee_id } = req.body;
+    const updateResult = await orderService.insertReplays(comment_id, noteContent, employee_id);
+    if (updateResult) {
+        return res.status(200).json({
+            status: true,
+            message: 'Replay added successfully',
+        });
+    } else {
+        return res.status(400).json({
+            status: false,
+            message: 'Failed to add replay',
+        });
+    }
+}
 const orderController = {
     getOrder,
     getOrders,
     getOrderById,
-    updateOrder
+    insertComments,
+    insertReplays
 }
 
 module.exports = orderController;

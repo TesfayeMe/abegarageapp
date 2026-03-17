@@ -35,14 +35,26 @@ const getOrderById = async (orderId, token) => {
     })
     return response;
 }
-const saveNote = async (orderId, noteContent, orderColumn, token) => {
-    const response = await fetch(`${api_url}/api/update-order/${orderId}/${orderColumn}`, {
-        method: 'PUT',
+const saveNote = async (orderId, noteContent, orderColumn, employee_id, token) => {
+    const commentsFor = orderColumn;
+    const response = await fetch(`${api_url}/api/insert-order-comments/${orderId}/${commentsFor}`, {
+        method: 'post',
         headers: {
             'Content-Type': 'application/json',
             'x-access-token': token
         },
-        body: JSON.stringify({ noteContent })
+        body: JSON.stringify({ noteContent, employee_id })
+    });
+    return response;
+}
+const saveRelay = async (commentId, noteContent, employee_id, token) => {
+    const response = await fetch(`${api_url}/api/insert-order-replays/${commentId}`, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+        },
+        body: JSON.stringify({ noteContent, employee_id })
     });
     return response;
 }
@@ -50,6 +62,7 @@ const OrderServices = {
     getOrderByVehicleId,
     getAllOrders,
     getOrderById,
-    saveNote
+    saveNote,
+    saveRelay
 }
 export default OrderServices

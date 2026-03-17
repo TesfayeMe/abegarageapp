@@ -1,151 +1,45 @@
 .view-order-container {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   display: flex;
-  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
   justify-content: center;
-  align-items: center;
-}
-.view-order-container h3 {
-  padding: 30px 10px;
-  max-width: 1000px;
-  text-align: center;
-}
-.order-details {
-  background-color: #fff;
-  /* padding: 20px; */
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* background-color: #edf1f1; */
+  background-color: #ecf1f1;
 
-  width: 70%;
-  display: flex;
-  justify-content: center;
-  /* align-items: center; */
-  gap: 50px;
 }
-.order-detail-divs {
+.order-detail-and-communication
+{
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border-left: 10px solid #e2b4de;
-  padding: 20px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  gap: 20px;
+  width: 65%;
+  max-width: 1000px;
+
 }
-.order-customer-info {
+.customer-vehicle-and-receiver-employee
+{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+  width: 25%;
+  max-width: 450px;
 }
-.order-vehicle-info .vehicle-info {
+.order-and-actions-on-order
+{
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.order-detail-divs h4 {
-  border-bottom: 1px solid #848f9650;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  text-align: center;
-}
-.actions-based-on-information {
-  display: flex;
-  gap: 30px;
-  margin-top: 20px;
-  background-color: rgb(255, 255, 255);
-  width: 100%;
-  justify-content: center;
-  border-radius: 10px;
-  padding: 20px;
-}
-.order-notes-spn {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background-color: rgb(240, 245, 244);
-  border-bottom: 1px solid rgb(195, 201, 204);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding: 10px;
-}
-.notes-replay-spn {
-  background-color: transparent;
-  color: rgb(0, 119, 255);
-  font-size: 12px;
-  margin-left: 10px;
-  cursor: pointer;
-  text-align: right;
-  top: -5px;
-  position: relative;
-  padding-right: 20px;
-  font-weight: 700;
-}
-.buttons-for-notes {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-}
-.add-notes-about-order,
-.edit-update-order-order-status-btn {
-  margin-top: 7px;
-  border: none;
-  background-color: transparent;
-  color: rgb(1, 31, 97);
-  cursor: pointer;
-  border-radius: 5px;
-}
-.order-detail-notes-overlay {
-  position: fixed; /* Changed from absolute */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.781);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10001;
-}
-.notes-modal-form-div {
+  gap: 20px;
+  justify-content: space-between;
   background-color: white;
   padding: 20px;
-  border-radius: 10px;
-  width: 45%;
-  max-width: 700px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(58, 56, 56, 0.1);
+}
+
+.communication-on-order-and-services
+{
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.close-notes--form-modal-btn {
-  align-self: flex-end;
-  border: none;
-  background-color: red;
-  font-size: 20px;
-  cursor: pointer;
-}
-.notes-modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.notes-textarea {
+  gap: 20px;
   width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 0.75rem;
-  border: 1px solid #f3bcc1;
-}
-.notes-form-save-btn {
-  align-self: flex-end;
-  border: none;
-  background-color: #ff0728;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
+  justify-content: space-between;
 }

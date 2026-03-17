@@ -4,37 +4,67 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const employeeServices = require('../services/employee.services')
 //A function to verify the token received from the frontend
+// const verifyToken = async (req, res, next) => {
+//     let token = req.headers['x-access-token'];
+//     if (!token) {
+//         console.log('No token provided');
+//         return res.status(403).send({
+//             status: 'noTokenProvided',
+//             message: "No token provided!"
+//         });
+//     }
+//     else {
+//         console.log(token);
+//         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//             if (err) {
+//                 if(err.name === 'TokenExpiredError')
+//                 {
+
+//                     console.log('Token', err);
+//                 }
+//                 console.log('Unauthorized!', err);
+
+//                 return res.status(401).send({
+//                     status: "tokenExpired",
+//                     message: 'tokenExpired!'
+//                 })
+//             }
+//             else {
+//                 req.employee_email = decoded.employee_email;
+//                 next();
+//             }
+//         })
+//     }
+// }
+
+
 const verifyToken = async (req, res, next) => {
-    let token = req.headers['x-access-token'];
+    let token = req.headers['x-access-token'] || req.headers['authorization'];
+
     if (!token) {
-        console.log('No token provided');
-        return res.status(403).send({
-            status: 'noTokenProvided',
-            message: "No token provided!"
-        });
+        return res.status(403).send({ message: "No token provided!" });
     }
-    else {
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            if (err) {
-                if(err.name === 'TokenExpiredError')
-                {
 
-                    console.log('Token', err);
-                }
-                console.log('Unauthorized!', err);
-
-                return res.status(401).send({
-                    status: "tokenExpired",
-                    message: 'tokenExpired!'
-                })
-            }
-            else {
-                req.employee_email = decoded.employee_email;
-                next();
-            }
-        })
+    // 1. If it starts with 'Bearer ', remove it correctly
+    if (token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length).trim();
+    } else {
+        // 2. Just trim any accidental spaces/newlines
+        token = token.trim();
     }
-}
+
+    // 3. LOG IT HERE to see if the 'e' is still missing
+    // console.log("Clean Token:", token); 
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ status: "invalidToken", message: err.message });
+        }
+        req.employee_email = decoded.employee_email;
+        next();
+    });
+};
+
 
 //function that checks if the user is an admin
 const isAdmin = async (req, res, next) => {

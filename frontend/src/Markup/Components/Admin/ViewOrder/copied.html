@@ -1,0 +1,413 @@
+<h3>{order?.all_services}  {order?.additional_request? `and ${order?.additional_request}` : ''} </h3>
+      {order ? (
+        <div className="order-details">
+          <div className='order-detail-divs order-customer-info'>
+            <h4>Customer</h4>
+<span><strong>Customer Name:</strong> {order?.customer_first_name} {order?.customer_last_name}</span>
+<span><strong>Email:</strong> {order?.customer_email}</span>
+          <span><strong>Phone Number:</strong> {order?.customer_phone_number}</span>
+          </div>
+          <div className='order-detail-divs order-vehicle-info'>
+            <h4>Vehicle</h4>
+
+<div className='vehicle-info'>
+ <span> <strong>Year:</strong> {order?.vehicle_year}</span> 
+ <span> <strong>Make:</strong> {order?.vehicle_make}</span> 
+ <span> <strong>Model:</strong> {order?.vehicle_model}</span> 
+ <span> <strong>Tag:</strong> {order?.vehicle_tag}</span> 
+  </div>
+          </div>
+          <div className='order-detail-divs order-order-info'>
+            <h4>Order</h4>
+
+ <span><strong>Order Date:</strong> {new Date(order?.order_date).toLocaleDateString()}</span>
+          <span><strong>Services:</strong> {order?.all_services}</span>
+          <span><strong>Total Price:</strong> {order?.order_total_price} ETB </span>
+          <span><strong>Additional Requests:</strong> {order?.all_additional_requests}</span>
+          <span><strong>Active Orders:</strong> {order?.active_order }</span>
+          <span><strong>Active Additional Requests:</strong> {order?.active_additional_request }</span>
+         
+         { 
+        order?.all_comments_for?.includes(1)
+         &&(
+<div>
+          <span className='order-notes-spn'>
+            
+               <span>
+              <strong>Notes for Internal Use: </strong>
+              {order?.all_comments_for?.split(',')[0] === "1" ? order?.all_comments.split(' | ')[0] : order?.all_comments.split(' | ')[1]}
+            </span>
+            <span className='all-replays-spn' >
+<span className='replays-spn'>
+              <span className='replay-text'>
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ Hello 
+ 
+          
+              </span>
+             <span className='replay-footer-content'>
+              <span>Tesfaye  10/10/2024  10:00 AM</span>
+             </span>
+            </span>
+<span className='replays-spn'>
+              <span className='replay-text'>
+ Hello 
+          
+              </span>
+             <span className='replay-footer-content'>
+              <span>Tesfaye  10/10/2024  10:00 AM</span>
+             </span>
+            </span>
+            <span className='replays-spn'>
+              <span className='replay-text'>
+ Hello 
+          
+              </span>
+             <span className='replay-footer-content'>
+              <span>Tesfaye  10/10/2024  10:00 AM</span>
+             </span>
+            </span>
+              </span>
+             <span className='notes-replay-spn'>
+              <span onClick={() => {setActivateSaveReplay(true);setActivateInternalNotesInput(false);setActivateCustomerNotesInput(false);setModal(true);}}>
+
+              Replay
+              </span>
+              
+              </span>
+             </span>
+             
+            </div>
+         )}
+          
+
+{
+order?.all_comments_for?.includes(2)
+&& (
+<div>
+          <span className='order-notes-spn'>
+            
+               <span>
+              <strong>Notes for customer:</strong>
+              {order?.all_comments_for?.split(',')[0] === "2" ? order?.all_comments.split(' | ')[0] : order?.all_comments.split(' | ')[1]}
+
+            </span>
+             <span className='notes-replay-spn' >
+  
+              <span onClick={() => {setActivateSaveReplay(true);setActivateInternalNotesInput(false);setActivateCustomerNotesInput(false);setModal(true);}}>
+
+              Replay
+              </span>
+              </span>
+             </span>
+             
+            </div>
+)}
+              
+
+          <div className='buttons-for-notes'>
+            
+
+            { 
+            !order?.all_comments_for?.includes(1)
+            && (
+ <div>
+
+            <button className='add-notes-about-order' onClick={()=>{setOrderColumn(1);setActivateInternalNotesInput(true); setActivateCustomerNotesInput(false); setModal(true)}}>Add internal Notes?</button>
+            </div>
+            )}
+            {
+              !order?.all_comments_for?.includes(2)
+             && (
+<div>
+ <button className='add-notes-about-order' onClick={()=>{setOrderColumn(2);setActivateCustomerNotesInput(true); setActivateInternalNotesInput(false); setModal(true)}}>Add notes for customer?</button>
+            </div>
+            )}
+           
+            
+           
+          </div>
+          <h2><strong> Status: {order.order_status === 0 ? "Received" : order.order_status === 1 ? "Assigned" : order.order_status === 2 ? "In progress" : order.order_status === 3 ? "Paused" : order.order_status === 4 ? "Canceled" : order.order_status === 5 ? "Completed" : "Submitted" }</strong></h2>
+          <div className='actions-based-on-information'>
+
+{/* <button className='edit-update-order-order-status-btn'>Edit Order?<FaEdit color='brown' size={23} /></button> */}
+<button className='edit-update-order-order-status-btn'>Edit Order?</button>
+{/* <button className='edit-update-order-order-status-btn'>Change order status?<TbStatusChange color='green' size={23} /></button> */}
+<button className='edit-update-order-order-status-btn'>Change order status?</button>
+          </div>
+
+{modal && (
+  <div className='order-detail-notes-overlay'>  
+        <div className='notes-modal-form-div'>
+          <div className='close-notes--form-modal-btn'>
+<button onClick={()=>{setModal(false); setNoteContent("");}}><IoMdClose color='red' size={22} /></button>
+  </div>
+          <form className='notes-modal-form'>
+    <div className='notes-modal-form-content-div-header'>
+<h4>{activateInternalNotesInput ? "Internal use note" : activateCustomerNotesInput ? "Note for customer" : ""}</h4>
+    </div>
+    <div className='notes-modal-form-content-div-inputs'>
+<textarea className='notes-textarea' value={noteContent} onChange={(e) => setNoteContent(e.target.value)} placeholder='Type your note here...' />
+      </div>
+
+<div>
+  
+  {(activateCustomerNotesInput || activateInternalNotesInput) && <button className='notes-form-save-btn' onClick={() => {handleSaveNotes();setNoteContent("")}}>Save note</button>}
+  {activateSaveReplay  && <button className='notes-form-save-btn' onClick={() => {handleSaveReplay();setNoteContent("")}}>Save Replay</button>}
+</div>
+            </form>
+
+        </div>
+      </div>
+)}
+          {/* <div className='order-detail-notes-overlay'>
+        
+        <div className='notes-modal-form-div'>
+          <div className='close-notes--form-modal-btn'>
+<button><IoMdClose color='red' size={22} /></button>
+  </div>
+          <form className='notes-modal-form'>
+
+  
+    <div className='notes-modal-form-content-div-header'>
+<h4>Internal use note || Note for customer</h4>
+    </div>
+    <div className='notes-modal-form-content-div-inputs'>
+<textarea className='notes-textarea' placeholder='Type your note here...' />
+      </div>
+<div>
+  <button className='notes-form-save-btn'>Save note</button>
+</div>
+  
+            </form>
+
+        </div>
+      </div> */}
+
+
+
+
+          </div>
+          <div className='order-detail-divs order_received_by'>
+            <h4>Received By</h4>
+          <span> {order?.company_role_name} {order?.employee_first_name} </span>
+          </div>
+          
+    
+         
+        </div>
+      ) : (
+        <p>Loading order details...</p>
+      )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      .view-order-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-order-container h3 {
+  padding: 30px 10px;
+  max-width: 1000px;
+  text-align: center;
+}
+.order-details {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+.order-detail-divs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 10px solid #e2b4de;
+  padding: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.order-customer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.order-vehicle-info .vehicle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.order-detail-divs h4 {
+  border-bottom: 1px solid #848f9650;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  text-align: center;
+}
+.actions-based-on-information {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 20px;
+}
+.order-notes-spn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: rgb(240, 245, 244);
+  border-bottom: 1px solid rgb(195, 201, 204);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 10px;
+}
+.notes-replay-spn {
+  background-color: transparent;
+  color: rgb(0, 119, 255);
+  font-size: 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  text-align: right;
+  top: -5px;
+  position: relative;
+  padding-right: 20px;
+  font-weight: 700;
+}
+.buttons-for-notes {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+.add-notes-about-order,
+.edit-update-order-order-status-btn {
+  margin-top: 7px;
+  border: none;
+  background-color: transparent;
+  color: rgb(1, 31, 97);
+  cursor: pointer;
+  border-radius: 5px;
+}
+.order-detail-notes-overlay {
+  position: fixed; /* Changed from absolute */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.781);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10001;
+}
+.notes-modal-form-div {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 45%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.close-notes--form-modal-btn {
+  align-self: flex-end;
+  border: none;
+  background-color: red;
+  font-size: 20px;
+  cursor: pointer;
+}
+.notes-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.notes-textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  border: 1px solid #f3bcc1;
+}
+.notes-form-save-btn {
+  align-self: flex-end;
+  border: none;
+  background-color: #ff0728;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.all-replays-spn
+{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.replays-spn
+{
+  background-color: transparent;
+  color: rgb(67, 85, 102);
+  font-size: 12px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: relative;
+  padding-right: 20px;
+  border: 1px solid rgb(195, 201, 204);
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+.replay-text
+{
+  font-weight: 700;
+  color: rgb(1, 31, 97);
+}
+.replay-footer-content
+{
+  font-size: 10px;
+  color: rgb(67, 85, 102);
+}

@@ -11,6 +11,8 @@ router.get('/api/orders/:cust_veh_id', [authMiddleWare.verifyToken], orderContro
 router.get('/api/get-services', authMiddleWare.verifyToken, orderController.getOrders); 
 //get order by id
 router.get('/api/order/:order_id', authMiddleWare.verifyToken, orderController.getOrderById);
-//update internal note for an order
-router.put('/api/update-order/:order_id/:orderColumn', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.updateOrder);
+//insert notes of an order
+router.post('/api/insert-order-comments/:order_id/:commentsFor', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.insertComments);
+//insert replays of an order
+router.post('/api/insert-order-replays/:comment_id', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.insertReplays);
 module.exports = router
