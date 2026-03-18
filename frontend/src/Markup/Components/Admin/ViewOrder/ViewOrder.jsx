@@ -136,7 +136,7 @@ useEffect(() => {
   {order?.order_date} <br /><br />
 </span>
     <span>
-      <FaUser  color='#64696e'/>&nbsp; <span>{order?.customer_first_name}</span>
+      <FaUser  color='#64696e'/>&nbsp; <span><strong>{order?.customer_first_name}</strong></span>
     </span><br/>
     <span>
       <IoIosCar color='#4d5258'/>&nbsp; {order?.vehicle_model} ({order?.vehicle_year})
