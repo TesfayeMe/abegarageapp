@@ -143,10 +143,18 @@ useEffect(() => {
     </span>
 </div>
 <div className='order-and-actions-on-order-left'>
-  order status, <br/>
-order price, <br/>
-edit btn , <br/>
-change status btn, <br/>
+  
+  <span >
+Status &nbsp; <span className='assigned'>
+  {order?.order_status===5 ? "Assigned" : "Not Assigned"}
+  </span>
+    </span><br/>
+    <br/>
+    <br/>
+    
+    <span><strong >{order?.order_total_price?.toFixed(2)} ETB</strong></span>
+    <br />
+    <span>Edit Button, Change Status Button</span>
 </div>
 
 </div>
