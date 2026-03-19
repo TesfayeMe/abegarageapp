@@ -199,6 +199,7 @@
 }
 .additional-request-and-internal-communication
 {
+  
   width: 63%;
   display: flex;
   flex-direction: column;
@@ -397,4 +398,60 @@ border: 1px solid #ebeff3;
 {
   display: flex;
   gap: 10px;
+}
+@media screen and (max-width: 1200px){
+  .order-detail-and-communication
+  {
+    width: 100%;
+  }
+  
+}
+@media screen and (max-width: 1000px){
+  .view-order-customer-communications-history
+  {
+    display: none;
+  }
+  
+}
+@media screen and (max-width: 850px){
+  .communication-on-order-and-services
+  {
+    flex-direction: column;
+
+  }
+  .services-and-customer-communications, .additional-request-and-internal-communication
+  {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 800px){
+  .view-order-container
+  {
+flex-direction: column-reverse;
+  }
+  .communication-on-order-and-services
+  {
+    flex-direction: column;
+
+  }
+  .customer-vehicle-and-receiver-employee
+  {
+    width: 100%;
+    flex-direction: row;
+    max-width: none;
+  }
+}
+
+@media screen and (max-width: 600px){
+  .customer-vehicle-and-receiver-employee
+  {
+   gap: 3px
+  }
+}
+@media screen and (max-width: 550px){
+  .order-information-receiver-employee-information
+  {
+   display: none;
+  }
 }
