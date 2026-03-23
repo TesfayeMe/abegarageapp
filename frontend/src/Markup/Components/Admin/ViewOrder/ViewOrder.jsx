@@ -155,14 +155,15 @@ useEffect(() => {
 </div>
 <div className='order-and-actions-on-order-left'>
   
-  <div className='order-status'>
+  <div className='order-status-and-order-price'> 
+<div className='order-status'>
 Status <span className='assigned'>
   {order?.order_status===1 ? "Assigned" : "Not Assigned"}
   </span>
     </div>
-    <br/>
     
-    <div className='order-price-div'><strong >{order?.order_total_price?.toFixed(2)} ETB</strong></div>
+    <div className='order-price-div' style={{marginTop: '30px'}}><strong >{order?.order_total_price?.toFixed(2)} ETB</strong></div>
+  </div>
     <div className='order-action-buttons'>
       <button className='order-action-buttons-btn order-action-buttons-edit'>Edit Order</button>
       <button className='order-action-buttons-btn order-action-buttons-change-status'>Change Status</button>
@@ -308,15 +309,15 @@ Status <span className='assigned'>
 <div className='customer-vehicle-and-receiver-employee'>
 <div className='order-view-customer-information'>
 <span className='order-view-customer-information-header'><FaUserAlt color='#8b898d'  /><span className='customer-information-header-txt'>Customer</span></span>
-<span className='order-view-customer-information-each-info info-name'><FaRegUser color='#8b898d'/> <span>Tesfaye</span></span>
-<span className='order-view-customer-information-each-info'><MdEmail color='#8b898d'/> <span>kostrie@gmail.cm</span></span>
-<span className='order-view-customer-information-each-info'><FaPhoneAlt color='#8b898d'/> <span>09374837854</span></span>
+<span className='order-view-customer-information-each-info info-name'><FaRegUser color='#8b898d'/> <span>{order?.customer_first_name}</span></span>
+<span className='order-view-customer-information-each-info'><MdEmail color='#8b898d'/> <span>{order?.customer_email}</span></span>
+<span className='order-view-customer-information-each-info'><FaPhoneAlt color='#8b898d'/> <span>{order?.customer_phone_number}</span></span>
 
 </div>
 <div className='order-view-vehicle-information'>
 <span className='order-view-vehicle-information-header'><FaCarRear color='#8b898d' /><span className='vehicle-information-header-txt'>Vehicle</span></span>
-<span className='order-view-vehicle-information-each-info'><IoCarSportOutline/> <span>Toyota(2021)</span></span>
-<span className='order-view-vehicle-information-each-info'>Tag: <span>2dsf21erere</span></span>
+<span className='order-view-vehicle-information-each-info'><IoCarSportOutline size={22}/> <span>{order?.vehicle_make} ( {order?.vehicle_model} - {order?.vehicle_year} )</span></span>
+<span className='order-view-vehicle-information-each-info'>Tag: <span>{order?.vehicle_tag}</span></span>
 </div>
 
 
@@ -325,7 +326,7 @@ Status <span className='assigned'>
 <span>Received By</span>
 </span>
 <span className='order-information-receiver-employee-information-body'>
-  <GrUserManager color='rgb(74, 162, 250)' size={20}/> <span> admin Tesfaye</span>
+  <GrUserManager color='rgb(74, 162, 250)' size={20}/> <span> {order?.company_role_name} {order?.employee_first_name}</span>
 </span>
 </div>
       </div>

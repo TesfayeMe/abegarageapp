@@ -38,9 +38,9 @@
 }
 .order-and-actions-on-order-left
 {
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: end; */
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 .order-status{
   display: flex;
@@ -443,15 +443,60 @@ flex-direction: column-reverse;
   }
 }
 
-@media screen and (max-width: 600px){
+@media screen and (max-width: 665px){
   .customer-vehicle-and-receiver-employee
   {
    gap: 3px
   }
 }
-@media screen and (max-width: 550px){
+@media screen and (max-width: 640px){
+  .customer-vehicle-and-receiver-employee
+  {
+   gap: 10px
+  }
   .order-information-receiver-employee-information
   {
    display: none;
   }
+}
+
+@media screen and (max-width: 540px){
+  .order-and-actions-on-order
+  {
+    flex-direction: column;
+  }
+  .order-and-actions-on-order-left
+  {
+    /* background-color: green; */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: start;
+    /* justify-content: flex-end; */
+    border-top: 5px solid #e9eef0;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-radius: 5px;
+  }
+  .order-status-and-order-price
+  {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: start;
+  }
+  .order-price-div
+  {
+    width: auto;
+    align-items: start;
+    justify-content: start;
+    text-align: start;
+  }
+}
+@media screen and (max-width: 500px){
+  .customer-vehicle-and-receiver-employee
+  {
+    flex-direction: column;
+  }
+  
 }
