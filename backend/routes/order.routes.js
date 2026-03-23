@@ -15,4 +15,8 @@ router.get('/api/order/:order_id', authMiddleWare.verifyToken, orderController.g
 router.post('/api/insert-order-comments/:order_id/:commentsFor', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.insertComments);
 //insert replays of an order
 router.post('/api/insert-order-replays/:comment_id', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.insertReplays);
+//get order additional request
+router.get('/api/get-order-additional-request/:orderId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getOrderAdditionalRequest);
+//add order additional request
+router.post('/api/add-new-additional-request', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.addAdditionalRequest)
 module.exports = router

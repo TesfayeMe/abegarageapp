@@ -96,12 +96,54 @@ const insertReplays = async (req, res) => {
         });
     }
 }
+
+const getOrderAdditionalRequest = async (req, res) => {
+    const { orderId } = req.params;
+    const getOrderAdditionalRequest =  await orderService.getOrderAdditionalRequest(orderId);
+    // console.log(getOrderAdditionalRequest);
+    if(getOrderAdditionalRequest)
+    {
+        return res.status(200).json({
+            status: true,
+            message: 'Additional Request Found',
+            data: getOrderAdditionalRequest
+        })
+    }
+    else
+    {
+         return res.status(400).json({
+            status: false,
+            message: 'Additional Request Not Found'
+        })
+    }
+}
+
+const addAdditionalRequest = async (req, res) => {
+    const orderAdditionalRequestData = req.body;
+    const addAdditionalRequest = await orderService.addAdditionalRequest(orderAdditionalRequestData);
+    if(addAdditionalRequest)
+    {
+        return res.status(200).json({
+            status: true,
+            message: 'Additional request successfully added'
+        })
+    }
+    else
+    {
+        return res.status(400).json({
+            status: false,
+            message: 'Additional request not successfully added'
+        })
+    }
+}
 const orderController = {
     getOrder,
     getOrders,
     getOrderById,
     insertComments,
-    insertReplays
+    insertReplays,
+    getOrderAdditionalRequest,
+    addAdditionalRequest
 }
 
 module.exports = orderController;

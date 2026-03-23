@@ -58,11 +58,37 @@ const saveRelay = async (commentId, noteContent, employee_id, token) => {
     });
     return response;
 }
+const getAdditionalRequests = async (orderId, token) =>{
+    console.log(orderId);
+   const response =  await fetch(`${api_url}/api/get-order-additional-request/${orderId}`,{
+    method: 'get',
+    headers: {
+        'Content-Type' :'application/json',
+        'x-access-token': token
+    }
+});
+return response;
+}
+const addNewRequest = async (additionalRequestData, token) => {
+  
+    const response = await fetch(`${api_url}/api/add-new-additional-request`,{
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+        },
+        body: JSON.stringify(additionalRequestData)
+    })
+    return await response.json();
+    
+}
 const OrderServices = {
     getOrderByVehicleId,
     getAllOrders,
     getOrderById,
     saveNote,
-    saveRelay
+    saveRelay,
+    getAdditionalRequests,
+    addNewRequest
 }
 export default OrderServices

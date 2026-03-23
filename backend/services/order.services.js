@@ -182,12 +182,26 @@ const insertReplays = async (commentId, noteContent, employee_id) => {
     console.log(insertResult);
     return insertResult.affectedRows > 0;
 }
-
+const getOrderAdditionalRequest = async (orderId) =>{
+    console.log(orderId);
+    const sqlForAdditionalRequest = `SELECT adrq.additional_request, adrq.additional_request_status, adrq.total_additional_request, adrq.completed_additional_request from orders ord JOIN additional_request adrq ON ord.order_id = adrq.order_id where ord.order_id = ?`;
+    const [additionalRequestResult] = await conn.query(sqlForAdditionalRequest, [orderId]);
+    // console.log(additionalRequestResult);
+    return additionalRequestResult.length > 0 ? additionalRequestResult : null;
+}
+const addAdditionalRequest = async (orderAdditionalRequestData) =>{
+    const {additionalRequest, orderId, totalAdditionalRequest} = orderAdditionalRequestData;
+const sqlForAddAdditionalRequest = `insert into additional_request (additional_request, order_id, total_additional_request) values(?,?,?)`;
+const additionalRequestResult = await conn.query(sqlForAddAdditionalRequest, [additionalRequest, orderId, totalAdditionalRequest]);
+return additionalRequestResult[0].affectedRows > 0 ? true : false;
+}
 const orderService = {
     getOrder,
     getOrders,
     getOrderById,
     insertComments,
-    insertReplays
+    insertReplays,
+    getOrderAdditionalRequest,
+    addAdditionalRequest
 }
 module.exports = orderService;
