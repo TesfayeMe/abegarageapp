@@ -1,11 +1,7 @@
-import React from 'react'
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import OrderService from '../../../../Services/OrderServices';
 import { useAuth } from '../../../../Context/AuthContext';
-import { FaEdit } from "react-icons/fa";
-import { TbStatusChange } from "react-icons/tb";
-import { IoMdClose } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 import { IoIosCar } from "react-icons/io";
 import { FaWrench } from "react-icons/fa6";
@@ -18,7 +14,6 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { FaCarRear } from "react-icons/fa6";
 import { IoCarSportOutline } from "react-icons/io5";
 import { GrUserManager } from "react-icons/gr";
-import { GrSend } from "react-icons/gr";
 import { BsSendFill } from "react-icons/bs";
 import './ViewOrder.css';
 import OrderServices from '../../../../Services/OrderServices';
@@ -31,11 +26,6 @@ const ViewOrder = () => {
   }
   const [order, setOrder] = useState(null);
   const [modal, setModal] = useState(false);
-  const [activateInternalNotesInput, setActivateInternalNotesInput] = useState(false);
-  const [activateCustomerNotesInput, setActivateCustomerNotesInput] = useState(false);
-  const [activateSaveReplay, setActivateSaveReplay] = useState(false);
-  const [noteContent, setNoteContent] = useState("");
-  const [orderColumn, setOrderColumn] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -62,9 +52,42 @@ const ViewOrder = () => {
     fetchOrder();
   }, [location.state?.order_id, token]);
 
-const handleSaveNotes = () => {
+//handleChange order status change
+const [changeOrderStatus, setChangeOrderStatus] = useState(false);
+const [newStatus, setNewOrderStatus] = useState(null)
+const handleSaveStatus = async () => {
+  const orderId = location.state?.order_id;
+  const updateData = {
+    orderId: orderId,
+    orderStatus: newStatus
+  }
+  const updateOrderStatus = await OrderService.updateOrderStatus(updateData, token);
+       if(updateOrderStatus.status === true)
+       {
+
+         alert('Status changed successfully')
+       }
+       else
+       {
+        alert('Status not changed')
+       }
+  alert(newStatus);
+  setChangeOrderStatus(false)
+}
+
+
+//Save notes handler
+const [commentForCustomer, setCommentForCustomer] = useState(null);
+const [commentForEmployee, setCommentForEmployee] = useState(null);
+const handleSaveNotes = (commentFor) => {
     const employee_id = employee?.employee_id;
-    const saveNote = OrderServices.saveNote(order?.order_id, noteContent, orderColumn, employee_id, token);
+    const commentData = {
+      comment: commentFor === 1 ? commentForCustomer : commentForEmployee,
+      employee_id: employee_id,
+      commentFor: commentFor,
+      orderId: location.state?.order_id
+    }
+    const saveNote = OrderServices.saveNote(commentData, token);
     saveNote.then((response) => response.json())
     .then((data) => {
       if (data.status === true) {
@@ -90,53 +113,28 @@ const handleSaveNotes = () => {
     .catch((error) => {
       console.error("Error saving internal note:", error);
     });
- 
   setModal(false);
-  
-  
-}
-const handleSaveReplay = () => {
-  const employee_id = employee?.employee_id;
-    const saveRelay = OrderServices.saveRelay(order?.comment_id, noteContent, employee_id, token);
-    saveRelay.then((response) => response.json())
-    .then((data) => {
-      if (data.status === true) {
-        console.log("Replay saved successfully:", data.message);
-        window.location.reload();
-      } else if (data.status === false) {
-        console.error("Failed to save replay:", data.message);
-      }
-      else if (data.status === "tokenExpired") {
-        console.error("Token expired. Please log in again.");
-      }
-      else if (data.status === "notManagerAndAdmin") {
-        console.error("You are not a manager or admin.");
-      }
-      else {
-        console.error("Unexpected response:", data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error saving replay:", error);
-    });
-  setModal(false);
-  
 }
 
+//controlling overflow during changeOrderStatus pop
 useEffect(() => {
-  if (modal) {
+  if (changeOrderStatus) {
     document.body.style.overflow = 'hidden';
   } else {
     document.body.style.overflow = 'auto';
   }
-}, [modal]);
+}, [changeOrderStatus]);
 
-//get order additional request
+
+//get order additional request and order notes
 const [additionalRequest, setAdditionalRequest] = useState(null);
+const [comments, setComments] = useState(null)
+const [commentsForCustomer, setCommentsForCustomer] = useState([]);
+const [commentsForEmployee, setCommentsForEmployee] = useState([]);
 useEffect(() => {
+  const orderId = location.state?.order_id;
   async function getAdditionalRequests() {
-    console.log(location.state?.order_id);
-    const additionalRequests = await OrderService.getAdditionalRequests(location.state?.order_id, token);
+    const additionalRequests = await OrderService.getAdditionalRequests(orderId, token);
    const additionalRequestsData = await additionalRequests.json();
    console.log(additionalRequestsData);
    if(additionalRequestsData.status === true)
@@ -161,14 +159,53 @@ useEffect(() => {
    {
     alert('Unauthorized please login again');
 
+        window.location.href ='/orders'
    }
     
   }
+  async function getOrderNotes() {
+    const getOrderNotes = await OrderService.getOrderNotes(orderId, token);
+          const getOrderNotesData = await getOrderNotes.json();
+          if(getOrderNotesData.status === true)
+          {
+            // alert('yes found')
+            setComments(getOrderNotesData.data)
+            getOrderNotesData.data.forEach(comment => {
+              if(comment.comment_for === 1)
+              {
+               commentsForCustomer.push(comment)
+              }
+              else
+              {
+                commentsForEmployee.push(comment)
+              }
+              
+            });
+          }
+          else if(getOrderNotesData.status === false)
+          {
+            alert('Order comment not found')
+          }
+         else if(getOrderNotesData.status === 'tokenExpired')
+         {
+          localStorage.removeItem('employee');
+          window.location.href= '/login';
+         }
+         else if(getOrderNotesData.status === 'notManagerAndAdmin')
+         {
+          alert('You are not authorized')
+         }
+         else
+         {
+          alert('Unknown server error')
+         }
+  }
   getAdditionalRequests();
+  getOrderNotes();
 }, [location.state?.order_id, token]);
-// console.log(additionalRequest);
 
-//add new additional request
+
+
 const [additionalRequestValue, setAdditionalRequestValue] =  useState(null)
 const handleAddAdditionalRequest = async () => {
   // const order_id = location.state?.order_id;
@@ -199,6 +236,7 @@ const handleAddAdditionalRequest = async () => {
       else if(addNewRequest.status === 'notManagerAndAdmin')
       {
         alert('Unauthorized action')
+        window.location.href ='/orders'
       }
 }
 
@@ -211,6 +249,7 @@ const STATUS_MAP = {
   5: "Completed",
 };
 
+
   return (
     <div className="view-order-container">
       <div className='order-detail-and-communication'>
@@ -221,8 +260,11 @@ const STATUS_MAP = {
     Order #{order?.order_id}
   </div>
   <div style={{fontWeight:'500', fontSize:'18px', color:'#989ca1'}}>
-  {order?.order_date} 
-
+{new Date(order?.order_date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+})}
 </div>
     <div style={{marginTop: '10px'}}>
       <FaUser  color='#64696e'/>&nbsp; <span><strong>{order?.customer_first_name}</strong></span>
@@ -243,14 +285,36 @@ const STATUS_MAP = {
   </div>
     <div className='order-action-buttons'>
       <button className='order-action-buttons-btn order-action-buttons-edit'>Edit Order</button>
-      <button className='order-action-buttons-btn order-action-buttons-change-status'>Change Status</button>
+      <button className='order-action-buttons-btn order-action-buttons-change-status' onClick={()=>setChangeOrderStatus(!changeOrderStatus)}>Change Status</button>
     </div>
 </div>
+{
+  changeOrderStatus && (<div className='modal-overlay'>
+  <div className='selection-of-order-status-modal'>
+    <div className='selection-of-order-status-modal-body'>
+
+  <h4>Select option below:</h4>
+<select onChange={e=>setNewOrderStatus(e.target.value)}>
+  <option value='' >Select status</option>
+  <option value={1}>Received</option>
+  <option value={2}>Assigned</option>
+  <option value={3}>In progress</option>
+  <option value={4}>Paused</option>
+  <option value={5}>Canceled</option>
+  <option value={6}>Completed</option>
+  <option value={7}>Submitted</option>
+</select>
+    </div>
+  
+<div  className='save-status-btn-dv'>
+  <button className='save-status-btn' onClick={handleSaveStatus}>Save status</button>
+</div>
+  </div>
+
+</div>)
+}
 
 </div>
-
-
-
 
 <div className='communication-on-order-and-services'>
 <div className='services-and-customer-communications'>
@@ -270,36 +334,40 @@ const STATUS_MAP = {
   </div>
 
 
-
-  <div className='view-order-customer-communications-history'>
+<div className='view-order-customer-communications-history'>
 <div className='view-order-customer-communications-history-header'><TbNotes color='#4e8ece'size={22} />
   <span className='view-order-customer-communications-history-header-txt'>Customer notes</span>
 </div>
 <div className='view-order-customer-communications-history-body'>
-<span className='view-order-customer-communications-history-body-each-note'>
-  Hello customer please bring your car key
-</span>
-<span className='view-order-customer-communications-history-body-each-note'>
+  {commentsForCustomer.map((comment, index)=>(
+<span className='view-order-customer-communications-history-body-each-note' key={index}>
  <span className='view-order-customer-communications-history-body-each-note-user-profile'>
   <span className='view-order-customer-communications-history-body-each-note-user-profile-photo'>
-    Photo
+    {comment.employee_photo_url === null ? <FaUser color='#b0b5ba' size={30}/>:  comment.employee_photo_url}
   </span>
   <span className='view-order-customer-communications-history-body-each-note-user-first-name'>
-  Gebre Egiziabhier
+    {comment.employee_first_name}
+
   </span>
  </span>
 <div className='view-order-customer-communications-history-body-each-note-content'>
 <span className='view-order-customer-communications-history-body-each-note-content-message'>
-   Hello customer please take your car, your car is ready to go
-  Hello customer please take your car, your car is ready to go
-  Hello customer please take your car, your car is ready to go
-  Hello customer please take your car, your car is ready to go 
+    {comment.comment}
 </span>
 <span className='view-order-customer-communications-history-body-each-note-content-date'>
-  Mar 20, 2026
+    {new Date(comment.comment_date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+})}
 </span>
 </div>
 </span>
+  ))}
+</div>
+<div className='view-order-customer-communications-history-input-form view-order-notes-input-form'>
+<textarea className='view-order-notes-input-form-text-area' placeholder='Note for customer...' onChange={(e)=>setCommentForCustomer(e.target.value)} />
+<button className='view-order-notes-input-form-submit-btn' onClick={()=>handleSaveNotes(1)}>    <BsSendFill />       </button>
 </div>
   </div>
 </div>
@@ -310,104 +378,55 @@ const STATUS_MAP = {
   <span className='order-view-additional-request-header'>
   <VscRequestChanges size={23}/><span className='order-view-additional-request-header-txt'>Additional request</span>
   </span>
-
   <div className='order-view-additional-request-all-requests'>
 {additionalRequest && (additionalRequest?.additional_request.split(',').map((request, index)=>(
     <span className='order-view-additional-request-all-requests-each-request' key={index}>
       {request}
     </span>
 )))
-
 }
-{
-  !additionalRequest && 
-  
+{ !additionalRequest && 
 <div style={{width: '100%', display: 'flex', padding: '2px 10px'}}>
   <p>No additional requests</p>
 </div>
-  
-  
 }
+
 <div  className='add-new-additional-request-bnt-div'>
   <div className='additional-request-input-form'>
     <textarea className='additional-request-input-form-text-area' placeholder='Additional request...' onChange={(e)=>setAdditionalRequestValue(e.target.value)} ></textarea><button className='add-new-additional-request-bnt' onClick={handleAddAdditionalRequest}><BsSendFill color='white' size={35}/></button>
   </div>
 </div>
 </div>
-
-
-   {/* <div className='order-view-additional-request-all-requests'>
-    <span className='order-view-additional-request-all-requests-each-request'>
-      Hello customer please take your car, your car
-    </span>
-     <span className='order-view-additional-request-all-requests-each-request'>
-      Hello customer please take your car, your car
-    </span>
-  </div> */}
-
-
-
-
 </div>
 
 <div className='order-view-internal-communication'>
 <div className='order-view-internal-communication-header'>
   <TbNotes size={23} color='#3d98d4'/> <span className='order-view-internal-communication-header-txt'>Internal notes</span>
 </div>
-
-
-
-<div className='order-view-internal-communication-body'>
+{commentsForEmployee?.map((comment, index) =>(
+<div className='order-view-internal-communication-body' key={index}>
 <div className='order-view-internal-communication-body-user'>
-<span>Photo</span>
-<span>Username</span>
+<span className='order-view-internal-communication-body-user-photo'>{comment.employee_photo_url === null ? <FaUser color='#adb6be' size={30} /> : comment.employee_photo_url}</span>
+<span style={{fontSize: '10px', fontWeight: 'bold'}}>{comment.employee_first_name}</span>
 </div>
 <div className='order-view-internal-communication-body-text-and-date'>
-<span className='order-view-internal-communication-body-text'>Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go</span>
-<span className='order-view-internal-communication-body-date'>Mar 20, 2026</span>
+<span className='order-view-internal-communication-body-text'>{comment.comment}</span>
+<span style={{fontSize: '10px', fontWeight: 'bold'}} className='order-view-internal-communication-body-date'>
+   {new Date(comment.comment_date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+})}
+</span>
 </div>
-
 </div>
-
-
-
-<div className='order-view-internal-communication-body'>
-<div className='order-view-internal-communication-body-user'>
-<span>Photo</span>
-<span>Username</span>
-</div>
-<div className='order-view-internal-communication-body-text-and-date'>
-<span className='order-view-internal-communication-body-text'>Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go</span>
-<span className='order-view-internal-communication-body-date'>Mar 20, 2026</span>
-</div>
-
+))}
+<div className='order-view-internal-communication-input-form view-order-notes-input-form'>
+<textarea className='view-order-notes-input-form-text-area' placeholder='Note for customer...' onChange={(e)=>setCommentForEmployee(e.target.value)} />
+<button className='view-order-notes-input-form-submit-btn' onClick={()=>handleSaveNotes(2)}>    <BsSendFill />       </button>
 </div>
 
 
-<div className='order-view-internal-communication-body'>
-<div className='order-view-internal-communication-body-user'>
-<span>Photo</span>
-<span>Username</span>
-</div>
-<div className='order-view-internal-communication-body-text-and-date'>
-<span className='order-view-internal-communication-body-text'>Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go</span>
-<span className='order-view-internal-communication-body-date'>Mar 20, 2026</span>
-</div>
-
-</div>
-
-
-<div className='order-view-internal-communication-body'>
-<div className='order-view-internal-communication-body-user'>
-<span>Photo</span>
-<span>Username</span>
-</div>
-<div className='order-view-internal-communication-body-text-and-date'>
-<span className='order-view-internal-communication-body-text'>Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go Hello customer please take your car, your car is ready to go</span>
-<span className='order-view-internal-communication-body-date'>Mar 20, 2026</span>
-</div>
-
-</div>
 </div>
 </div>
 </div>

@@ -35,15 +35,14 @@ const getOrderById = async (orderId, token) => {
     })
     return response;
 }
-const saveNote = async (orderId, noteContent, orderColumn, employee_id, token) => {
-    const commentsFor = orderColumn;
-    const response = await fetch(`${api_url}/api/insert-order-comments/${orderId}/${commentsFor}`, {
+const saveNote = async (commentData, token) => {
+    const response = await fetch(`${api_url}/api/add-order-comments`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
             'x-access-token': token
         },
-        body: JSON.stringify({ noteContent, employee_id })
+        body: JSON.stringify(commentData)
     });
     return response;
 }
@@ -82,6 +81,27 @@ const addNewRequest = async (additionalRequestData, token) => {
     return await response.json();
     
 }
+const getOrderNotes = async (orderId, token) => {
+    const response = await fetch(`${api_url}/api/get-order-notes/${orderId}`,{
+        method: 'get',
+        headers : {
+            'content-type': 'application/json',
+            'x-access-token' : token
+        }
+    })
+    return response;
+}
+const updateOrderStatus = async (statusData, token) => {
+    const response = await fetch(`${api_url}/api/update-order-status`, {
+        method: 'put',
+        headers : {
+            'content-type': 'application/json',
+            'x-access-token': token
+        },
+        body: JSON.stringify(statusData)
+    })
+    return await response.json();
+}
 const OrderServices = {
     getOrderByVehicleId,
     getAllOrders,
@@ -90,5 +110,7 @@ const OrderServices = {
     saveRelay,
     getAdditionalRequests,
     addNewRequest
+    ,getOrderNotes,
+    updateOrderStatus
 }
 export default OrderServices

@@ -1,10 +1,9 @@
 const conn = require('../config/db.config')
 const getOrder = async (customer_vehicle_id) => {
     const { customer_id, vehicle_id } = customer_vehicle_id;
-    
     const orderSql = `SELECT cvh.vehicle_type, cvh.vehicle_color, cvh.vehicle_tag, ord.order_date, ord_inf.additional_request, ord_st.order_status, GROUP_CONCAT(com_serv.service_name SEPARATOR ', ') AS service_names FROM customer_info cust JOIN customer_vehicle_info cvh ON cust.customer_id = cvh.customer_id JOIN orders ord ON cvh.vehicle_id = ord.vehicle_id JOIN order_info ord_inf ON ord.order_id = ord_inf.order_id JOIN order_status ord_st ON ord.order_id = ord_st.order_id JOIN order_services ord_serv ON ord.order_id = ord_serv.order_id JOIN common_services com_serv ON ord_serv.service_id = com_serv.service_id WHERE cust.customer_id = ? AND cvh.vehicle_id = ? GROUP BY ord.order_id, cust.customer_first_name, cvh.vehicle_type, cvh.vehicle_color, cvh.vehicle_tag, ord.order_date, ord.order_hash, ord_inf.additional_request, ord_st.order_status;`
     const [orderResult] = await conn.query(orderSql, [customer_id, vehicle_id]);
-    console.log(orderResult);
+    // console.log(orderResult);
     return orderResult.length > 0 ? orderResult : null
 }
 const getOrders = async () => {
@@ -163,24 +162,24 @@ GROUP BY ord.order_id;`
 //     ord.order_date, ord.active_order, crole.company_role_name, 
 //     emp_info.employee_first_name, ord_stat.order_status;`;
     const [orderByIdResult] = await conn.query(orderByIdSql, [order_id]);
-    console.log(orderByIdResult);
+    // console.log(orderByIdResult);
     return orderByIdResult.length > 0 ? orderByIdResult[0] : null;
 }
 
 
-const insertComments = async (orderId, noteContent, commentsFor, employee_id) => {
-    // const updateNoteSql = `INSERT INTO comments (comment, employee_id, comment_for, order_id) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE ${commentsFor} = VALUES(${commentsFor})`;
+const addComments = async (commentData) => {
+    const { comment, employee_id, commentFor, orderId} = commentData;
     const updateNoteSql = `INSERT INTO comments (comment, employee_id, comment_for, order_id) VALUES (?, ?, ?, ?)`;
-    const [updateResult] = await conn.query(updateNoteSql, [noteContent, employee_id, commentsFor, orderId]);
+    const [updateResult] = await conn.query(updateNoteSql, [comment, employee_id, commentFor, orderId]);
     console.log(updateResult);
     return updateResult.affectedRows > 0;
 }
 
-const insertReplays = async (commentId, noteContent, employee_id) => {
-    const insertReplaySql = `INSERT INTO replay (replay, comment_id, employee_id) VALUES (?, ?, ?)`;
-    const [insertResult] = await conn.query(insertReplaySql, [noteContent, commentId, employee_id]);
-    console.log(insertResult);
-    return insertResult.affectedRows > 0;
+const getOrderComments = async (orderId) => {
+    const insertReplaySql = `SELECT emp_inf.employee_photo_url, emp_inf.employee_first_name, com.comment, com.comment_for, com.comment_date FROM orders ord JOIN comments com ON ord.order_id = com.order_id JOIN employee emp ON com.employee_id = emp.employee_id JOIN employee_info emp_inf ON emp.employee_id = emp_inf.employee_id WHERE ord.order_id = ? ORDER BY com.comment_date ASC;`;
+    const [commentResult] = await conn.query(insertReplaySql, [orderId]);
+    // console.log(commentResult);
+    return commentResult.length > 0 ? commentResult : null;
 }
 const getOrderAdditionalRequest = async (orderId) =>{
     console.log(orderId);
@@ -195,13 +194,22 @@ const sqlForAddAdditionalRequest = `insert into additional_request (additional_r
 const additionalRequestResult = await conn.query(sqlForAddAdditionalRequest, [additionalRequest, orderId, totalAdditionalRequest]);
 return additionalRequestResult[0].affectedRows > 0 ? true : false;
 }
+
+const updateOrderStatus = async (statusData) => {
+    const { orderStatus, orderId} = statusData;
+    const sqlUpdataOrderStatus = `update order_status set order_status = ? where order_id = ?`;
+    const updateResult = await conn.query(sqlUpdataOrderStatus, [orderStatus, orderId] );
+      console.log(updateResult[0]);
+      return updateResult[0].affectedRows > 0 ? true : false
+}
 const orderService = {
     getOrder,
     getOrders,
     getOrderById,
-    insertComments,
-    insertReplays,
+    addComments,
+    getOrderComments,
     getOrderAdditionalRequest,
-    addAdditionalRequest
+    addAdditionalRequest,
+    updateOrderStatus
 }
 module.exports = orderService;

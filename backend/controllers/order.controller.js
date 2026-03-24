@@ -1,12 +1,8 @@
 const orderService = require('../services/order.services')
 const getOrder = async (req, res, next) => {
-    // const customer_vehicle_id = req.body;
     const { cust_veh_id } = req.params;
-    // console.log(cust_veh_id)
     const customer_id = cust_veh_id.split(',')[0];
     const vehicle_id = cust_veh_id.split(',')[1];
-    // console.log(customer_id)
-    // console.log(vehicle_id)
     const customer_vehicle_id = { customer_id: customer_id, vehicle_id: vehicle_id };
     const getOrder = await orderService.getOrder(customer_vehicle_id);
     if (getOrder) {
@@ -60,12 +56,9 @@ const getOrderById = async (req, res) => {
         })
     }
 }
-const insertComments = async (req, res) => {
-    const { order_id } = req.params;
-    const { commentsFor } = req.params;
-    const { noteContent } = req.body;
-    const { employee_id } = req.body;
-    const updateResult = await orderService.insertComments(order_id, noteContent, commentsFor, employee_id);
+const AddComments = async (req, res) => {
+    const commentData = req.body;
+    const updateResult = await orderService.addComments(commentData);
     if (updateResult) {
         return res.status(200).json({
             status: true,
@@ -79,20 +72,19 @@ const insertComments = async (req, res) => {
     }
 }
 
-const insertReplays = async (req, res) => {
-    const { comment_id } = req.params;
-    const { noteContent } = req.body;
-    const { employee_id } = req.body;
-    const updateResult = await orderService.insertReplays(comment_id, noteContent, employee_id);
-    if (updateResult) {
+const getOrderComments = async (req, res) => {
+    const { orderId } = req.params;
+    const getComments = await orderService.getOrderComments(orderId);
+    if (getComments) {
         return res.status(200).json({
             status: true,
-            message: 'Replay added successfully',
+            message: 'Comments found',
+            data: getComments
         });
     } else {
         return res.status(400).json({
             status: false,
-            message: 'Failed to add replay',
+            message: 'Comments not found',
         });
     }
 }
@@ -136,14 +128,35 @@ const addAdditionalRequest = async (req, res) => {
         })
     }
 }
+
+const updateOrderStatus = async (req, res) => {
+    const statusData = req.body;
+    const updateOrderStatus = await orderService.updateOrderStatus(statusData);
+    if(updateOrderStatus)
+    {
+        return res.json(200).json({
+            status: true,
+            message: 'Order status updated successfully'
+        })
+    }
+    else
+    {
+        return res.json(400).json({
+            status: false,
+            message: 'Order status not updated'
+        })
+    }
+    
+}
 const orderController = {
     getOrder,
     getOrders,
     getOrderById,
-    insertComments,
-    insertReplays,
+    AddComments,
+    getOrderComments,
     getOrderAdditionalRequest,
-    addAdditionalRequest
+    addAdditionalRequest,
+    updateOrderStatus
 }
 
 module.exports = orderController;

@@ -12,11 +12,13 @@ router.get('/api/get-services', authMiddleWare.verifyToken, orderController.getO
 //get order by id
 router.get('/api/order/:order_id', authMiddleWare.verifyToken, orderController.getOrderById);
 //insert notes of an order
-router.post('/api/insert-order-comments/:order_id/:commentsFor', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.insertComments);
+router.post('/api/add-order-comments', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.AddComments);
 //insert replays of an order
-router.post('/api/insert-order-replays/:comment_id', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.insertReplays);
+router.get('/api/get-order-notes/:orderId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getOrderComments);
 //get order additional request
 router.get('/api/get-order-additional-request/:orderId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getOrderAdditionalRequest);
 //add order additional request
-router.post('/api/add-new-additional-request', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.addAdditionalRequest)
+router.post('/api/add-new-additional-request', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.addAdditionalRequest);
+//update order status
+router.put('/api/update-order-status', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.updateOrderStatus);
 module.exports = router
