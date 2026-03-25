@@ -66,12 +66,13 @@ const handleSaveStatus = async () => {
        {
 
          alert('Status changed successfully')
+         window.location.href='/order-details'
        }
        else
        {
         alert('Status not changed')
        }
-  alert(newStatus);
+  // alert(newStatus);
   setChangeOrderStatus(false)
 }
 
@@ -131,6 +132,7 @@ const [additionalRequest, setAdditionalRequest] = useState(null);
 const [comments, setComments] = useState(null)
 const [commentsForCustomer, setCommentsForCustomer] = useState([]);
 const [commentsForEmployee, setCommentsForEmployee] = useState([]);
+
 useEffect(() => {
   const orderId = location.state?.order_id;
   async function getAdditionalRequests() {
@@ -145,7 +147,8 @@ useEffect(() => {
    }
    else if(additionalRequestsData.status === false)
    {
-    alert('no additional request found');
+    // alert('no additional request found');
+    console.log('no additional request found');
    }
    else if(additionalRequestsData.status === 'tokenExpired')
    {
@@ -157,8 +160,8 @@ useEffect(() => {
    }
    else if(additionalRequestsData.status === 'notManagerAndNotAdmin')
    {
-    alert('Unauthorized please login again');
-
+    // alert('Unauthorized please login again');
+console.log('Unauthorized please login again')
         window.location.href ='/orders'
    }
     
@@ -166,25 +169,32 @@ useEffect(() => {
   async function getOrderNotes() {
     const getOrderNotes = await OrderService.getOrderNotes(orderId, token);
           const getOrderNotesData = await getOrderNotes.json();
-          if(getOrderNotesData.status === true)
-          {
-            // alert('yes found')
-            setComments(getOrderNotesData.data)
-            getOrderNotesData.data.forEach(comment => {
-              if(comment.comment_for === 1)
-              {
-               commentsForCustomer.push(comment)
-              }
-              else
-              {
-                commentsForEmployee.push(comment)
-              }
-              
-            });
-          }
+if (getOrderNotesData.status === true) {
+  const customerComments = [];
+  const employeeComments = [];
+
+  getOrderNotesData.data.forEach(comment => {
+    if (comment.comment_for === 1) {
+      customerComments.push(comment);
+    } else {
+      employeeComments.push(comment);
+    }
+  });
+
+  setCommentsForCustomer(customerComments);
+  setCommentsForEmployee(employeeComments)
+  setComments(getOrderNotesData.data);
+}
+
+
+
+
+
+
+
           else if(getOrderNotesData.status === false)
           {
-            alert('Order comment not found')
+            console.log('Order comment not found');
           }
          else if(getOrderNotesData.status === 'tokenExpired')
          {
@@ -193,11 +203,11 @@ useEffect(() => {
          }
          else if(getOrderNotesData.status === 'notManagerAndAdmin')
          {
-          alert('You are not authorized')
+          console.log('You are not authorized');
          }
          else
          {
-          alert('Unknown server error')
+          console.log('Unknown server error');
          }
   }
   getAdditionalRequests();
@@ -241,12 +251,12 @@ const handleAddAdditionalRequest = async () => {
 }
 
 const STATUS_MAP = {
-  0: "Received",
-  1: "Assigned",
-  2: "In Progress",
-  3: "Paused",
-  4: "Canceled",
-  5: "Completed",
+  1: "Received",
+  2: "Assigned",
+  3: "In Progress",
+  4: "Paused",
+  5: "Canceled",
+  6: "Completed",
 };
 
 

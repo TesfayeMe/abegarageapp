@@ -134,14 +134,14 @@ const updateOrderStatus = async (req, res) => {
     const updateOrderStatus = await orderService.updateOrderStatus(statusData);
     if(updateOrderStatus)
     {
-        return res.json(200).json({
+        return res.status(200).json({
             status: true,
             message: 'Order status updated successfully'
         })
     }
     else
     {
-        return res.json(400).json({
+        return res.status(400).json({
             status: false,
             message: 'Order status not updated'
         })

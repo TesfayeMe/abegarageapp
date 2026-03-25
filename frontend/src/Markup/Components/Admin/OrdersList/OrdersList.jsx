@@ -95,8 +95,8 @@ const  handleViewOrder = async(order_id)=>{
                                         {order.company_role_name} {order.employee_first_name}
                                     </td>
                                     <td>
-                                        <span className={`status status-${ order.order_status === 0 ? "received" : order.order_status === 1 ? "assigned" : order.order_status === 2 ? "in-progress" : order.order_status === 3 ? "paused" : order.order_status === 4 ? "canceled" : order.order_status === 5 ? "completed" : "submitted"}`}>
-                                            {order.order_status === 0 ? "Received" : order.order_status === 1 ? "Assigned" : order.order_status === 2 ? "In-progress" : order.order_status === 3 ? "Paused" : order.order_status === 4 ? "Canceled" : order.order_status === 5 ? "Completed" : "Submitted" }
+                                        <span className={`status status-${ order.order_status === 1 ? "received" : order.order_status === 2 ? "assigned" : order.order_status === 3 ? "in-progress" : order.order_status === 4 ? "paused" : order.order_status === 5 ? "canceled" : order.order_status === 6 ? "completed" : "submitted"}`}>
+                                            {order.order_status === 1 ? "Received" : order.order_status === 2 ? "Assigned" : order.order_status === 3 ? "In-progress" : order.order_status === 4 ? "Paused" : order.order_status === 5 ? "Canceled" : order.order_status === 6 ? "Completed" : "Submitted" }
                                         </span>
                                     
                                     </td>
