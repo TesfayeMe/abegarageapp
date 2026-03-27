@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import OrderService from '../../../../Services/OrderServices';
 import { useAuth } from '../../../../Context/AuthContext';
@@ -20,6 +20,7 @@ import OrderServices from '../../../../Services/OrderServices';
 const ViewOrder = () => {
   const location = useLocation();
   const { employee } = useAuth();
+  const navigate = useNavigate();
   let token = null;
   if (employee) {
     token = employee.employee_token;
@@ -466,6 +467,7 @@ const STATUS_MAP = {
   <GrUserManager color='rgb(74, 162, 250)' size={20}/> <span> {order?.company_role_name} {order?.employee_first_name}</span>
  </span>
 </div>
+<p className='return-to-orders-list' onClick={()=>navigate('/orders')}>return to order lists</p>
       </div>
     </div>
   )

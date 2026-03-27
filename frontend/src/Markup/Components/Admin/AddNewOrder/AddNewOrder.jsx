@@ -11,6 +11,8 @@ import { IoCloseSharp } from "react-icons/io5";
 import VehicleServices from '../../../../Services/VehicleServices';
 import { RiCloseFill } from "react-icons/ri";
 import ServiceServices from '../../../../Services/ServiceServices';
+import { FaHistory } from "react-icons/fa";
+import { FaCar } from "react-icons/fa";
 const AddNewOrder = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -25,7 +27,7 @@ const AddNewOrder = () => {
     const [isCustomerSelected, setIsCustomerSelected] = useState(false);
     const [isVehicleSelected, setIsVehicleSelected] = useState(false);
     const [showNewOrderModal, setShowNewOrderModal] = useState(false);
-
+    const [vehicleHistoryModal, setVehicleHistoryModal] = useState(false);
 
     const [services, setServices] = useState([]);
     const [serviceIDs, setServiceIDs] = useState([]);
@@ -36,6 +38,19 @@ const AddNewOrder = () => {
     const [selectedVehicleId, setSelectedVehicleId] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [showSearchResults, setShowSearchResults] = useState(false);
+ useEffect(() => {
+  if (vehicleHistoryModal) {
+    // Prevent scrolling
+    document.body.style.overflow = 'hidden';
+  } else {
+    // Restore scrolling when modal is closed
+    document.body.style.overflow = 'unset';
+  }
+  // Cleanup function to ensure scroll is restored if component unmounts
+  return () => {
+    document.body.style.overflow = 'unset';
+  };
+}, [vehicleHistoryModal]);
     useEffect(() => {
         async function searchCustomer(searchValue) {
             console.log('serached', searchValue)
@@ -239,7 +254,9 @@ const [additionalRequest, setAdditionalRequest] = useState('');
                     {
                        isVehicleSelected && selectedVehicleId ? (
                         <>
-                        <div className='selected-vehicle-info'>
+                          <div className='selected-vehicle-info'>
+
+                        
                             {selectedCustomerVehicle.map((vehicle) => {
                                 if(vehicle.vehicle_id === selectedVehicleId){
                                     return (
@@ -251,7 +268,8 @@ const [additionalRequest, setAdditionalRequest] = useState('');
                                             <span><strong>Vehicle Serial : </strong>{vehicle.vehicle_serial}</span><br />
                                             <span><strong>Vehicle Color : </strong>{vehicle.vehicle_color}</span><br />
                                             <span><strong>Vehicle Mileage : </strong>{vehicle.vehicle_mileage}</span><br />
-                                            <span><strong>Edit Vehicle Info : </strong><FaEdit className='edit-customer-icon' size={22} color='red' onClick={() => navigate('/admin/edit-vehicle', { state: { vehicle_id: vehicle.vehicle_id } })} /></span>
+                                            <span><strong>Edit Vehicle Info : </strong><FaEdit className='edit-customer-icon' size={22} color='red' onClick={() => navigate('/mgr/edit-vehicle', { state: { vehicle_id: vehicle.vehicle_id } })} /></span><br/>
+                                            <span><strong>View Vehicle history : </strong><FaHistory className='view-vehicle-info-icon' size={22} color='red' onClick={()=>setVehicleHistoryModal(!vehicleHistoryModal)} /></span>
                                         </div>
                                     )
                                 }
@@ -259,8 +277,120 @@ const [additionalRequest, setAdditionalRequest] = useState('');
                             <div className='close-btn-div'>
                                 <button className='close-selected-vehicle-btn' onClick={() => {setIsVehicleSelected(false); setSelectedVehicleId(null)}}><IoCloseSharp /></button>
                             </div>
-                        </div>
+                            {vehicleHistoryModal && (  
+                              <div className='vehicle-history-modal-overlay'>
+                                <div className='vehicle-history-modal'>
+<div className='vehicle-history-modal-header'>
+  <h4>Customer -Tesfaye, Toyota-Yaris(2011)</h4><button className='close-selected-vehicle-btn' onClick={()=>setVehicleHistoryModal(!vehicleHistoryModal)}><IoCloseSharp /></button>
+</div>
+<div className='active-order-of-customer-vehicle'>
+<div className='active-order-of-customer-vehicle-header'>Current Active Order</div>
+<div className='active-order-of-customer-vehicle-content'>
+  <div className='active-order-of-customer-vehicle-content-main'>
+    <div className='order-vehicle-avator'>
+<FaCar size={35} className='car-avator'/> 
+    </div>
+    <div className='order-date-div'>
+  <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER DATE</span>
+  <span className='active-order-of-customer-vehicle-content-main-bodies'>
 
+  2023-10-26
+  </span>
+  </div>
+  <div className='vehicle-order-status'>
+  <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER STATUS</span>
+    <span className='active-order-of-customer-vehicle-content-main-bodies'>
+
+Diagnostics and Quote (In Progress)
+  </span>
+  </div>
+  <div className='vehicle-order-services'>
+  <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER SERVICES</span>
+  <span className='active-order-of-customer-vehicle-content-main-bodies'>
+
+order services
+  </span>
+  </div>
+  <div className='vehicle-order-additional-requests'>
+  <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER ADD REQUESTS</span>
+  <span className='active-order-of-customer-vehicle-content-main-bodies'>
+
+order add req
+  </span>
+  </div>
+  </div>
+  <div className='vehicle-order-notes'>
+<div className='vehicle-order-notes-for-customer vehicle-order-note-div'>
+  <span className='vehicle-order-notes-headers'>
+CUSTOMER NOTES
+  </span>
+<p>Customer notes</p>
+</div>
+<div className='vehicle-order-between-bar-notes'>
+  i
+</div>
+<div className='vehicle-order-notes-internal-use vehicle-order-note-div'>
+   <span className='vehicle-order-notes-headers'>
+INTERNAL USE NOTES
+  </span>
+Internal use notes
+</div>
+  </div>
+</div>
+</div>
+<div className='closed-order-history-of-customer-vehicle'>
+  <div className='closed-order-history-of-customer-vehicle-header'>
+<p>CLOSED ORDER HISTORY</p>
+  </div>
+  <div className='closed-order-history-of-customer-vehicle-each'>
+<div className='closed-order-history-of-customer-vehicle-upper'>
+<div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
+<span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>ORDER ID</span>
+#134
+</div>
+<div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
+<span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>ORDER DATE</span>
+2023-09-20
+</div>
+<div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
+<span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>STATUS</span>
+COMPLETED
+</div>
+<div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
+<span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>PRICE</span>
+1,250 ETB
+</div>
+<div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
+<span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>TIME LENGTH</span>
+7 HOURS
+</div>
+</div>
+<div className='closed-order-history-of-customer-vehicle-lower'>
+<div className='closed-order-history-of-customer-vehicle-lower-each-entry'>
+  <span className='closed-order-history-of-customer-vehicle-lower-each-entry-header'>
+    ORDER SERVICES & ADD REQUESTS
+  </span>
+  all services and additional requests
+</div>
+<div className='closed-order-history-of-customer-vehicle-lower-each-entry'>
+  <span className='closed-order-history-of-customer-vehicle-lower-each-entry-header'>
+    NOTES FOR CUSTOMER
+  </span>
+  notes for customer
+</div>
+<div className='closed-order-history-of-customer-vehicle-lower-each-entry'>
+  <span className='closed-order-history-of-customer-vehicle-lower-each-entry-header'>
+    NOTES FOR INTERNAL USE
+  </span>
+  internal use notes
+</div>
+</div>
+  </div>
+</div>
+  </div>
+  </div>)}
+                        
+    </div>
 
 
 

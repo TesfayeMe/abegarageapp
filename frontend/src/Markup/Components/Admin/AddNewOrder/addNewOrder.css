@@ -67,7 +67,7 @@ display: flex;
     color: rgb(255, 255, 255);
     cursor: pointer;
 }
-.edit-customer-icon {
+.edit-customer-icon, .view-vehicle-info-icon {
     cursor: pointer;
 }
 .vehicle-lists-for-selected-customer
@@ -136,10 +136,147 @@ display: flex;
     color: rgb(255, 255, 255);
     cursor: pointer;
 }
-.add-new-order-form-content-container
+.vehicle-history-modal-overlay
 {
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+background-color: rgba(0, 0, 0, 0.925);
+/* backdrop-filter: blur(10px); */
+/* filter: blur(10px); */
+background-color: bl;
+position: fixed;
+top: 0;
+left: 0;
+z-index: 10001;
+}
+.vehicle-history-modal
+{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    border: 1px solid green;
+    background-color: white;
+    max-width: 1000px;
+}
+
+.vehicle-history-modal-header
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px;
+    border-bottom: 2px solid rgb(234, 238, 240);
+}
+.active-order-of-customer-vehicle
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 
 }
+.active-order-of-customer-vehicle-header
+{
+    /* margin-top: 15px; */
+}
+.active-order-of-customer-vehicle-content
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgb(227, 233, 227);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(43, 43, 43, 0.205);
+    background-color: rgba(226, 242, 255, 0.61);
+    gap: 10px;
+}
+.active-order-of-customer-vehicle-content-main
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(216, 226, 216);
+    padding: 5px;
+    border-radius: 10px;
+    gap: 10px;
+}
+.order-vehicle-avator
+{
+    color: #a6b7c0;
+    padding: 10px;
+    background-color: rgb(228, 232, 233);
+    justify-content: center;
+    align-self: start;
+    border-radius: 8px;   
+}
+.order-date-div, .vehicle-order-status, .vehicle-order-services, .vehicle-order-additional-requests
+{
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+}
+.active-order-of-customer-vehicle-content-main-headers
+{
+    color: #6c8c9e;
+}
+.active-order-of-customer-vehicle-content-main-bodies
+{
+    color: black;
+}
+.vehicle-order-notes
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 2px;
+}
+.vehicle-order-note-div
+{
+display: flex;
+flex-direction: column;
+width: 47%;
+padding: 3px 10px;
+}
+.vehicle-order-notes-headers
+{
+color: #6c8c9e;
+font-size: 13px;
+}
+.vehicle-order-between-bar-notes
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 10px;
+    background-color: green;
+}
+.closed-order-history-of-customer-vehicle
+{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid rgb(234, 240, 234);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.226);
+    border-radius:  8px;
+    margin: 2px 20px;
+    margin: 1px 20px 15px 20px;
+}
+
+
+
+
+
+
 .service-list-texts-checkboxes
 {
     display: flex;

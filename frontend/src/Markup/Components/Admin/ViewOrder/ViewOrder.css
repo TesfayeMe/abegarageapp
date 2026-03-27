@@ -601,7 +601,17 @@ background-color: rgb(216, 222, 226);
   color: white;
   font-weight: bolder;
 }
-
+.return-to-orders-list
+{
+  margin-top: 30px;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  color: rgb(43, 109, 185);
+  cursor: pointer;
+  font-weight: bold;
+  font-style: italic;
+}
 
 
 
