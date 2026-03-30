@@ -102,6 +102,28 @@ const updateOrderStatus = async (statusData, token) => {
     })
     return await response.json();
 }
+const getActiveOrders = async (vehicleId, loginEmployeeToken) =>{
+  const response = await fetch(`${api_url}/api/get-active-orders/${vehicleId}`,{
+    method: 'get',
+    headers: {
+        'content-type': 'application/json',
+        'x-access-token': loginEmployeeToken
+    }
+})
+return response;
+}
+const getClosedOrders = async (vehicleId, loginEmployeeToken) =>{
+const response = fetch(`${api_url}/api/get-closed-orders/${vehicleId}`,
+    {
+        method : 'get',
+        headers: {
+            'content-type': 'application/json',
+            'x-access-token': loginEmployeeToken
+        }
+    }
+)
+return response;
+}
 const OrderServices = {
     getOrderByVehicleId,
     getAllOrders,
@@ -111,6 +133,8 @@ const OrderServices = {
     getAdditionalRequests,
     addNewRequest
     ,getOrderNotes,
-    updateOrderStatus
+    updateOrderStatus,
+    getActiveOrders,
+    getClosedOrders
 }
 export default OrderServices

@@ -13,6 +13,7 @@ import { RiCloseFill } from "react-icons/ri";
 import ServiceServices from '../../../../Services/ServiceServices';
 import { FaHistory } from "react-icons/fa";
 import { FaCar } from "react-icons/fa";
+import OrderServices from '../../../../Services/OrderServices';
 const AddNewOrder = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -133,7 +134,7 @@ if(selectedCustomerId){
     customerVehicles(selectedCustomerId);
 }
 }, [selectedCustomerId])
-
+// console.log(selectedCustomerVehicle);
 
 
 //----------------------------------------------handle service order for a selected vehicle and customer----------------------------------------------
@@ -211,11 +212,16 @@ const [additionalRequest, setAdditionalRequest] = useState('');
     }
   }
 
+
+
+const [activeOrder, setActiveOrder] = useState(null);
+const [closedOrders, setClosedOrders] = useState([])
   useEffect(() => {
     async function fetchServices() {
       const servicesData = await ServiceServices.getServices(loginEmployeeToken);
       const servicesDataJson = await servicesData.json();
-   
+      console.log(selectedVehicleId);
+   console.log(servicesDataJson.data[0]);
       if (servicesDataJson.status === true) {
         setServices(servicesDataJson.data[0]);
       }
@@ -227,11 +233,46 @@ const [additionalRequest, setAdditionalRequest] = useState('');
         console.log(servicesDataJson.message)
       }
     }
+async function fetchActiveOrders() {
+   const activeOrder = await OrderServices.getActiveOrders(selectedVehicleId, loginEmployeeToken);
+      const activeOrderData = await activeOrder.json();
+  //  console.log(activeOrderData);
+      if (activeOrderData.status === true) {
+        setActiveOrder(activeOrderData.data);
+      }
+      else if (activeOrderData.status === 'tokenExpired') {
+        localStorage.removeItem('employee');
+        window.location.href = '/login'
+      }
+      else {
+        console.log(activeOrderData.message)
+      }
+}
+async function fetchClosedOrders() {
+  const closedOrders = await OrderServices.getClosedOrders(selectedVehicleId, loginEmployeeToken)
+ const closedOrdersData = await closedOrders.json();
+ console.log(closedOrdersData);
+ if(closedOrdersData.status === true)
+ {
+setClosedOrders(closedOrdersData.data)
+ }
+ else if(closedOrdersData.status === 'tokenExpired')
+ {
+
+  localStorage.removeItem('employee');
+        window.location.href = '/login'
+      }
+      else {
+        console.log(closedOrdersData.message)
+      }
+}
     fetchServices();
+    fetchActiveOrders();
+    fetchClosedOrders();
   }, [selectedVehicleId])
 
-
-
+console.log(activeOrder);
+console.log(closedOrders);
 
     return (
         <div className='add-new-order-page'>
@@ -281,12 +322,24 @@ const [additionalRequest, setAdditionalRequest] = useState('');
                               <div className='vehicle-history-modal-overlay'>
                                 <div className='vehicle-history-modal'>
 <div className='vehicle-history-modal-header'>
-  <h4>Customer -Tesfaye, Toyota-Yaris(2011)</h4><button className='close-selected-vehicle-btn' onClick={()=>setVehicleHistoryModal(!vehicleHistoryModal)}><IoCloseSharp /></button>
+  
+  {
+    activeOrder  ? (
+      <h4>Customer - {activeOrder?.customer_name}, {activeOrder?.vehicle_make}-{activeOrder?.vehicle_model}({activeOrder?.vehicle_year})</h4>
+    ) :(
+      <h4>Customer - history</h4>
+    )
+  }
+  <button className='close-selected-vehicle-btn' onClick={()=>{setVehicleHistoryModal(!vehicleHistoryModal); setSelectedVehicleId(null)}}><IoCloseSharp  /></button>
 </div>
-<div className='active-order-of-customer-vehicle'>
-<div className='active-order-of-customer-vehicle-header'>Current Active Order</div>
+<div className='vehicle-history-modal-body'>
+  {
+    activeOrder ? (
+
+      <div className='active-order-of-customer-vehicle'>
+<div className='active-order-of-customer-vehicle-header'>CURRENT ACTIVE ORDER</div>
 <div className='active-order-of-customer-vehicle-content'>
-  <div className='active-order-of-customer-vehicle-content-main'>
+  <div className='active-order-of-customer-vehicle-content-main' title={`view order detail ${activeOrder?.vehicle_make}-${activeOrder?.vehicle_model}(${activeOrder?.vehicle_year})`} onClick={()=>navigate('/order-details', { state: { order_id: 39 }})}>
     <div className='order-vehicle-avator'>
 <FaCar size={35} className='car-avator'/> 
     </div>
@@ -294,55 +347,69 @@ const [additionalRequest, setAdditionalRequest] = useState('');
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER DATE</span>
   <span className='active-order-of-customer-vehicle-content-main-bodies'>
 
-  2023-10-26
+  {activeOrder?.order_date}
   </span>
   </div>
   <div className='vehicle-order-status'>
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER STATUS</span>
     <span className='active-order-of-customer-vehicle-content-main-bodies'>
-
-Diagnostics and Quote (In Progress)
+{activeOrder?.order_status === 1 ? 'order reached to garage ( Received ) ' : activeOrder?.order_status === 2 ? 'Order reached to the technician (Assigned)' : 'Diagnostics and Quote (In Progress)'}
   </span>
   </div>
   <div className='vehicle-order-services'>
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER SERVICES</span>
   <span className='active-order-of-customer-vehicle-content-main-bodies'>
-
-order services
+{activeOrder?.services?.split(',').map((serv, index)=>(
+  <>
+  <div>
+{serv}
+  </div>
+  </>
+))}
   </span>
   </div>
   <div className='vehicle-order-additional-requests'>
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER ADD REQUESTS</span>
   <span className='active-order-of-customer-vehicle-content-main-bodies'>
 
-order add req
+{/* {activeOrder.additional_requests} */}
+
+{activeOrder?.additional_requests?.split(',').map((request, index)=>(
+  <>
+  <div>
+{request}
+  </div>
+  </>
+))}
+
   </span>
   </div>
+  
   </div>
-  <div className='vehicle-order-notes'>
-<div className='vehicle-order-notes-for-customer vehicle-order-note-div'>
-  <span className='vehicle-order-notes-headers'>
-CUSTOMER NOTES
-  </span>
-<p>Customer notes</p>
-</div>
-<div className='vehicle-order-between-bar-notes'>
-  i
-</div>
-<div className='vehicle-order-notes-internal-use vehicle-order-note-div'>
-   <span className='vehicle-order-notes-headers'>
-INTERNAL USE NOTES
-  </span>
-Internal use notes
-</div>
-  </div>
+
+
+
 </div>
 </div>
+
+
+
+    ) : (
+      <div className='active-order-of-customer-vehicle-not-found-div'>
+        No active order found!
+      </div>
+    )
+  }
+
 <div className='closed-order-history-of-customer-vehicle'>
   <div className='closed-order-history-of-customer-vehicle-header'>
-<p>CLOSED ORDER HISTORY</p>
+<span>CLOSED ORDER HISTORY</span>
   </div>
-  <div className='closed-order-history-of-customer-vehicle-each'>
+  <div className='closed-order-history-of-customer-vehicle-container'>
+
+
+
+  <div className='closed-order-history-of-customer-vehicle-each'  title='view order history' onClick={()=>navigate('/order-details', { state: { order_id: 39 }})}>
 <div className='closed-order-history-of-customer-vehicle-upper'>
 <div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
 <span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>ORDER ID</span>
@@ -386,6 +453,34 @@ COMPLETED
 </div>
 </div>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+
+
+
+
 </div>
   </div>
   </div>)}
@@ -421,12 +516,12 @@ COMPLETED
                   </button>
                     </div>
                   
-                  {services.length > 0 ? (
+                  {services?.length > 0 ? (
                     <form style={{ padding: '10px' }} onSubmit={handleServiceOrder}>
                       
                       <div className='add-new-order-form-content-container'>
                         {
-                          services.map((service) => (
+                          services?.map((service) => (
                             <>
                               <div className='form-group col-md-12 service-list-texts-checkboxes' key={service.service_id}>
                                 <div className='service-list-texts' style={{ width: '100%' }} onClick={() => handleServiceClick(service.service_id)} >

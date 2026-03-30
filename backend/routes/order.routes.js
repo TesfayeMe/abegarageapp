@@ -21,4 +21,8 @@ router.get('/api/get-order-additional-request/:orderId', [authMiddleWare.verifyT
 router.post('/api/add-new-additional-request', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.addAdditionalRequest);
 //update order status
 router.put('/api/update-order-status', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.updateOrderStatus);
+//get active order
+router.get('/api/get-active-orders/:vehicleId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getActiveOrders);
+//get closed orders
+router.get('/api/get-closed-orders/:vehicleId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getClosedOrders)
 module.exports = router

@@ -171,6 +171,15 @@ z-index: 10001;
     padding: 18px;
     border-bottom: 2px solid rgb(234, 238, 240);
 }
+.vehicle-history-modal-body
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
 .active-order-of-customer-vehicle
 {
     width: 100%;
@@ -201,10 +210,10 @@ z-index: 10001;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid rgb(216, 226, 216);
     padding: 5px;
     border-radius: 10px;
     gap: 10px;
+    cursor: pointer;
 }
 .order-vehicle-avator
 {
@@ -264,13 +273,74 @@ font-size: 13px;
 {
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    border: 1px solid rgb(234, 240, 234);
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.226);
-    border-radius:  8px;
-    margin: 2px 20px;
-    margin: 1px 20px 15px 20px;
+    gap: 5px;
+    cursor: pointer;
 }
+
+.closed-order-history-of-customer-vehicle-header
+{
+    padding-left: 20px;
+}
+.closed-order-history-of-customer-vehicle-container
+{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 0 20px 20px;
+}
+
+.closed-order-history-of-customer-vehicle-each
+{
+    width: calc(100% - 20px);
+    padding: 15px;
+    border: 1px solid #ebe5e5;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 1px 1px 4px #0000004b ;
+}
+.closed-order-history-of-customer-vehicle-each:hover
+{
+    background-color: rgb(219, 222, 223);
+}
+.closed-order-history-of-customer-vehicle-upper, .closed-order-history-of-customer-vehicle-lower
+{
+    width: 100%;
+    /* background-color: yellow; */
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+.closed-order-history-of-customer-vehicle-upper-each-entry, .closed-order-history-of-customer-vehicle-lower-each-entry
+{
+    display: flex;
+    flex-direction: column;
+    color: black;
+    font-size: 12px;
+}
+.closed-order-history-of-customer-vehicle-upper-each-entry-header, .closed-order-history-of-customer-vehicle-lower-each-entry-header
+{
+    color: #6c8c9e;
+    font-size: 13px;
+}
+
+.active-order-of-customer-vehicle-not-found-div
+{
+    padding: 10px;
+    text-align: center;
+    border: 1px solid rgb(217, 228, 217);
+    margin: 20px;
+    border-radius: 8px;
+    background-color: rgb(242, 247, 242);
+}
+
+
+
+
+
+
 
 
 

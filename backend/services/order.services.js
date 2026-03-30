@@ -202,6 +202,47 @@ const updateOrderStatus = async (statusData) => {
       console.log(updateResult[0]);
       return updateResult[0].affectedRows > 0 ? true : false
 }
+const getActiveOrders = async (vehicleId) => {
+    // console.log(vehicleId);
+    const sqlActiveOrder = `SELECT
+    ANY_VALUE (CONCAT(cust_inf.customer_first_name, ' ', cust_inf.customer_last_name)) AS customer_name,
+    ANY_VALUE(car.vehicle_year) AS vehicle_year,
+    ANY_VALUE(car.vehicle_make) AS vehicle_make,
+    ANY_VALUE(car.vehicle_model) AS vehicle_model,
+    ANY_VALUE(ord.order_date) AS order_date,
+    ANY_VALUE(ord_stat.order_status) AS order_status,
+    GROUP_CONCAT(DISTINCT service.service_name SEPARATOR ', ') AS services,
+    GROUP_CONCAT(DISTINCT add_req.additional_request SEPARATOR ', ') AS additional_requests
+FROM customer_identifier cust_ident
+JOIN customer_info cust_inf 
+    ON cust_ident.customer_id = cust_inf.customer_id
+JOIN orders ord 
+    ON cust_ident.customer_id = ord.customer_id
+JOIN customer_vehicle_info car 
+    ON ord.vehicle_id = car.vehicle_id
+JOIN order_services ord_serv 
+    ON ord.order_id = ord_serv.order_id
+JOIN common_services service 
+    ON ord_serv.service_id = service.service_id
+JOIN additional_request add_req 
+    ON ord.order_id = add_req.order_id
+JOIN order_status ord_stat 
+    ON ord.order_id = ord_stat.order_id
+WHERE car.vehicle_id = ? AND ord_stat.order_status  IN(1,2,3)
+GROUP BY car.vehicle_id;`;
+    const [activeOrderResult] = await conn.query(sqlActiveOrder, [vehicleId]);
+    console.log(activeOrderResult[0]);
+    return activeOrderResult.length > 0 ? activeOrderResult[0] : null;
+}
+
+const getClosedOrders = async (vehicleId) =>{
+const sqlForClosedOrders = `select ANY_VALUE(ord.order_id) AS order_id, ANY_VALUE(ord.order_date) AS order_date, ANY_VALUE(ord_stat.order_status) AS order_status, ANY_VALUE(ord_inf.order_total_price) AS order_price, GROUP_CONCAT(com.service_name SEPARATOR ',') AS services, GROUP_CONCAT(add_req.additional_request SEPARATOR ',') AS additional_request, ANY_VALUE(note.comment) AS notes from customer_vehicle_info car JOIN orders ord ON car.vehicle_id = ord.vehicle_id JOIN order_info ord_inf on ord.order_id = ord_inf.order_id JOIN order_status ord_stat ON ord.order_id = ord_stat.order_id JOIN order_services ord_serv ON ord.order_id = ord_serv.order_id JOIN common_services com ON ord_serv.service_id = com.service_id JOIN additional_request add_req ON ord.order_id = add_req.order_id JOIN comments note ON ord.order_id = note.order_id where car.vehicle_id = ? AND ord_stat.order_status  IN(4,5,6,7)
+GROUP BY car.vehicle_id;`;
+const [resultForClosedOrders] = await conn.query(sqlForClosedOrders, [vehicleId]);
+// console.log(resultForClosedOrders);
+return resultForClosedOrders.length > 0 ? resultForClosedOrders : null
+}
+
 const orderService = {
     getOrder,
     getOrders,
@@ -210,6 +251,8 @@ const orderService = {
     getOrderComments,
     getOrderAdditionalRequest,
     addAdditionalRequest,
-    updateOrderStatus
+    updateOrderStatus,
+    getActiveOrders,
+    getClosedOrders
 }
 module.exports = orderService;

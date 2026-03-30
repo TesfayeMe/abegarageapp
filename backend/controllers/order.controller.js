@@ -148,6 +148,46 @@ const updateOrderStatus = async (req, res) => {
     }
     
 }
+
+const getActiveOrders = async (req, res)=>{
+    const {vehicleId} = req.params;
+    const getActiveOrders = await orderService.getActiveOrders(vehicleId)
+    console.log(getActiveOrders)
+    if(getActiveOrders)
+    {
+        return res.status(200).json({
+            status: true,
+            message: 'active order found',
+            data: getActiveOrders
+        })
+    }
+    else
+    {
+        return res.status(400).json({
+            status: false,
+            message: 'active order not found!',
+        })
+    }
+}
+const getClosedOrders = async (req, res) => {
+    const {vehicleId} = req.params;
+    const closedOrders = await orderService.getClosedOrders(vehicleId);
+    // console.log(closedOrders);
+    if(closedOrders)
+    {
+        res.status(200).json({
+            status: true,
+            data: closedOrders
+        })
+    }
+    else
+    {
+        res.status(400).json({
+            status: false,
+            message: 'This vehicle of a customer has not closed orders!'
+        })
+    }
+}
 const orderController = {
     getOrder,
     getOrders,
@@ -156,7 +196,9 @@ const orderController = {
     getOrderComments,
     getOrderAdditionalRequest,
     addAdditionalRequest,
-    updateOrderStatus
+    updateOrderStatus,
+    getActiveOrders,
+    getClosedOrders
 }
 
 module.exports = orderController;
