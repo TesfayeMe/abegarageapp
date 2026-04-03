@@ -45,14 +45,15 @@ const ViewOrder = () => {
         else if(data.status === "notManagerAndAdmin"){
           console.error("You are not a manager or admin.");
         }
-        else {          console.error("Unexpected response:", data.message);
+        else {          
+          console.error("Unexpected response:", data.message);
         }
       }
     };
 
     fetchOrder();
   }, [location.state?.order_id, token]);
-
+console.log(order);
 //handleChange order status change
 const [changeOrderStatus, setChangeOrderStatus] = useState(false);
 const [newStatus, setNewOrderStatus] = useState(null)
@@ -214,12 +215,86 @@ if (getOrderNotesData.status === true) {
   getAdditionalRequests();
   getOrderNotes();
 }, [location.state?.order_id, token]);
-
+console.log(additionalRequest);
 
 
 const [additionalRequestValue, setAdditionalRequestValue] =  useState(null)
-const handleAddAdditionalRequest = async () => {
+const handleAddAdditionalRequest = async (order_status) => {
   // const order_id = location.state?.order_id;
+if(order_status === 5 || order_status === 6 || order_status === 7)
+{  alert('Cannot add additional request for completed, canceled or submitted orders')
+  return;
+}
+else if(additionalRequestValue === null || additionalRequestValue.trim() === '')
+{
+  alert('Additional request cannot be empty')
+  return;
+}
+else if(additionalRequestValue.split(',').length > 5)
+{  alert('You can add up to 5 additional requests at a time, please separate each request with a comma')
+  return;
+}
+else if(additionalRequestValue.length > 500)
+{
+  alert('Additional request cannot exceed 500 characters')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.trim() === ''))
+{
+  alert('Additional request cannot contain empty requests, please remove extra commas')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.length > 100))
+{
+  alert('Each additional request cannot exceed 100 characters')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.length < 3))
+{
+  alert('Each additional request should be at least 3 characters long')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => /[^a-zA-Z0-9\s]/.test(request)))
+{
+  alert('Additional request cannot contain special characters except commas')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('urgent')))
+{
+  alert('Additional request cannot contain the word "urgent", please use the priority option to mark an order as urgent')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('asap')))
+{
+  alert('Additional request cannot contain the word "asap", please use the priority option to mark an order as urgent')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('immediately')))
+{
+  alert('Additional request cannot contain the word "immediately", please use the priority option to mark an order as urgent')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('emergency')))
+{
+  alert('Additional request cannot contain the word "emergency", please use the priority option to mark an order as urgent')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('important')))
+{
+  alert('Additional request cannot contain the word "important", please use the priority option to mark an order as urgent')
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('high priority')))
+{
+  alert('Additional request cannot contain the phrase "high priority", please use the priority option to mark an order as urgent')  
+  return;
+}
+else if(additionalRequestValue.split(',').some(request => request.toLowerCase().includes('low priority')))
+{  alert('Additional request cannot contain the phrase "low priority", please use the priority option to mark an order as low priority')  
+  return;
+}
+else{
+
   const additionalRequestData = {
     additionalRequest: additionalRequestValue,
     orderId: location.state?.order_id,
@@ -249,6 +324,9 @@ const handleAddAdditionalRequest = async () => {
         alert('Unauthorized action')
         window.location.href ='/orders'
       }
+}
+
+
 }
 
 const STATUS_MAP = {
@@ -404,7 +482,7 @@ const STATUS_MAP = {
 
 <div  className='add-new-additional-request-bnt-div'>
   <div className='additional-request-input-form'>
-    <textarea className='additional-request-input-form-text-area' placeholder='Additional request...' onChange={(e)=>setAdditionalRequestValue(e.target.value)} ></textarea><button className='add-new-additional-request-bnt' onClick={handleAddAdditionalRequest}><BsSendFill color='white' size={35}/></button>
+    <textarea className='additional-request-input-form-text-area' placeholder='Additional request...' onChange={(e)=>setAdditionalRequestValue(e.target.value)} ></textarea><button className='add-new-additional-request-bnt' onClick={()=>handleAddAdditionalRequest(order?.order_status)}><BsSendFill color='white' size={35}/></button>
   </div>
 </div>
 </div>

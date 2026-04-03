@@ -71,7 +71,7 @@ return response;
 const addNewRequest = async (additionalRequestData, token) => {
   
     const response = await fetch(`${api_url}/api/add-new-additional-request`,{
-        method: 'post',
+        method: 'put',
         headers: {
             'Content-Type': 'application/json',
             'x-access-token': token
@@ -113,7 +113,7 @@ const getActiveOrders = async (vehicleId, loginEmployeeToken) =>{
 return response;
 }
 const getClosedOrders = async (vehicleId, loginEmployeeToken) =>{
-const response = fetch(`${api_url}/api/get-closed-orders/${vehicleId}`,
+  const response = fetch(`${api_url}/api/get-closed-orders/${vehicleId}`,
     {
         method : 'get',
         headers: {
@@ -123,6 +123,18 @@ const response = fetch(`${api_url}/api/get-closed-orders/${vehicleId}`,
     }
 )
 return response;
+}
+const getClosedOrderComments = async (vehicleId, loginEmployeeToken) => {
+    const response = await fetch(`${api_url}/api/get-closed-orders-comments/${vehicleId}`,{
+        method: 'get',
+        headers: {
+            'content-type': 'application/json',
+            'x-access-token': loginEmployeeToken
+        }
+    });
+
+    return response;
+
 }
 const OrderServices = {
     getOrderByVehicleId,
@@ -135,6 +147,7 @@ const OrderServices = {
     ,getOrderNotes,
     updateOrderStatus,
     getActiveOrders,
-    getClosedOrders
+    getClosedOrders,
+    getClosedOrderComments
 }
 export default OrderServices

@@ -188,6 +188,26 @@ const getClosedOrders = async (req, res) => {
         })
     }
 }
+const getClosedOrdersComments  = async (req, res) => {
+    const {vehicleId} = req.params;
+
+    const getClosedOrdersComments = await orderService.getClosedOrdersComments(vehicleId);
+    if(getClosedOrdersComments)
+    {
+        return res.status(200).json({
+            status: true,
+            data: getClosedOrdersComments
+        })
+    }
+    else
+    {
+        res.status(400).json({
+            status: false,
+            message: `comments for vehicle ${vehicleId} not found`
+        })
+    }
+
+}
 const orderController = {
     getOrder,
     getOrders,
@@ -198,7 +218,8 @@ const orderController = {
     addAdditionalRequest,
     updateOrderStatus,
     getActiveOrders,
-    getClosedOrders
+    getClosedOrders,
+    getClosedOrdersComments
 }
 
 module.exports = orderController;

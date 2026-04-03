@@ -14,6 +14,7 @@ import ServiceServices from '../../../../Services/ServiceServices';
 import { FaHistory } from "react-icons/fa";
 import { FaCar } from "react-icons/fa";
 import OrderServices from '../../../../Services/OrderServices';
+import writingHand from '../../../../assets/icons/writing-hand.svg'
 const AddNewOrder = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -196,6 +197,18 @@ const [additionalRequest, setAdditionalRequest] = useState('');
   }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
   const handleServiceClick = async (service_id) => {
     if (serviceIDs.includes(service_id)) {
       setServiceIDs(serviceIDs.filter(id => id !== service_id));
@@ -215,7 +228,8 @@ const [additionalRequest, setAdditionalRequest] = useState('');
 
 
 const [activeOrder, setActiveOrder] = useState(null);
-const [closedOrders, setClosedOrders] = useState([])
+const [closedOrders, setClosedOrders] = useState([]);
+const [closedOrderComments, setClosedOrderComments] = useState([]);
   useEffect(() => {
     async function fetchServices() {
       const servicesData = await ServiceServices.getServices(loginEmployeeToken);
@@ -246,6 +260,7 @@ async function fetchActiveOrders() {
       }
       else {
         console.log(activeOrderData.message)
+        setActiveOrder(null);
       }
 }
 async function fetchClosedOrders() {
@@ -264,15 +279,36 @@ setClosedOrders(closedOrdersData.data)
       }
       else {
         console.log(closedOrdersData.message)
+        setClosedOrders([])
       }
+}
+const fetchClosedOrderComments = async () => {
+  const closedOrderComments = await OrderServices.getClosedOrderComments(selectedVehicleId, loginEmployeeToken);
+  const closedOrderCommentsData = await closedOrderComments.json();
+  if(closedOrderCommentsData.status === true)
+  {
+setClosedOrderComments(closedOrderCommentsData.data)
+  }
+  else if(closedOrderCommentsData.status === false)
+  {
+console.log(closedOrderCommentsData.message);
+setClosedOrderComments([])
+  }
+  else if(closedOrderCommentsData.status === 'tokenExpired')
+  {
+    localStorage.removeItem('employee')
+    window.location.href= '/login'
+  }
 }
     fetchServices();
     fetchActiveOrders();
     fetchClosedOrders();
+    fetchClosedOrderComments()
   }, [selectedVehicleId])
 
 console.log(activeOrder);
 console.log(closedOrders);
+console.log(closedOrderComments);
 
     return (
         <div className='add-new-order-page'>
@@ -347,7 +383,12 @@ console.log(closedOrders);
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER DATE</span>
   <span className='active-order-of-customer-vehicle-content-main-bodies'>
 
-  {activeOrder?.order_date}
+  {/* {activeOrder?.order_date} */}
+  {new Date(activeOrder?.order_date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+})}
   </span>
   </div>
   <div className='vehicle-order-status'>
@@ -405,77 +446,124 @@ console.log(closedOrders);
   <div className='closed-order-history-of-customer-vehicle-header'>
 <span>CLOSED ORDER HISTORY</span>
   </div>
-  <div className='closed-order-history-of-customer-vehicle-container'>
+  {closedOrders.length > 0 && (
+    closedOrders.map((order)=>(
+
+  <div className='closed-order-history-of-customer-vehicle-container' key={order.order_id}>
 
 
 
-  <div className='closed-order-history-of-customer-vehicle-each'  title='view order history' onClick={()=>navigate('/order-details', { state: { order_id: 39 }})}>
+  <div className='closed-order-history-of-customer-vehicle-each'  title='view order history' onClick={()=>navigate('/order-details', { state: { order_id: order.order_id }})}>
 <div className='closed-order-history-of-customer-vehicle-upper'>
 <div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
 <span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>ORDER ID</span>
-#134
+# {order.order_id}
 </div>
 <div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
 <span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>ORDER DATE</span>
-2023-09-20
+{/* {closedOrders.order_date} */}
+{new Date(order?.order_date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+})}
 </div>
 <div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
 <span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>STATUS</span>
-COMPLETED
+ {closedOrders.order_status === 4 ? 'Paused': order.order_status === 5 ? 'Canceled': order.order_status === 6 ? 'Completed' : 'Submitted' }
 </div>
 <div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
 <span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>PRICE</span>
-1,250 ETB
+<span>
+  $ {order?.order_price?.toFixed(2)} ETB
+</span>
 </div>
 <div className='closed-order-history-of-customer-vehicle-upper-each-entry'>
 <span className='closed-order-history-of-customer-vehicle-upper-each-entry-header'>TIME LENGTH</span>
-7 HOURS
+{/* time length from order_date to completed_date */}
+{order?.completed_date ? Math.ceil((new Date(order.completed_date) - new Date(order.order_date)) / (1000 * 60 * 60 * 24)) + ' days' : 'N/A'}
 </div>
 </div>
 <div className='closed-order-history-of-customer-vehicle-lower'>
 <div className='closed-order-history-of-customer-vehicle-lower-each-entry'>
   <span className='closed-order-history-of-customer-vehicle-lower-each-entry-header'>
-    ORDER SERVICES & ADD REQUESTS
+    ORDER SERVICES
   </span>
-  all services and additional requests
+  <span className='closed-order-history-of-customer-vehicle-lower-each-entry-order-services'>
+
+  {order.services}
+  </span>
+  <span  className='closed-order-history-of-customer-vehicle-lower-each-entry-order-add-requests'>
+  {order.additional_requests}
+
+  </span>
 </div>
 <div className='closed-order-history-of-customer-vehicle-lower-each-entry'>
   <span className='closed-order-history-of-customer-vehicle-lower-each-entry-header'>
     NOTES FOR CUSTOMER
   </span>
-  notes for customer
+  {closedOrderComments.map((comments, index)=>(
+   < >
+    {comments.comment_for === 1 && (
+       <>
+    
+      {order.order_id === comments.order_id && (<div  style={{display: 'flex', gap: '10px'}}><span style={{width: '15px', height: '15px'}}>
+      <img src={writingHand}/>
+    </span><span >{comments.comment_for === 1 && (comments.comment.length < 38 ? comments.comment : `${comments.comment.substring(0,35)}...`)}</span></div>)}
+    </>
+  )}
+   </>
+    
+  ))}
 </div>
 <div className='closed-order-history-of-customer-vehicle-lower-each-entry'>
   <span className='closed-order-history-of-customer-vehicle-lower-each-entry-header'>
     NOTES FOR INTERNAL USE
   </span>
-  internal use notes
+  {closedOrderComments.map((comments, index)=>(
+   < >
+    {comments.comment_for === 2 && (
+      <>
+    
+      {order.order_id === comments.order_id && (<div  style={{display: 'flex', gap: '10px'}}><span style={{width: '15px', height: '15px'}}>
+      <img src={writingHand}/>
+    </span><span >{comments.comment_for === 2 && (comments.comment.length < 38 ? comments.comment : `${comments.comment.substring(0,35)}...`)}</span></div>)}
+    </>
+  )}
+   </>
+    
+  ))}
 </div>
 </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ))
+    
+) 
+  
+  }
+  {closedOrders.length === 0 && (
+    <div className='no-closed-vehicle-history'>
+<span>
+  No closed order history for this vehicle!
+</span>
+    </div>
+  )}
+
 </div>
 
 
@@ -678,7 +766,7 @@ COMPLETED
 
                     </div>
                     {searchResults.length === 0 && (
-                        <button type='button' className='theme-btn btn-style-one add-new-customer-btn'>Add new customer</button>
+                        <button type='button' className='theme-btn btn-style-one add-new-customer-btn' onClick={()=>navigate('/mgr/add-customer')}>Add new customer</button>
                     )}
                 </di>)
             }

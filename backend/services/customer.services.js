@@ -141,17 +141,21 @@ const addServiceOrder = async (serviceData) => {
             await conn.query(sqlServices, [serviceValues]);
         }
 
-        // 5. Insert into order_status
+        //5. insert into additional request 
+        const sqlAdditionalRequest = `INSERT INTO additional_request (additional_request, order_id, total_additional_request) values(?,?,?)`;
+         await conn.query(sqlAdditionalRequest, [additional_request, orderId, active_additional_request]);
+
+        // 6. Insert into order_status
         const sqlStatus = 'INSERT INTO order_status (order_id) VALUES (?)';
         await conn.query(sqlStatus, [orderId]);
 
-        // 6. If everything worked, COMMIT the changes
+        // 7. If everything worked, COMMIT the changes
         await conn.query('COMMIT');
 
         return { orderId, ...serviceData };
 
     } catch (error) {
-        // 7. If ANY step fails, ROLLBACK everything automatically
+        // 8. If ANY step fails, ROLLBACK everything automatically
         await conn.query('ROLLBACK');
         console.error("Transaction failed, rolled back:", error);
         return null;

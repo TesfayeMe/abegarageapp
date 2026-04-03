@@ -336,7 +336,17 @@ font-size: 13px;
     background-color: rgb(242, 247, 242);
 }
 
-
+.no-closed-vehicle-history
+{
+    background-color: rgb(238, 243, 238);
+    padding: 20px;
+    margin: 0 20px 20px;
+    border: 1px solid rgb(171, 198, 206);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
 

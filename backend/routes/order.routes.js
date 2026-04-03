@@ -18,11 +18,13 @@ router.get('/api/get-order-notes/:orderId', [authMiddleWare.verifyToken, authMid
 //get order additional request
 router.get('/api/get-order-additional-request/:orderId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getOrderAdditionalRequest);
 //add order additional request
-router.post('/api/add-new-additional-request', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.addAdditionalRequest);
+router.put('/api/add-new-additional-request', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.addAdditionalRequest);
 //update order status
 router.put('/api/update-order-status', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.updateOrderStatus);
 //get active order
 router.get('/api/get-active-orders/:vehicleId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getActiveOrders);
 //get closed orders
 router.get('/api/get-closed-orders/:vehicleId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getClosedOrders)
+//get closed orders comments
+router.get('/api/get-closed-orders-comments/:vehicleId', [authMiddleWare.verifyToken, authMiddleWare.isManagerAndAdmin], orderController.getClosedOrdersComments)
 module.exports = router
