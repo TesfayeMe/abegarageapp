@@ -57,8 +57,73 @@ console.log(order);
 //handleChange order status change
 const [changeOrderStatus, setChangeOrderStatus] = useState(false);
 const [newStatus, setNewOrderStatus] = useState(null)
-const handleSaveStatus = async () => {
+const handleSaveStatus = async (oldOrderStatus) => {
   const orderId = location.state?.order_id;
+  console.log(oldOrderStatus, newStatus);
+  if(oldOrderStatus === newStatus)
+  {
+    alert('No changes to save');
+    setChangeOrderStatus(false);
+    return;
+  }
+  else if(oldOrderStatus === 7 && newStatus !== 7)
+  {
+    alert('Cannot change status of a submitted order');
+    return;
+  }
+  else if(oldOrderStatus === newStatus - 2 && (newStatus === 5 || newStatus === 6))
+      {
+          alert('Cannot change status of an order that is two steps ahead, please change the status step by step')
+          return;
+      }
+  else if(oldOrderStatus === newStatus - 1 && (newStatus === 5 || newStatus === 6))
+  {
+    const confirmChange = window.confirm('Are you sure you want to change the status of this order without changing the status to in progress first? This may cause confusion for the employee working on the order');
+    if(!confirmChange)
+    {
+      return;
+    }
+  }
+  else if((oldOrderStatus === 1 || oldOrderStatus === 2) && newStatus === 7)
+  {
+    const confirmChange = window.confirm('Are you sure you want to submit this order without changing the status to in progress first? This may cause confusion for the employee working on the order');
+    if(!confirmChange)
+    {      return;
+    }
+  }
+  else if((oldOrderStatus === 3 || oldOrderStatus === 4) && newStatus === 7)
+  { 
+    const confirmChange = window.confirm('Are you sure you want to submit this order without changing the status to completed first? This may cause confusion for the employee working on the order');
+    if(!confirmChange)
+    {      return;
+    }
+  }
+  else if(newStatus === null)
+  {
+    alert('Please select a status');
+    return;
+  }
+  else if(oldOrderStatus === 5 || oldOrderStatus === 6)
+  {
+    alert('Cannot change status of completed or canceled orders');
+    return;
+  }
+  else if(newStatus === 5 && oldOrderStatus === 7)
+  {
+    alert('Cannot cancel a submitted order, please contact the customer to cancel the order');
+    return;
+  }
+  else if(newStatus === 6 && oldOrderStatus === 7)
+  {
+    alert('Cannot complete a submitted order, please contact the customer to complete the order');
+    return;
+  }
+
+  else
+
+  {
+
+
   const updateData = {
     orderId: orderId,
     orderStatus: newStatus
@@ -77,7 +142,7 @@ const handleSaveStatus = async () => {
   // alert(newStatus);
   setChangeOrderStatus(false)
 }
-
+  }
 
 //Save notes handler
 const [commentForCustomer, setCommentForCustomer] = useState(null);
@@ -385,18 +450,18 @@ const STATUS_MAP = {
   <h4>Select option below:</h4>
 <select onChange={e=>setNewOrderStatus(e.target.value)}>
   <option value='' >Select status</option>
-  <option value={1}>Received</option>
-  <option value={2}>Assigned</option>
-  <option value={3}>In progress</option>
-  <option value={4}>Paused</option>
-  <option value={5}>Canceled</option>
-  <option value={6}>Completed</option>
-  <option value={7}>Submitted</option>
+  {/* <option value={1}>Received</option> */}
+  <option value={2}>Assign</option>
+  <option value={3}>Resume</option>
+  <option value={4}>Pause</option>
+  <option value={5}>Cancel</option>
+  {/* <option value={6}>Completed</option> */}
+  <option value={7}>Submit</option>
 </select>
     </div>
   
 <div  className='save-status-btn-dv'>
-  <button className='save-status-btn' onClick={handleSaveStatus}>Save status</button>
+  <button className='save-status-btn' onClick={() => handleSaveStatus(order?.order_status)}>Save status</button>
 </div>
   </div>
 
