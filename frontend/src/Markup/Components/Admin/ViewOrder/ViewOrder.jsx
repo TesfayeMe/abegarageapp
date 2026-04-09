@@ -448,7 +448,7 @@ const STATUS_MAP = {
     <div className='selection-of-order-status-modal-body'>
 
   <h4>Select option below:</h4>
-<select onChange={e=>setNewOrderStatus(e.target.value)}>
+<select onChange={e=>setNewOrderStatus(e.target.value)} className='selection-of-order-status-modal-body-select'>
   <option value='' >Select status</option>
   {/* <option value={1}>Received</option> */}
   <option value={2}>Assign</option>

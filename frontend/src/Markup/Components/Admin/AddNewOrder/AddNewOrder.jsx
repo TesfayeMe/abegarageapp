@@ -361,7 +361,7 @@ console.log(closedOrderComments);
   
   {
     activeOrder  ? (
-      <h4>Customer - {activeOrder?.customer_name}, {activeOrder?.vehicle_make}-{activeOrder?.vehicle_model}({activeOrder?.vehicle_year})</h4>
+      <h4>Customer - {activeOrder[0]?.customer_name}, {activeOrder[0]?.vehicle_make}-{activeOrder[0]?.vehicle_model}({activeOrder[0]?.vehicle_year})</h4>
     ) :(
       <h4>Customer - history</h4>
     )
@@ -375,7 +375,7 @@ console.log(closedOrderComments);
       <div className='active-order-of-customer-vehicle'>
 <div className='active-order-of-customer-vehicle-header'>CURRENT ACTIVE ORDER</div>
 <div className='active-order-of-customer-vehicle-content'>
-  <div className='active-order-of-customer-vehicle-content-main' title={`view order detail ${activeOrder?.vehicle_make}-${activeOrder?.vehicle_model}(${activeOrder?.vehicle_year})`} onClick={()=>navigate('/order-details', { state: { order_id: 39 }})}>
+  <div className='active-order-of-customer-vehicle-content-main' title={`view order detail ${activeOrder[0]?.vehicle_make}-${activeOrder[0]?.vehicle_model}(${activeOrder[0]?.vehicle_year})`} onClick={()=>navigate('/order-details', { state: { order_id: 39 }})}>
     <div className='order-vehicle-avator'>
 <FaCar size={35} className='car-avator'/> 
     </div>
@@ -383,8 +383,8 @@ console.log(closedOrderComments);
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER DATE</span>
   <span className='active-order-of-customer-vehicle-content-main-bodies'>
 
-  {/* {activeOrder?.order_date} */}
-  {new Date(activeOrder?.order_date).toLocaleDateString("en-US", {
+  {/* {activeOrder[0]?.order_date} */}
+  {new Date(activeOrder[0]?.order_date).toLocaleDateString("en-US", {
   month: "short",
   day: "numeric",
   year: "numeric",
@@ -394,13 +394,13 @@ console.log(closedOrderComments);
   <div className='vehicle-order-status'>
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER STATUS</span>
     <span className='active-order-of-customer-vehicle-content-main-bodies'>
-{activeOrder?.order_status === 1 ? 'order reached to garage ( Received ) ' : activeOrder?.order_status === 2 ? 'Order reached to the technician (Assigned)' : 'Diagnostics and Quote (In Progress)'}
+{activeOrder[0]?.order_status === 1 ? 'order reached to garage ( Received ) ' : activeOrder[0] ?.order_status === 2 ? 'Order reached to the technician (Assigned)' : 'Diagnostics and Quote (In Progress)'}
   </span>
   </div>
   <div className='vehicle-order-services'>
   <span className='active-order-of-customer-vehicle-content-main-headers'>ORDER SERVICES</span>
   <span className='active-order-of-customer-vehicle-content-main-bodies'>
-{activeOrder?.services?.split(',').map((serv, index)=>(
+{activeOrder[0]?.services?.split(',').map((serv, index)=>(
   <>
   <div>
 {serv}
@@ -415,7 +415,7 @@ console.log(closedOrderComments);
 
 {/* {activeOrder.additional_requests} */}
 
-{activeOrder?.additional_requests?.split(',').map((request, index)=>(
+{activeOrder[0]?.additional_requests?.split(',').map((request, index)=>(
   <>
   <div>
 {request}

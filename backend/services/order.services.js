@@ -1,4 +1,5 @@
 const conn = require('../config/db.config')
+const pool = require('../config/db.config'); // your exported pool
 const getOrder = async (customer_vehicle_id) => {
     const { customer_id, vehicle_id } = customer_vehicle_id;
     const orderSql = `SELECT cvh.vehicle_type, cvh.vehicle_color, cvh.vehicle_tag, ord.order_date, ord_inf.additional_request, ord_st.order_status, GROUP_CONCAT(com_serv.service_name SEPARATOR ', ') AS service_names FROM customer_info cust JOIN customer_vehicle_info cvh ON cust.customer_id = cvh.customer_id JOIN orders ord ON cvh.vehicle_id = ord.vehicle_id JOIN order_info ord_inf ON ord.order_id = ord_inf.order_id JOIN order_status ord_st ON ord.order_id = ord_st.order_id JOIN order_services ord_serv ON ord.order_id = ord_serv.order_id JOIN common_services com_serv ON ord_serv.service_id = com_serv.service_id WHERE cust.customer_id = ? AND cvh.vehicle_id = ? GROUP BY ord.order_id, cust.customer_first_name, cvh.vehicle_type, cvh.vehicle_color, cvh.vehicle_tag, ord.order_date, ord.order_hash, ord_inf.additional_request, ord_st.order_status;`
@@ -106,21 +107,72 @@ return additionalRequestResult[0].affectedRows > 0 ? true : false;
 
 const updateOrderStatus = async (statusData) => {
     const { orderStatus, orderId} = statusData;
-    // console.log(orderStatus, orderId);
-    const sqlUpdataOrderStatus = `update order_status set order_status = ? where order_id = ?`;
-    const updateResult = await conn.query(sqlUpdataOrderStatus, [orderStatus, orderId] );
-    //   console.log(updateResult[0]);
-      return updateResult[0].affectedRows > 0 ? true : false
+//     // console.log(orderStatus, orderId);
+   const now = new Date();
+const mysqlNow = now.toISOString().slice(0, 19).replace('T', ' ');
+let connp = await pool.getConnection();
+  try {
+    await connp.beginTransaction();
+    if (orderStatus === '2') {
+        console.log(mysqlNow);
+      await connp.query(
+        "UPDATE order_info SET assigned_date = ? WHERE order_id = ?",
+        [mysqlNow, orderId]
+      );
+    }
+    else if(orderStatus === '4')
+    {
+        await connp.query(
+            "UPDATE order_info SET paused_date = ? WHERE order_id = ?",
+            [mysqlNow, orderId]
+        );
+
+    }
+    else if(orderStatus === '5')
+    {
+        await connp.query(
+            "UPDATE order_info SET canceled_date = ? WHERE order_id = ?",
+            [mysqlNow, orderId]
+        );
+    }
+    else if(orderStatus === '7')
+    {
+        await connp.query(
+            "UPDATE order_info SET submitted_date = ? WHERE order_id = ?",
+            [mysqlNow, orderId]
+        );
+    }
+
+    await connp.query(
+      "UPDATE order_status SET order_status = ? WHERE order_id = ?",
+      [orderStatus, orderId]
+    );
+
+    await connp.commit();
+    console.log('Transaction success');
+    return true;
+
+  } catch (err) {
+    console.error('Transaction failed:', err);
+    await connp.rollback();
+    return false;
+
+  } finally {
+    connp.release(); 
+  }
+
+
+
 }
 const getActiveOrders = async (vehicleId) => {
     // console.log(vehicleId);
     const sqlActiveOrder = `SELECT
-    ANY_VALUE (CONCAT(cust_inf.customer_first_name, ' ', cust_inf.customer_last_name)) AS customer_name,
+    ANY_VALUE(CONCAT(cust_inf.customer_first_name, ' ', cust_inf.customer_last_name)) AS customer_name,
     ANY_VALUE(car.vehicle_year) AS vehicle_year,
     ANY_VALUE(car.vehicle_make) AS vehicle_make,
     ANY_VALUE(car.vehicle_model) AS vehicle_model,
     ANY_VALUE(ord.order_date) AS order_date,
-    ANY_VALUE(ord_stat.order_status) AS order_status,
+    ord_stat.order_status,
     GROUP_CONCAT(DISTINCT service.service_name SEPARATOR ', ') AS services,
     GROUP_CONCAT(DISTINCT add_req.additional_request SEPARATOR ', ') AS additional_requests
 FROM customer_identifier cust_ident
@@ -134,15 +186,16 @@ JOIN order_services ord_serv
     ON ord.order_id = ord_serv.order_id
 JOIN common_services service 
     ON ord_serv.service_id = service.service_id
-JOIN additional_request add_req 
+LEFT JOIN additional_request add_req 
     ON ord.order_id = add_req.order_id
 JOIN order_status ord_stat 
     ON ord.order_id = ord_stat.order_id
-WHERE car.vehicle_id = ? AND ord_stat.order_status  IN(1,2,3)
-GROUP BY car.vehicle_id;`;
+WHERE car.vehicle_id = ? 
+  AND ord_stat.order_status IN (1,2,3)
+GROUP BY ord.order_id, ord_stat.order_status;`;
     const [activeOrderResult] = await conn.query(sqlActiveOrder, [vehicleId]);
-    console.log(activeOrderResult[0]);
-    return activeOrderResult.length > 0 ? activeOrderResult[0] : null;
+    console.log(activeOrderResult);
+    return activeOrderResult.length > 0 ? activeOrderResult : null;
 }
 
 const getClosedOrders = async (vehicleId) =>{
